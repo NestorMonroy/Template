@@ -1,0 +1,46 @@
+{% url 'posts:list' as home_url %}
+{% url 'posts:create' as new_post %}
+
+{% url 'login' as login_url %}
+{% url 'logout' as logout_url %}
+{% url 'register' as register_url %}
+
+<nav class="navbar navbar-dark bg-dark static-top bg-custom-1">
+    <a class="navbar-brand" href="{{ home_url }}">
+        {% if brand_name %} {{brand_name }} {% else %} NO {% endif %}
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-list"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar-list">
+        <ul class="navbar-nav">
+
+            {% if request.user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ logout_url }}">Logout</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ new_post }}">Nuevo post </a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{register_url }} ">Register</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ login_url }}">Login</a>
+            </li>
+            {% endif %}
+
+            <li class="nav-item">
+                <a class="nav-link" href="#">Otro</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<style>
+    .bg-custom-1 {
+        background-color: #1e4358;
+    }
+</style>

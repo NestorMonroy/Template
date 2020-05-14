@@ -1,6 +1,5 @@
 node_modules
 ##Django
-*log
 *.pot
 *.pyc
 _pycache_/
@@ -14,8 +13,4 @@ venv
 .vscode
 vscode/
 .vscode/
-
-*.py[cod]
-.$py.class
-
 *.so
