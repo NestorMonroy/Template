@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,12 +12,15 @@
     {% include 'frontend/include/head.html' %}
 </head>
 
-<body>
+<body class="blog-posts sidebar-collapse">
     {% include "messages_display.html" %}
-    
+
     {% include 'frontend/include/navbar.html' with brand_name='Blog Nestor' %}
 
-    <div class="container">
+    {% include 'frontend/include/header.html' with brand_name='Blog Nestor' %}
+
+    <div class="main main-raised">
+
         {% block content %}{% endblock %}
     </div>
 

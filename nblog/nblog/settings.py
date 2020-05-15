@@ -131,3 +131,6 @@ MEDIA_ROOT = os.path.join(os.path.dirname(
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static_blog"),
 ]
+
+PROTECTED_ROOT = os.path.join(os.path.dirname(
+    BASE_DIR), "static_cdn", "protected_media")

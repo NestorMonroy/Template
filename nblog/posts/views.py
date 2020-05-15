@@ -32,7 +32,7 @@ def post_create(request):
     context = {
         "form": form,
     }
-    return render(request, "post_form.html", context)
+    return render(request, "posts/post_form.html", context)
 
 
 def post_detail(request, slug=None):
@@ -47,7 +47,7 @@ def post_detail(request, slug=None):
         "instance": instance,
         "share_string": share_string,
     }
-    return render(request, "post_detail.html", context)
+    return render(request, "posts/post_detail.html", context)
 
 
 def post_list(request):
@@ -81,7 +81,7 @@ def post_list(request):
         "page_request_var": page_request_var,
         "today": today,
     }
-    return render(request, "post_list.html", context)
+    return render(request, "posts/post_list.html", context)
 
 
 def post_update(request, slug=None):
@@ -100,7 +100,7 @@ def post_update(request, slug=None):
 		"instance": instance,
 		"form":form,
 	}
-	return render(request, "post_form.html", context)
+	return render(request, "posts/post_form.html", context)
 
 
 
