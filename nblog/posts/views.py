@@ -30,6 +30,7 @@ def post_create(request):
     if form.is_valid():
         instance = form.save(commit=False)
         instance.user = request.user
+        print(instance.publish)
         instance.save()
         # message success
         messages.success(request, "Successfully Created")

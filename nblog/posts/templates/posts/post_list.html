@@ -1,68 +1,68 @@
 {% extends "base.html" %}
 {% block content %}
 
-
 <div class='col-sm-12'>
-    <h1>{{ title }}</h1>
+    <div class="section">
+        <h3 class="title text-center">{{ title }}</h3>
+        <br>
+        <div class="row">
+            {% for obj in object_list %}
+            <div class="col-md-4">
+                <div class="card card-plain card-blog">
+                    <div class="card-header card-header-image">
+                        {% if obj.image %}
+                        <a href='{{ obj.get_absolute_url }}'>
+                            <img class="img img-raised" src='{{ obj.image.url }}'>
+                        </a>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        {% if obj.draft %}
+                        <h3 class="card-category text-info">Staff only: Draft</h3>
+                        {% endif %}
+                        {% if obj.publish > today %}
+                        <h3 class="card-category text-danger">Staff Only: Future Post</h3>
+                        {% endif %}
+                        <h4 class="card-title">
+                            <a href='{{ obj.get_absolute_url }}'>{{ obj.title }}</a>
+                            <small>{{ obj.publish }}</small>
+                        </h4>
+                        {% if obj.user.get_full_name %}
+                        <p class="card-category text-danger">Author: {{ obj.user.get_full_name }}</p>
+                        {% endif %}
 
-    {% for obj in object_list %}
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="card">
-                {% if obj.image %}
-                <img src='{{ obj.image.url }}' class='img-responsive' />
-                {% endif %}
-                <div class="caption post-detail-item">
-                    {% if obj.draft %}
-                    <h3>Staff only: Draft</h3>
-                    {% endif %}
-                    {% if obj.publish > today %}
-                    <h3>Staff Only: Future Post</h3>
-                    {% endif %}
-                    <h3>
-                        <a href='{{ obj.get_absolute_url }}'>{{ obj.title }}</a>
+                        <p class="card-description">
+                            <a href="{{ obj.get_absolute_url }}"> Read More
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="section">
+            <div class="row">
+                <div class="col-md-8 ml-auto mr-auto text-center">
+                    <span class="step-links">
+                        {% if object_list.has_previous %}
+                        <a
+                            href="?{{ page_request_var }}={{ object_list.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
+                        {% endif %}
 
-                        <small>{{ obj.publish }}</small>
+                        <span class="current">
+                            Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
+                        </span>
 
-                    </h3>
-                    {% if obj.user.get_full_name %}
-
-                    <p>Author: {{ obj.user.get_full_name }}</p>
-
-                    {% endif %}
-
-                    <p><a href="{{ obj.get_absolute_url }}" class="btn btn-primary" role="button">View</a></p>
-
-
+                        {% if object_list.has_next %}
+                        <a
+                            href="?{{ page_request_var }}={{ object_list.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">next</a>
+                        {% endif %}
+                    </span>
                 </div>
             </div>
         </div>
-        <hr />
     </div>
-
-    {% endfor %}
-
-    <div class="pagination">
-        <span class="step-links">
-            {% if object_list.has_previous %}
-            <a
-                href="?{{ page_request_var }}={{ object_list.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
-            {% endif %}
-
-            <span class="current">
-                Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
-            </span>
-
-            {% if object_list.has_next %}
-            <a
-                href="?{{ page_request_var }}={{ object_list.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">next</a>
-            {% endif %}
-        </span>
-    </div>
-
-
-
-
 </div>
+
 
 {% endblock content %}
