@@ -10,61 +10,79 @@ from django.contrib.auth import (
 User = get_user_model()
 
 
-class UserLoginForm(forms.Form):
-    username = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput)
+class LoginForm(forms.Form):
+    email = forms.EmailField(
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Email...'
+        })
+    )
 
-    def clean(self, *args, **kwargs):
-        username = self.cleaned_data.get("username")
-        password = self.cleaned_data.get("password")
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Password...'
+        })
+    )
 
-        # user_qs = User.objects.filter(username=username)
-        # if user_qs.count() == 1:
-        #     user = user_qs.first()
-        if username and password:
-            user = authenticate(username=username, password=password)
-            if not user:
-                raise forms.ValidationError("This user does not exist")
-            if not user.check_password(password):
-                raise forms.ValidationError("Incorrect passsword")
-            if not user.is_active:
-                raise forms.ValidationError("This user is not longer active.")
-        return super(UserLoginForm, self).clean(*args, **kwargs)
+    def __init__(self, request, *args, **kwargs):
+        self.request = request
+        super(LoginForm, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        request = self.request
+        data = self.cleaned_data
+        email = data.get("email")
+        password = data.get("password")
+        qs = User.objects.filter(email=email)
+        if qs.exists():
+            # user email is registered, check active/
+            not_active = qs.filter(is_active=False)
+            user = authenticate(request, username=email, password=password)
+            # print(user)
+        if user is None:
+            raise forms.ValidationError("Invalid credentials")
+        login(request, user)
+        self.user = user
+        return data
 
 
-class UserRegisterForm(forms.ModelForm):
-    email = forms.EmailField(label='Email address')
-    email2 = forms.EmailField(label='Confirm Email')
-    password = forms.CharField(widget=forms.PasswordInput)
+class RegisterForm(forms.ModelForm):
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'password'
+    }))
+    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Repite password'
+    }))
+
+    email = forms.EmailField(widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'email'
+    }))
+
+    full_name = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Nombre'
+    }))
 
     class Meta:
         model = User
-        fields = [
-            'username',
-            'email',
-            'email2',
-            'password'
-        ]
+        fields = ('full_name', 'email', 'password1', 'password2')
 
-    # def clean(self, *args, **kwargs):
-    #     email = self.cleaned_data.get('email')
-    #     email2 = self.cleaned_data.get('email2')
-    #     if email != email2:
-    #         raise forms.ValidationError("Emails must match")
-    #     email_qs = User.objects.filter(email=email)
-    #     if email_qs.exists():
-    #         raise forms.ValidationError("This email has already been registered")
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Passwords don't match")
+        return password2
 
-    #     return super(UserRegisterForm,self).clean(*args, **kwargs)
+    def save(self, commit=True):
 
-    def clean_email2(self):
-        email = self.cleaned_data.get('email')
-        email2 = self.cleaned_data.get('email2')
-        if email != email2:
-            raise forms.ValidationError("Emails must match")
-        email_qs = User.objects.filter(email=email)
-        if email_qs.exists():
-            raise forms.ValidationError(
-                "This email has already been registered")
-        return email
-
+        user = super(RegisterForm, self).save(commit=False)
+        user.set_password(self.cleaned_data["password1"])
+        # user.is_active = False
+        if commit:
+            user.save()
+        return user

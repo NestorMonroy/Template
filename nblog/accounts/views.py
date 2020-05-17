@@ -6,47 +6,50 @@ from django.contrib.auth import (
 
 )
 from django.shortcuts import render, redirect
+from django.utils.http import is_safe_url
+from django.views.generic import CreateView, FormView
 
-from .forms import UserLoginForm, UserRegisterForm
-
-
-def login_view(request):
-    # print(request.user.is_authenticated())
-    next = request.GET.get('next')
-    title = "Login"
-    form = UserLoginForm(request.POST or None)
-    if form.is_valid():
-        username = form.cleaned_data.get("username")
-        password = form.cleaned_data.get('password')
-        user = authenticate(username=username, password=password)
-        login(request, user)
-        if next:
-            return redirect(next)
-        return redirect("/")
-    return render(request, "accounts/form.html", {"form": form, "title": title})
+from .mixins import NextUrlMixin, RequestFormAttachMixin
+from .forms import LoginForm, RegisterForm
+from .signals import user_logged_in
 
 
-def register_view(request):
-    # print(request.user.is_authenticated())
-    next = request.GET.get('next')
-    title = "Register"
-    form = UserRegisterForm(request.POST or None)
-    if form.is_valid():
-        user = form.save(commit=False)
-        password = form.cleaned_data.get('password')
-        user.set_password(password)
-        user.save()
-        new_user = authenticate(username=user.username, password=password)
-        login(request, new_user)
-        if next:
-            return redirect(next)
-        return redirect("/")
+class LoginView(NextUrlMixin, RequestFormAttachMixin, FormView):
+    form_class = LoginForm
+    success_url = '/'
+    template_name = 'accounts/login.html'
+    default_next = '/'
 
-    context = {
-        "form": form,
-        "title": title
-    }
-    return render(request, "accounts/form.html", context)
+    def form_valid(self, form,):
+        request = self.request
+        next_ = request.GET.get('next')
+        next_post = request.POST.get('next')
+        redirect_path = next_ or next_post or None
+        email = form.cleaned_data.get("email")
+        password = form.cleaned_data.get("password")
+        user = authenticate(request, username=email, password=password)
+        if user is not None:
+            login(request, user)
+            user_logged_in.send(user.__class__, instance=user, request=request)
+            # print("nestor Login usuario 1")
+            # print(user)
+            # pendiente ya que esta regresando una nueva session key para cada usuario
+            # print(request.session.session_key)
+            try:
+                del request.session['guest_email_id']
+            except:
+                pass
+            if is_safe_url(redirect_path, request.get_host()):
+                return redirect(redirect_path)
+            else:
+                return redirect("/")
+        return super(LoginView, self).form_invalid(form)
+
+
+class RegisterView(CreateView):
+    form_class = RegisterForm
+    template_name = 'accounts/register.html'
+    success_url = '/login/'
 
 
 def logout_view(request):

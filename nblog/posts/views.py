@@ -24,6 +24,40 @@ from .models import Post
 from .forms import PostForm
 
 
+def post_list(request):
+    today = timezone.now().date()
+    queryset_list = Post.objects.active()  # .order_by("-timestamp")
+    if request.user.is_staff or request.user.is_superuser:
+        queryset_list = Post.objects.all()
+
+    query = request.GET.get("q")
+    if query:
+        queryset_list = queryset_list.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(user__first_name__icontains=query) |
+            Q(user__last_name__icontains=query)
+        ).distinct()
+    paginator = Paginator(queryset_list, 3)  # Show 25 contacts per page
+    page_request_var = "page"
+    page = request.GET.get(page_request_var)
+    try:
+        queryset = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        queryset = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        queryset = paginator.page(paginator.num_pages)
+    context = {
+        "object_list": queryset,
+        "title": "List",
+        "page_request_var": page_request_var,
+        "today": today,
+    }
+    return render(request, "posts/post_list.html", context)
+
+
 class PostNew(generic.CreateView):
     model = Post
     template_name = "posts/post_form.html"
@@ -34,25 +68,6 @@ class PostNew(generic.CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
-
-
-def post_create(request):
-    if not request.user.is_staff or not request.user.is_superuser:
-        raise Http404
-
-    form = PostForm(request.POST or None, request.FILES or None)
-    if form.is_valid():
-        instance = form.save(commit=False)
-        instance.user = request.user
-        # print(instance.publish)
-        instance.save()
-        # message success
-        messages.success(request, "Successfully Created")
-        return HttpResponseRedirect(instance.get_absolute_url())
-    context = {
-        "form": form,
-    }
-    return render(request, "posts/post_form.html", context)
 
 
 def post_detail(request, slug=None):
@@ -105,38 +120,18 @@ def post_detail(request, slug=None):
     return render(request, "posts/post_detail.html", context)
 
 
-def post_list(request):
-    today = timezone.now().date()
-    queryset_list = Post.objects.active()  # .order_by("-timestamp")
-    if request.user.is_staff or request.user.is_superuser:
-        queryset_list = Post.objects.all()
+class PostEdit(LoginRequiredMixin, generic.UpdateView):
+    model = Post
+    template_name = "posts/post_form.html"
+    context_object_name = 'obj'
+    form_class = PostForm
+    success_message = "Editado"
+    login_url = "login"
 
-    query = request.GET.get("q")
-    if query:
-        queryset_list = queryset_list.filter(
-            Q(title__icontains=query) |
-            Q(content__icontains=query) |
-            Q(user__first_name__icontains=query) |
-            Q(user__last_name__icontains=query)
-        ).distinct()
-    paginator = Paginator(queryset_list, 3)  # Show 25 contacts per page
-    page_request_var = "page"
-    page = request.GET.get(page_request_var)
-    try:
-        queryset = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        queryset = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        queryset = paginator.page(paginator.num_pages)
-    context = {
-        "object_list": queryset,
-        "title": "List",
-        "page_request_var": page_request_var,
-        "today": today,
-    }
-    return render(request, "posts/post_list.html", context)
+    def form_valid(self, form):
+        form.instance.user_modify = self.request.user.id
+        # print(self.request.user.id)
+        return super().form_valid(form)
 
 
 def post_update(request, slug=None):

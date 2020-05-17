@@ -48,6 +48,19 @@ def upload_image_path(instance, filename):
     )
 
 
+def upload_image_account_path(instance, filename):
+    # print(instance)
+    # print(filename)
+    new_filename = random.randint(1, 100000000)
+    name, ext = get_filename_ext(filename)
+    final_filename = '{new_filename}{ext}'.format(
+        new_filename=new_filename, ext=ext)
+    return "post/accounts/{new_filename}/{final_filename}".format(
+        new_filename=new_filename,
+        final_filename=final_filename
+    )
+
+
 def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 

@@ -30,14 +30,13 @@
                                     value="{% if obj %} {{ obj.title }} {% endif %}">
                             </div>
                             <div class="form-group label-floating">
-                                <label class="form-control-label bmd-label-floating" for="id_content">
-                                    Descripcion</label>
-                                <textarea class="form-control" name="content" rows="5" id="id_content"
-                                    value="{% if obj %} {{ obj.content }} {% endif %}"></textarea>
+                                <input class="form-control" name="content" rows="5" id="id_content"
+                                    value="{% if obj %} {{ obj.content }} {% endif %}"></input>
                             </div>
                             <div>
                                 <label for="id_image">Image:</label>
-                                <input type="file" name="image" accept="image/*" id="id_image">
+                                <input type="file" name="image" accept="image/*"
+                                    value="{% if obj %} {{ obj.image }} {% endif %}" id="id_image">
                             </div>
                             <div class="form-check">
                                 <label class="form-check-label">

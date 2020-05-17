@@ -5,6 +5,8 @@ from .models import Post
 
 
 class PostForm(forms.ModelForm):
+    content = forms.Textarea()
+    #forms.CharField(label=label,required=False, widget=forms.Textarea, initial = initial)
     publish = forms.DateField()
 
     class Meta:
