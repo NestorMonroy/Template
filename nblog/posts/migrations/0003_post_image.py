@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='post',
             name='image',
-            field=models.ImageField(blank=True, height_field='height_field', null=True, upload_to=posts.models.upload_location, width_field='width_field'),
+            field=models.ImageField(blank=True, height_field='height_field', null=True,
+                                    upload_to=posts.models.upload_image_path, width_field='width_field'),
         ),
     ]
