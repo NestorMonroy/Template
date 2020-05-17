@@ -10,7 +10,6 @@ from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 
 
-
 from markdown_deux import markdown
 from comments.models import Comment
 
@@ -40,10 +39,29 @@ def upload_location(instance, filename):
     return "%s/%s" % (new_id, filename)
 
 
+class Category(models.Model):
+    name = models.CharField('Nombre de la categoría', max_length=255)
+
+    def __str__(self):
+        """str."""
+        return self.name
+
+
+class Tag(models.Model):
+    name = models.CharField('Nombre de etiqueta', max_length=255)
+
+    def __str__(self):
+        """str."""
+        return self.name
+
+
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=120)
     slug = models.SlugField(unique=True)
+    category = models.ForeignKey(
+        Category, verbose_name='Categoria', on_delete=models.PROTECT, blank=True, null=True)
+    tag = models.ManyToManyField(Tag, blank=True, verbose_name='Tags')
     image = models.ImageField(upload_to=upload_location,
                               null=True,
                               blank=True,
@@ -52,17 +70,30 @@ class Post(models.Model):
     height_field = models.IntegerField(default=0)
     width_field = models.IntegerField(default=0)
     content = models.TextField()
+    is_publick = models.BooleanField('¿Está abierto al público?', default=True)
     draft = models.BooleanField(default=False)
     publish = models.DateField(auto_now=False, auto_now_add=False)
-    # models.TimeField(null=True, blank=True) #assume minutes
+    description = models.TextField('Descripción del articulo', blank=True)
     read_time = models.IntegerField(default=0)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
+    created_at = models.DateTimeField(
+        'Fecha de creación', default=timezone.now)
 
     objects = PostManager()
 
     def __str__(self):
         return self.title
+
+    def get_description(self):
+        if self.description:
+            return self.description
+        else:
+            description = 'Categoria:{0} Etiquetas:{1}'
+            category = self.category
+            tags = ' '.join(tag.name for tag in self.tag.all())
+            description = description.format(category, tags)
+            return description
 
     def get_absolute_url(self):
         return reverse("posts:detail", kwargs={"slug": self.slug})
@@ -77,6 +108,22 @@ class Post(models.Model):
         content = self.content
         markdown_text = markdown(content)
         return mark_safe(markdown_text)
+
+    def get_next(self):
+        next_post = Post.objects.filter(
+            is_publick=True, created_at__gt=self.created_at
+        ).order_by('-created_at')
+        if next_post:
+            return next_post.last()
+        return None
+
+    def get_prev(self):
+        prev_post = Post.objects.filter(
+            is_publick=True, created_at__lt=self.created_at
+        ).order_by('-created_at')
+        if prev_post:
+            return prev_post.first()
+        return None
 
     @property
     def comments(self):

@@ -12,6 +12,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.utils import timezone
 
@@ -22,27 +23,17 @@ from comments.models import Comment
 from .models import Post
 from .forms import PostForm
 
-# Create your views here.
 
+class PostNew(generic.CreateView):
+    model = Post
+    template_name = "posts/post_form.html"
+    context_object_name = "obj"
+    form_class = PostForm
+    success_message = "Categoria Creada Satisfactoriamente"
 
-# class PostNew(generic.CreateView):
-#     model=Post
-#     template_name="posts/post_form.html"
-#     context_object_name = "obj"
-#     form_class=PostForm
-#     # success_url=reverse_lazy("inv:categoria_list")
-#     success_message="Categoria Creada Satisfactoriamente"
-    
-#     def get_content_object_url(self, obj):
-#         try:
-#             return obj.content_object.get_api_url()
-#         except:
-#             return None
-#     def form_valid(self, form):
-#         form.instance.user_account = self.request.user
-#         return super().form_valid(form)
-
-
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 
 def post_create(request):
@@ -53,7 +44,7 @@ def post_create(request):
     if form.is_valid():
         instance = form.save(commit=False)
         instance.user = request.user
-        print(instance.publish)
+        # print(instance.publish)
         instance.save()
         # message success
         messages.success(request, "Successfully Created")
