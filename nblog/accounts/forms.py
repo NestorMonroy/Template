@@ -11,40 +11,26 @@ User = get_user_model()
 
 
 class LoginForm(forms.Form):
-    email = forms.EmailField(
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Email...'
-        })
-    )
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput)
 
-    password = forms.CharField(
-        widget=forms.PasswordInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Password...'
-        })
-    )
+    def clean(self, *args, **kwargs):
+        username = self.cleaned_data.get("username")
+        password = self.cleaned_data.get("password")
 
-    def __init__(self, request, *args, **kwargs):
-        self.request = request
-        super(LoginForm, self).__init__(*args, **kwargs)
+        # user_qs = User.objects.filter(username=username)
+        # if user_qs.count() == 1:
+        #     user = user_qs.first()
+        if username and password:
+            user = authenticate(username=username, password=password)
+            if not user:
+                raise forms.ValidationError("This user does not exist")
+            if not user.check_password(password):
+                raise forms.ValidationError("Incorrect passsword")
+            if not user.is_active:
+                raise forms.ValidationError("This user is not longer active.")
+        return super(LoginForm, self).clean(*args, **kwargs)
 
-    def clean(self):
-        request = self.request
-        data = self.cleaned_data
-        email = data.get("email")
-        password = data.get("password")
-        qs = User.objects.filter(email=email)
-        if qs.exists():
-            # user email is registered, check active/
-            not_active = qs.filter(is_active=False)
-            user = authenticate(request, username=email, password=password)
-            # print(user)
-        if user is None:
-            raise forms.ValidationError("Invalid credentials")
-        login(request, user)
-        self.user = user
-        return data
 
 
 class RegisterForm(forms.ModelForm):
@@ -62,14 +48,14 @@ class RegisterForm(forms.ModelForm):
         'placeholder': 'email'
     }))
 
-    full_name = forms.CharField(widget=forms.TextInput(attrs={
+    username = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'Nombre'
     }))
 
     class Meta:
         model = User
-        fields = ('full_name', 'email', 'password1', 'password2')
+        fields = ('username', 'email', 'password1', 'password2')
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")

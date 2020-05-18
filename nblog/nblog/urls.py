@@ -20,13 +20,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
 
-from accounts.views import (LoginView, RegisterView, logout_view)
+from accounts.views import (login_view, RegisterView, logout_view)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^comments/', include(('comments.urls', 'comments'), namespace='comments')),
     url(r'^register/', RegisterView.as_view(), name='register'),
-    url(r'^login/', LoginView.as_view(), name='login'),
+    url(r'^login/', login_view, name='login'),
     url(r'^logout/', logout_view, name='logout'),
     url(r'^', include(('posts.urls', 'posts'), namespace='posts')),
 

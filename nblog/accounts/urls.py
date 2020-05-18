@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 # from products.views import UserProductHistoryView
-from .views import (LoginView, RegisterView)
+# from .views import (LoginView, RegisterView)
 
 urlpatterns = [
     # url(r'^$', LoginView.as_view(), name='login'),
