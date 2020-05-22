@@ -24,17 +24,26 @@ from accounts.views import (login_view, RegisterView, logout_view)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url(
+        r'^api-auth/',
+        include('rest_framework.urls', namespace='rest_framework')
+    ),
+    url(
+        r'^', include('puppies.api.urls')
+    ),
+
     url(r'^comments/', include(('comments.urls', 'comments'), namespace='comments')),
     url(r'^register/', RegisterView.as_view(), name='register'),
-    url(r'^login/', login_view, name='login'),
-    url(r'^logout/', logout_view, name='logout'),
-    url(r'^', include(('posts.urls', 'posts'), namespace='posts')),
 
-    url(r'^api/users/', include(('accounts.api.urls',
-                                 'users-api'), namespace='users-api')),
-    url(r'^api/comments/', include(('comments.api.urls',
-                                    'comments-api'), namespace='comments-api')),
-    url(r'^api/posts/', include(('posts.api.urls', 'posts-api'), namespace='posts-api')),
+    # url(r'^login/', login_view, name='login'),
+    # url(r'^logout/', logout_view, name='logout'),
+    # url(r'^', include(('posts.urls', 'posts'), namespace='posts')),
+
+    # url(r'^api/users/', include(('accounts.api.urls',
+    #                              'users-api'), namespace='users-api')),
+    # url(r'^api/comments/', include(('comments.api.urls',
+    #                                 'comments-api'), namespace='comments-api')),
+    # url(r'^api/posts/', include(('posts.api.urls', 'posts-api'), namespace='posts-api')),
 ]
 
 
