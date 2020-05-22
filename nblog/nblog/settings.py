@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'compressor',
     'rest_framework',
+    'puppies',
 
     'accounts',
     'posts',
@@ -151,3 +152,11 @@ MEDIA_ROOT = os.path.join(os.path.dirname(
 
 PROTECTED_ROOT = os.path.join(os.path.dirname(
     BASE_DIR), "static_cdn", "protected_media")
+
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [],
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
+}
