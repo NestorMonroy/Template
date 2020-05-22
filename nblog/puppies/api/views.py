@@ -16,11 +16,16 @@ def get_delete_update_puppy(request, pk):
         serializer = PuppySerializer(puppy)
         return Response(serializer.data)
 
-    elif request.method == 'DELETE':
-        return Response({})
+    if request.method == 'PUT':
+        serializer = PuppySerializer(puppy, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == 'PUT':
-        return Response({})
+    if request.method == 'DELETE':
+        puppy.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET', 'POST'])
@@ -43,3 +48,14 @@ def get_post_puppies(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+
+# def function(Var1, Var2):
+#     if Var2 == 0 and Var1 > 0:
+#         print("Result One")
+#     elif Var2 == 1 and Var1 > 0:
+#         print("Result Two")
+#     elif Var1 < 1:
+#         print("Result Three")
+#     return Var1 - 1
+# function(1, 1)

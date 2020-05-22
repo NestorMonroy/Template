@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from puppies.models import Puppy
+from ..models import Puppy
 
 
 class PuppySerializer(serializers.ModelSerializer):

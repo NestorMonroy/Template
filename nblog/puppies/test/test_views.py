@@ -3,8 +3,8 @@ from rest_framework import status
 from django.test import TestCase, Client
 from django.urls import reverse
 
-from .models import Puppy
-from .api.serializers import PuppySerializer
+from ..models import Puppy
+from ..api.serializers import PuppySerializer
 
 client = Client()
 
@@ -45,7 +45,7 @@ class GetSinglePuppyTest(TestCase):
 
     def test_get_valid_single_puppy(self):
         response = client.get(
-            reversed('get_delete_update_puppy', kwargs={'pk': self.rambo.pk})
+            reverse('get_delete_update_puppy', kwargs={'pk': self.rambo.pk})
         )
         puppy = Puppy.objects.get(pk=self.rambo.pk)
         serializer = PuppySerializer(puppy)
@@ -54,7 +54,7 @@ class GetSinglePuppyTest(TestCase):
 
     def test_get_invalid_single_puppy(self):
         response = client.get(
-            reverse('get_delete_update_pupy', kwargs={'pk': 30})
+            reverse('get_delete_update_puppy', kwargs={'pk': 30})
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -62,13 +62,14 @@ class GetSinglePuppyTest(TestCase):
 class CreateNewPuppyTest(TestCase):
 
     def setUp(self):
+
         self.valid_payload = {
             'name': 'Muffin',
             'age': 4,
             'breed': 'Pamerion',
             'color': 'White'
         }
-        self.valid_payload = {
+        self.invalid_payload = {
             'name': '',
             'age': 4,
             'breed': 'Pamerion',
@@ -79,7 +80,7 @@ class CreateNewPuppyTest(TestCase):
         response = client.post(
             reverse('get_post_puppies'),
             data=json.dumps(self.valid_payload),
-            content_type='aplication/json'
+            content_type='application/json'
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -87,7 +88,7 @@ class CreateNewPuppyTest(TestCase):
         response = client.post(
             reverse('get_post_puppies'),
             data=json.dumps(self.invalid_payload),
-            content_type='aplication/json'
+            content_type='application/json'
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -107,7 +108,7 @@ class UpdateSinglePuppyTest(TestCase):
             'breed': 'Labrador',
             'color': 'Black'
         }
-        self.valid_payload = {
+        self.invalid_payload = {
             'name': '',
             'age': 4,
             'breed': 'Pamerion',
@@ -124,7 +125,7 @@ class UpdateSinglePuppyTest(TestCase):
 
     def test_invalid_puppy(self):
         response = client.put(
-            reverse('get_delete_puppy', kwargs={'pk': self.muffin.pk}),
+            reverse('get_delete_update_puppy', kwargs={'pk': self.muffin.pk}),
             data=json.dumps(self.invalid_payload),
             content_type='application/json'
         )
