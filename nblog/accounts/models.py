@@ -9,22 +9,22 @@ from django.contrib.auth.models import PermissionsMixin, BaseUserManager
 class UserProfileManager(BaseUserManager):
     """Manager for user profiles"""
 
-    def create_user(self, email, name, password=None):
+    def create_user(self, email, full_name, password=None):
         """Create a new user profile"""
         if not email:
             raise ValueError('Users must have an email address')
 
         email = self.normalize_email(email)
-        user = self.model(email=email, name=name,)
+        user = self.model(email=email, full_name=full_name,)
 
         user.set_password(password)
         user.save(using=self._db)
 
         return user
 
-    def create_superuser(self, email, name, password):
+    def create_superuser(self, email, full_name, password):
         """Create and save a new superuser with given details"""
-        user = self.create_user(email, name, password)
+        user = self.create_user(email, full_name, password)
 
         user.is_superuser = True
         user.is_staff = True
@@ -54,15 +54,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     # ['full_name'] #python manage.py createsuperuser
     REQUIRED_FIELDS = ['full_name']
 
+    objects = UserProfileManager()
+
     def __str__(self):
-        return self.email
-
-    def get_full_name(self):
-        if self.full_name:
-            return self.full_name
-        return self.email
-
-    def get_short_name(self):
         return self.email
 
     def has_perm(self, perm, obj=None):
@@ -70,17 +64,3 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def has_module_perms(self, app_label):
         return True
-
-    @property
-    def is_staff(self):
-        if self.is_admin:
-            return True
-        return self.is_staff
-
-    @property
-    def is_admin(self):
-        return self.is_admin
-
-    @property
-    def active(self):
-        return self.is_active
