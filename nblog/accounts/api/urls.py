@@ -1,12 +1,7 @@
-from django.conf.urls import url
-from django.contrib import admin
-
-from .views import (
-    UserCreateAPIView,
-    UserLoginAPIView
-    )
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from accounts.api import views
 
 urlpatterns = [
-    url(r'^login/$', UserLoginAPIView.as_view(), name='login'),
-    url(r'^register/$', UserCreateAPIView.as_view(), name='register'),
+    path('hello-view/', views.UserLoginAPIView.as_view()),
 ]
