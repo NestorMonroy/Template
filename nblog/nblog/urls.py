@@ -35,7 +35,7 @@ urlpatterns = [
 
     # url(r'^', include(('posts.urls', 'posts'), namespace='posts')),
 
-    url(r'^api/users/', include(('accounts.api.urls',
+    path('', include(('accounts.api.urls',
                                  'users-api'), namespace='users-api')),
     # url(r'^api/comments/', include(('comments.api.urls',
     #                                 'comments-api'), namespace='comments-api')),
