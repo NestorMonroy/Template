@@ -1,10 +1,12 @@
 
 from django.shortcuts import resolve_url
+from django.contrib.auth.decorators import login_required
 
 from django.http import HttpResponseRedirect, QueryDict
 from django.conf import settings
 
 from django.views.generic.edit import FormView
+from django.views.generic import View, ListView, DetailView
 
 from django.views.decorators.debug import sensitive_post_parameters
 from django.contrib.sites.shortcuts import get_current_site
@@ -26,6 +28,8 @@ from django.contrib.auth import (
     logout as auth_logout, update_session_auth_hash,
 )
 
+from .. import models
+from ..forms import LoginForm, SignUpForm, ProfileFrontEndForm, UpdatePasswordForm, ForgotPasswordForm
 
 class SuccessURLAllowedHostsMixin:
     success_url_allowed_hosts = set()
@@ -95,3 +99,50 @@ class LoginView(SuccessURLAllowedHostsMixin, FormView):
             **(self.extra_context or {})
         })
         return context
+
+
+@method_decorator(login_required, name='dispatch')
+class UserDashboardView(ListView):
+    template_name = 'accounts/dashboard.html'
+    model = models.Profile
+
+    def get_queryset(self):
+        profile = self.request.user.profile
+        return models.Profile.objects.filter()[:5]
+
+    def get_context_data(self, **kwargs):
+        context = super(UserDashboardView, self).get_context_data(**kwargs)
+        user = self.request.user
+        profile = user.profile
+        context.update(locals())
+        return context
+
+
+
+def register_view(request):
+    user = request.user
+    if user.is_authenticated:
+        return HttpResponseRedirect('/')
+    form_title, form_button = 'Δημιουργια Λογαριασμου', 'Δημιουργια'
+    text = '''Δημιουργώντας λογαριασμό στο κατάστημα μας, θα μπορείτε να ολοκληρλωσετε πιο εύκολα την διαδικασία παραγγελίας,
+              να προσθέσετε προϊόντα στο λιστα Επιθυμιών και πολλά άλλα.'''
+    form = SignUpForm(request.POST or None)
+    if form.is_valid():
+        user_ = form.save()
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password1')
+        user = authenticate(username=username, password=password)
+        if user:
+            login(request, user)
+            send_mail('Ευχαριστουμε που εγγραφήκατε στο optika-kotsalis.',
+                      f'To username σας είναι {username}',
+                      SITE_EMAIL,
+                      [username, ],
+                      fail_silently=True
+                      )
+            return redirect('user_profile')
+    else:
+        messages.warning(request, form.errors)
+    context = locals()
+    return render(request, 'frontend/user_views/register.html', context)
+

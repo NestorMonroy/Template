@@ -4,5 +4,7 @@ from rest_framework.routers import DefaultRouter
 from accounts.api import views
 
 urlpatterns = [
-    url(r'^login/$', views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
+    url(r'^login/$', views.LoginView.as_view(), name='login'),
+    url(r'^profile/$', views.UserDashboardView.as_view(), name='profile'),
+
 ]

@@ -5,7 +5,7 @@ from django.contrib.auth import (
     login,
     logout,
 )
-
+from . import models
 
 User = get_user_model()
 
@@ -72,3 +72,15 @@ class RegisterForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+
+class ProfileForm(forms.ModelForm):
+    user = forms.ModelChoiceField(queryset=User.objects.filter(is_staff=False), widget=forms.HiddenInput(), required=False)
+
+    class Meta:
+        model = models.Profile
+        fields = ('user', 'bio', 'city', 'avatar')
+
+
+
