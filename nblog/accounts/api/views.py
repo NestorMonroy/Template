@@ -146,7 +146,7 @@ def register_view(request):
                       [username, ],
                       fail_silently=True
                       )
-            return redirect('user_profile')
+            return redirect('accounts:user_profile')
     else:
         messages.warning(request, form.errors)
     context = locals()

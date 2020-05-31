@@ -8,71 +8,53 @@
                 <h1>Completa tus datos</h1>
             </div>
 
-            <div class='container'>
-                <div class='row'>
-                    <div class='col ml-auto mr-auto'>
-                        <div class="card">
-                            <form method='POST'> {% csrf_token %}
-                                <div class="card-body">
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="material-icons">face</i>
-                                                </span>
-                                            </div>
-                                            {{ form.full_name}}
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="material-icons">mail</i>
-                                                </span>
-                                            </div>
-                                            {{ form.email}}
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="material-icons">lock_outline</i>
-                                                </span>
-                                            </div>
-                                            {{ form.password1}}
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="material-icons">lock_outline</i>
-                                                </span>
-                                            </div>
-                                            {{ form.password2}}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-check" style="padding-left: 4rem;">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="checkbox" value="" checked>
-                                        <span class="form-check-sign">
-                                            <span class="check"></span>
-                                        </span>
-                                        Acepto <a href="">terminos y condiciones</a>.
-                                    </label>
-                                </div>
-                                <div class="text-center">
-                                    <button type='submit' class='btn btn-tpe2'>Crear cuenta</button>
-                                </div>
-                            </form>
+            <div class="breadcrumb-section">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="page-title">
+                                <h2>Δημιουργια Λογαριασμου</h2>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <nav aria-label="breadcrumb" class="theme-breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{% url 'homepage' %}">Αρχικη Σελιδα</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Δημιουργία Λογαριασμου</li>
+                                </ol>
+                            </nav>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+            <!-- breadcrumb End -->
+
+
+            <!--section start-->
+            <section class="register-page section-b-space">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h3>Συμπληρωστε την φορμα</h3>
+                            <div class="theme-card">
+                                <form class="theme-form" method="post">{% csrf_token %}
+                                   {{ form }}
+                                    <br> <br>
+                                    <button type="submit" class="btn btn-solid">Δημιουργία λογαριασμού</button>
+
+                                    <br>
+
+                                </form>
+                                <br><br>
+                                <p>Για να συνδεθείτε πατήστε <a href="{% url 'accounts:user_login' %}" > εδω.</a></p>
+                                <br>
+                                <a style="display: inline;margin-top: 300px;" href="{% url 'social:begin' 'facebook' %}" class="btn btn-solid btn-info right">Σύνδεση μεσω facebοοκ</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+                    </div>
+                </div>
 </div>
 {% endblock content %}

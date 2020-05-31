@@ -47,6 +47,17 @@ def upload_image_path(instance, filename):
         final_filename=final_filename
     )
 
+def upload_icon_path(instance, filename):
+    # print(instance)
+    # print(filename)
+    new_filename = random.randint(1, 100000000)
+    name, ext = get_filename_ext(filename)
+    final_filename = '{new_filename}{ext}'.format(
+        new_filename=new_filename, ext=ext)
+    return "comment_thumbnail/{new_filename}/{final_filename}".format(
+        new_filename=new_filename,
+        final_filename=final_filename
+    )
 
 def upload_image_account_path(instance, filename):
     # print(instance)

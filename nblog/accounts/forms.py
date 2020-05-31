@@ -1,9 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
-from django.contrib.auth.models import User
 
 from . import models
-
 
 
 class BaseForm(forms.Form):
@@ -35,8 +33,9 @@ class SignUpForm(BaseForm, UserCreationForm):
     username = forms.EmailField(required=True, label='Email')
 
     class Meta:
-        model = User
-        fields = ['username', 'first_name', 'last_name', 'password1', 'password2', 'email']
+        model = models.User
+        fields = ['username', 'first_name', 'last_name',
+                  'password1', 'password2', 'email']
 
     def clean_email(self):
         email = self.cleaned_data['username']
@@ -61,19 +60,22 @@ class SignUpFormEng(SignUpForm):
 
 
 class ProfileForm(BaseForm, forms.ModelForm):
-    user = forms.ModelChoiceField(queryset=User.objects.filter(is_staff=False), widget=forms.HiddenInput(), required=False)
+    user = forms.ModelChoiceField(queryset=models.User.objects.filter(
+        is_staff=False), widget=forms.HiddenInput(), required=False)
 
     class Meta:
         model = models.Profile
-        fields = ['user', 'bio', 'city', 'avatar',]
+        fields = ['user', 'bio', 'city', 'avatar', ]
 
 
 class ProfileFrontEndForm(BaseForm, forms.ModelForm):
-    user = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
+    user = forms.ModelChoiceField(
+        queryset=models.User.objects.all(), widget=forms.HiddenInput())
 
     class Meta:
         model = models.Profile
-        fields = ['user', 'bio', 'city', 'avatar',]
+        fields = ['user', 'bio', 'city', 'avatar', ]
+
 
 class ProfileFrontEndEngForm(ProfileFrontEndForm):
 

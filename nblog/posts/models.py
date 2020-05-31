@@ -1,7 +1,9 @@
-
+import os
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 
+
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.db import models
 from django.db.models.signals import pre_save
 
@@ -14,15 +16,10 @@ from django.utils.text import slugify
 from markdown_deux import markdown
 from comments.models import Comment
 
-from .utils import get_read_time, upload_image_path, unique_slug_generator
+from .utils import get_read_time, upload_image_path, unique_slug_generator, upload_icon_path
 
 from django.contrib.auth.models import User
-
-
-class PostManager(models.Manager):
-    def active(self, *args, **kwargs):
-        # Post.objects.all() = super(PostManager, self).all()
-        return super(PostManager, self).filter(draft=False).filter(publish__lte=timezone.now())
+from .managers import PostQuerySet
 
 
 class Category(models.Model):
@@ -56,7 +53,7 @@ class Post(models.Model):
     height_field = models.IntegerField(default=0)
     width_field = models.IntegerField(default=0)
     content = models.TextField()
-    is_publick = models.BooleanField('¿Está abierto al público?', default=True)
+    is_public = models.BooleanField('¿Está abierto al público?', default=True)
     draft = models.BooleanField(default=False)
     publish = models.DateField(auto_now=False, auto_now_add=False)
     description = models.TextField('Descripción del articulo', blank=True)
@@ -66,7 +63,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(
         'Fecha de creación', default=timezone.now)
 
-    objects = PostManager()
+    objects = PostQuerySet.as_manager()
 
     def __str__(self):
         return self.title
@@ -130,3 +127,39 @@ def pre_save_post_receiver(sender, instance, *args, **kwargs):
 
 
 pre_save.connect(pre_save_post_receiver, sender=Post)
+
+class File(models.Model):
+    """Adjuntos asociados con artículos y comentarios"""
+    title = models.CharField('título', max_length=255, blank=True)
+    src = models.FileField('Adjunto archivo', upload_to='files/%Y/%m/%d/')
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+    created_at = models.DateTimeField('Fecha de creación', default=timezone.now)
+
+    def __str__(self):
+        return 'modelo:{} pk:{} url:{}'.format(self.content_type, self.object_id, self.src.url)
+
+    def get_filename(self):
+        """Obtener el nombre del archivo"""
+        return os.path.basename(self.src.url)
+
+
+class Comment(models.Model):
+    """Comentario"""
+    name = models.CharField('nombre', max_length=255, default='Sin nombre')
+    text = models.TextField('comentario')
+    icon = models.ImageField(
+        'miniatura', upload_to='comment_thumbnail/%Y/%m/%d/', blank=True, null=True)
+    target = models.ForeignKey(
+        Post, on_delete=models.CASCADE, verbose_name='Artículo objetivo')
+    files = GenericRelation('File')
+    created_at = models.DateTimeField(
+        'Fecha de creación', default=timezone.now)
+
+    def __str__(self):
+        return self.text[:10]
+
+    def get_filename(self):
+        """Obtener el nombre del archivo"""
+        return os.path.basename(self.file.url)
