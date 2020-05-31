@@ -1,9 +1,13 @@
 
 from django.shortcuts import resolve_url
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, reverse, render, HttpResponseRedirect, get_object_or_404
 
 from django.http import HttpResponseRedirect, QueryDict
 from django.conf import settings
+from django.contrib.auth import login, authenticate
+from django.core.mail import send_mail
+
 
 from django.views.generic.edit import FormView
 from django.views.generic import View, ListView, DetailView
@@ -13,6 +17,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.forms import (
     AuthenticationForm, PasswordChangeForm, PasswordResetForm, SetPasswordForm,
 )
+from django.contrib import messages
 
 from django.utils.http import (
     url_has_allowed_host_and_scheme, urlsafe_base64_decode,
@@ -30,6 +35,9 @@ from django.contrib.auth import (
 
 from .. import models
 from ..forms import LoginForm, SignUpForm, ProfileFrontEndForm, UpdatePasswordForm, ForgotPasswordForm
+
+SITE_EMAIL = settings.SITE_EMAIL
+
 
 class SuccessURLAllowedHostsMixin:
     success_url_allowed_hosts = set()
@@ -118,14 +126,12 @@ class UserDashboardView(ListView):
         return context
 
 
-
 def register_view(request):
     user = request.user
     if user.is_authenticated:
         return HttpResponseRedirect('/')
-    form_title, form_button = 'Δημιουργια Λογαριασμου', 'Δημιουργια'
-    text = '''Δημιουργώντας λογαριασμό στο κατάστημα μας, θα μπορείτε να ολοκληρλωσετε πιο εύκολα την διαδικασία παραγγελίας,
-              να προσθέσετε προϊόντα στο λιστα Επιθυμιών και πολλά άλλα.'''
+    form_title, form_button = 'Crear una cuenta', 'Creación'
+    text = '''Creando una cuenta en nuestro blog'''
     form = SignUpForm(request.POST or None)
     if form.is_valid():
         user_ = form.save()
@@ -134,8 +140,8 @@ def register_view(request):
         user = authenticate(username=username, password=password)
         if user:
             login(request, user)
-            send_mail('Ευχαριστουμε που εγγραφήκατε στο optika-kotsalis.',
-                      f'To username σας είναι {username}',
+            send_mail('Gracias por registrate',
+                      f'Tu username es {username}',
                       SITE_EMAIL,
                       [username, ],
                       fail_silently=True
@@ -144,5 +150,4 @@ def register_view(request):
     else:
         messages.warning(request, form.errors)
     context = locals()
-    return render(request, 'frontend/user_views/register.html', context)
-
+    return render(request, 'accounts/register.html', context)

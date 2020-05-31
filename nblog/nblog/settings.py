@@ -57,8 +57,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'nblog.urls'
-AUTH_USER_MODEL = 'accounts.User'
 
 TEMPLATES = [
     {
@@ -173,6 +171,12 @@ MARKDOWN_DEUX_STYLES = {
 }
 
 
-LOGIN_URL = "/login/"
-LOGIN_REDIRECT_URL = "/profile/"
-LOGOUT_REDIRECT_URL = "/"
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'user_profile'
+LOGOUT_URL = 'logout'
+LOGOUT_REDIRECT_URL = 'login'
+
+SITE_EMAIL = 'nestor.monroy.90@gmail.com'
+
+ROOT_URLCONF = 'nblog.urls'
+AUTH_USER_MODEL = 'accounts.User'
