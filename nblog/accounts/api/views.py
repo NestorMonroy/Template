@@ -37,7 +37,7 @@ from django.contrib.auth import (
 from .. import models
 from ..forms import LoginForm, SignUpForm, ProfileFrontEndForm, UpdatePasswordForm, ForgotPasswordForm, RegisterForm, Step1Form, Step2Form
 from ..emails import send_password_reset_email, send_account_activate_email
-from .decorators import anonymous_required
+from ..decorators import anonymous_required
 
 SITE_EMAIL = settings.SITE_EMAIL
 
@@ -158,8 +158,7 @@ def register_view(request):
 
 
 def registerHandler(request):
-    if settings.SIGN_UP_LOCKED:
-        return render(request, 'registration/disabled.html')
+
     form = None
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -195,7 +194,7 @@ def registerHandler(request):
                 return HttpResponseRedirect(continue_url)
             return HttpResponseRedirect('/register/step-1')
     else:
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             return HttpResponseRedirect('/')
         else:
             form = RegisterForm()

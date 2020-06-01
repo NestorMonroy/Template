@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'^profile/$', views.UserDashboardView.as_view(), name='user_profile'),
     url(r'^register/step-1$', views.step1Handler, name='register-step-1'),
     url(r'^register/step-2$', views.step2Handler, name='register-step-2'),
-    url(r'^register$', views.registerHandler, name='register'),
+    url(r'^register/', views.registerHandler, name='register'),
     url(r'^activate/(?P<token>.+)$', views.activeAccountHandler, name='activate'),
     url(r'^logout$', views.logoutHandler, name='logout'),
     url(r'^reset_password/(?P<token>.+)$',

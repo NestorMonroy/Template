@@ -1,9 +1,9 @@
 {% url 'posts:list' as home_url %}
 {% url 'posts:create' as new_post %}
 
-{% url 'login' as login_url %}
-{% url 'logout' as logout_url %}
-{% url 'register' as register_url %}
+{% url 'accounts:user_login' as login_url %}
+{% url 'accounts:logout' as logout_url %}
+{% url 'accounts:register' as register_url %}
 
 <nav class="navbar navbar-color-on-scroll navbar-transparent    fixed-top  navbar-expand-lg " color-on-scroll="100"
     id="sectionsNav">
