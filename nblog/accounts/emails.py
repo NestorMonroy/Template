@@ -1,5 +1,5 @@
 from django.core.mail import EmailMessage
-from django.core.urlresolvers import reverse
+from django.shortcuts import redirect, reverse
 from django.conf import settings
 
 
@@ -14,7 +14,7 @@ def send_password_reset_email(request, token):
     Thanks,
     The My Drink Nation team
     %s
-    """ % (request.build_absolute_uri(reverse('user:reset-password', args=(token.token,))), request.build_absolute_uri(reverse('core:home')))
+    """ % (request.build_absolute_uri(reverse('accounts:reset-password', args=(token.token,))), request.build_absolute_uri(reverse('core:home')))
     msg.from_email = settings.EMAIL_FROM_EMAIL
     msg.to = [token.user.email]
     msg.send()
