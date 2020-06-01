@@ -4,7 +4,7 @@
 
 {% block title %}Step 2{% endblock %}
 
-{% block page %}
+{% block content %}
 <div class="col-xs-12 col-sm-8 col-centered">
   <br>
   <div class="page-header text-center">
@@ -16,7 +16,7 @@
   <div>
     <div class="panel panel-default">
       <div class="panel-body">
-        <form create-card-form submit="true" name="form" action="{% url 'user:register-step-2' %}" method="post">
+        <form create-card-form submit="true" name="form" action="{% url 'accounts:register-step-2' %}" method="post">
           {% csrf_token %}
           {{ form.non_field_errors }}
           <div create-card-form-body></div>

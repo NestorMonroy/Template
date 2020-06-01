@@ -133,24 +133,39 @@ def register_view(request):
     user = request.user
     if user.is_authenticated:
         return HttpResponseRedirect('/')
-    form_title, form_button = 'Crear una cuenta', 'Creación'
-    text = '''Creando una cuenta en nuestro blog'''
+    form_title, form_button = 'Create new Account', 'Create'
+    text = '''Creating new account to our store you can do the checkout process more easy,
+                add items to wishlist and many more.'''
     form = SignUpForm(request.POST or None)
     if form.is_valid():
         user_ = form.save()
+        email = form.cleaned_data.get('email')
         username = form.cleaned_data.get('username')
         password = form.cleaned_data.get('password1')
-        user = authenticate(username=username, password=password)
+        users = models.User.objects.filter(email=email)
+        if len(users) > 0:
+            # User already exists with this email
+            form.add_error(
+                None, 'User exists with that email already. Did you mean to login?')
+            return render(request, 'registration/register.html', {'form': form})
+        firstname = form.cleaned_data.get('firstname')
+        lastname = form.cleaned_data.get('lastname')
+        username = form.cleaned_data['email'][:30]
+        password = form.cleaned_data.get('password')
 
+        user = models.Profile.new(
+            username, email, password, firstname, lastname)
+
+        user = authenticate(username=username, password=password)
         if user:
             login(request, user)
-            send_mail('Gracias por registrate',
-                      f'Tu username es {username}',
+            send_mail('Thank you for creating account yo Optika-kotsalis.',
+                      f'Your username is  {username}',
                       SITE_EMAIL,
                       [username, ],
                       fail_silently=True
                       )
-            return redirect('accounts:user_profile')
+            return redirect('eng:user_profile')
     else:
         messages.warning(request, form.errors)
     context = locals()

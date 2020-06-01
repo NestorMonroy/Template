@@ -21,7 +21,7 @@ from .managers import UserProfileManager
 class User(AbstractBaseUser, PermissionsMixin):
     """Database model for users in the system """
     username_validator = UnicodeUsernameValidator()
-    user = models.CharField(
+    username = models.CharField(
         _('username'),
         max_length=150,
         unique=True,
@@ -52,7 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
     EMAIL_FIELD = 'email'
-    USERNAME_FIELD = 'user'
+    USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
 
     objects = UserProfileManager()
@@ -100,7 +100,7 @@ class Profile(models.Model):
 
     def save(self, *args, **kwargs):
         try:
-            existing = Profile.objects.all().get(user=self.username)
+            existing = Profile.objects.all().get(user=self.user)
             self.id = existing.id
         except Profile.DoesNotExist:
             pass
@@ -108,19 +108,15 @@ class Profile(models.Model):
         # 	self.tab = 0
         models.Model.save(self, *args, **kwargs)
 
-        @classmethod
-        def new(cls, username, email, password, firstname, lastname):
-            user = User.objects.create_user(username, email, password)
-            user.first_name = firstname
-            user.last_name = lastname
-            user.save()
-
-            profile = Profile(user=user, active=False)
-            profile.save()
-            return user
-
-        class Meta:
-            unique_together = ("user")
+    @classmethod
+    def new(cls, username, email, password, firstname, lastname):
+        user = User.objects.create_user(username, email, password)
+        user.first_name = firstname
+        user.last_name = lastname
+        user.save()
+        profile = Profile(user=user, active=False)
+        profile.save()
+        return user
 
 
 class ProfileStatus(models.Model):

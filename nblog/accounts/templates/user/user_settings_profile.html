@@ -1,7 +1,7 @@
 {% extends "user/user_settings_base.html" %}
 
-{% block body %}
-<form name="form" action="{% url 'user:profile' %}" method="post">
+{% block content %}
+<form name="form" action="{% url 'accounts:user_profile' %}" method="post">
   <div class="panel panel-default">
     <div class="panel-body">
       

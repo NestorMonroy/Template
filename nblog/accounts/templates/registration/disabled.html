@@ -1,16 +1,10 @@
 {% extends "base.html" %}
 
-{% block page %}
+{% block content %}
 <div class="row">
 	<div class="col-xs-12 text-center">
 		<h2>Registration is currently disabled.</h2>
-		<h3><a href="{% url 'core:home' %}"><i class="fa fa-arrow-left"></i> Back</a></h3>
+		<h3><a href="{% url 'post:homepage' %}"><i class="fa fa-arrow-left"></i> Back</a></h3>
 	</div>
 </div>
-{% endblock %}
-
-{% block analytics %}
-<script>
-ga('send', 'pageview');
-</script>
 {% endblock %}
