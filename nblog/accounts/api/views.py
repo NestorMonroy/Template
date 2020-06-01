@@ -35,7 +35,7 @@ from django.contrib.auth import (
 )
 
 from .. import models
-from ..forms import LoginForm, SignUpForm, ProfileFrontEndForm, UpdatePasswordForm, ForgotPasswordForm, RegisterForm, Step1Form, Step2Form
+from ..forms import LoginForm, SignUpForm, ProfileFrontEndForm, UpdatePasswordForm, ForgotPasswordForm, Step1Form, Step2Form
 from ..emails import send_password_reset_email, send_account_activate_email
 from ..decorators import anonymous_required
 
@@ -112,7 +112,7 @@ class LoginView(SuccessURLAllowedHostsMixin, FormView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
+# @method_decorator(login_required, name='dispatch')
 class UserDashboardView(ListView):
     template_name = 'accounts/dashboard.html'
     model = models.Profile
@@ -124,97 +124,88 @@ class UserDashboardView(ListView):
     def get_context_data(self, **kwargs):
         context = super(UserDashboardView, self).get_context_data(**kwargs)
         user = self.request.user
-        profile = user.profile
         context.update(locals())
         return context
 
 
 def register_view(request):
+    next = request.GET.get('next')
+    
     user = request.user
     if user.is_authenticated:
         return HttpResponseRedirect('/')
     form_title, form_button = 'Create new Account', 'Create'
     text = '''Creating new account to our store you can do the checkout process more easy,
                 add items to wishlist and many more.'''
-    form = SignUpForm(request.POST or None)
-    if form.is_valid():
-        user_ = form.save()
-        email = form.cleaned_data.get('email')
-        username = form.cleaned_data.get('username')
-        password = form.cleaned_data.get('password1')
-        users = models.User.objects.filter(email=email)
-        if len(users) > 0:
-            # User already exists with this email
-            form.add_error(
-                None, 'User exists with that email already. Did you mean to login?')
-            return render(request, 'registration/register.html', {'form': form})
-        firstname = form.cleaned_data.get('firstname')
-        lastname = form.cleaned_data.get('lastname')
-        username = form.cleaned_data['email'][:30]
-        password = form.cleaned_data.get('password')
-
-        user = models.Profile.new(
-            username, email, password, firstname, lastname)
-
-        user = authenticate(username=username, password=password)
-        if user:
-            login(request, user)
-            send_mail('Thank you for creating account yo Optika-kotsalis.',
-                      f'Your username is  {username}',
-                      SITE_EMAIL,
-                      [username, ],
-                      fail_silently=True
-                      )
-            return redirect('eng:user_profile')
-    else:
-        messages.warning(request, form.errors)
-    context = locals()
-    return render(request, 'accounts/register.html', context)
-
-
-def registerHandler(request):
-
     form = None
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = SignUpForm(request.POST)
         if form.is_valid():
-            # Check for dupe users
-            email = form.cleaned_data['email']
-            username = form.cleaned_data['username']
-            users = models.User.objects.filter(email=email)
-            if len(users) > 0:
-                # User already exists with this email
-                form.add_error(
-                    None, 'User exists with that email already. Did you mean to login?')
-                return render(request, 'registration/register.html', {'form': form})
-            firstname = form.cleaned_data['firstname']
-            lastname = form.cleaned_data['lastname']
-            username = form.cleaned_data['email'][:30]
-            password = form.cleaned_data['password']
 
-            # Shiny new saved user
-            user = models.Profile.new(
-                username, email, password, firstname, lastname)
+            # email = form.cleaned_data.get('email')
+            # full_name = form.cleaned_data.get('full_name')
+            # password = form.cleaned_data.get('password1')
+            print("1")
+            print(user)
+            full_name = form.cleaned_data['full_name']
+            email = form.cleaned_data['email'][:30]
+            password = form.cleaned_data['password1']
+            user = models.Profile.new(full_name, email, password)
+            print(user)
+            print("nestor")
 
-            # Email activation
-            token = models.AccountActivationToken(
-                user=user, token=uuid.uuid4())
-            token.save()
-            send_account_activate_email(request, token)
+            user = authenticate(user=user, password=password)
 
-            user = authenticate(username=username, password=password)
-            login(request, user)
-            continue_url = request.GET.get('next')
-            if continue_url:
-                return HttpResponseRedirect(continue_url)
-            return HttpResponseRedirect('/register/step-1')
+            if user:
+                return redirect('accounts:user_profile')
     else:
-        if request.user.is_authenticated:
-            return HttpResponseRedirect('/')
-        else:
-            form = RegisterForm()
-
+        form = SignUpForm()
     return render(request, 'registration/register.html', {'form': form})
+
+
+# def registerHandler(request):
+
+#     form = None
+#     if request.method == 'POST':
+#         form = RegisterForm(request.POST)
+#         if form.is_valid():
+#             # Check for dupe users
+#             email = form.cleaned_data['email']
+#             username = form.cleaned_data['username']
+#             users = models.User.objects.filter(email=email)
+#             if len(users) > 0:
+#                 # User already exists with this email
+#                 form.add_error(
+#                     None, 'User exists with that email already. Did you mean to login?')
+#                 return render(request, 'registration/register.html', {'form': form})
+#             firstname = form.cleaned_data['firstname']
+#             lastname = form.cleaned_data['lastname']
+#             username = form.cleaned_data['email'][:30]
+#             password = form.cleaned_data['password']
+
+#             # Shiny new saved user
+#             user = models.Profile.new(
+#                 username, email, password, firstname, lastname)
+
+#             # Email activation
+#             token = models.AccountActivationToken(
+#                 user=user, token=uuid.uuid4())
+#             token.save()
+#             send_account_activate_email(request, token)
+
+#             user = authenticate(username=username, password=password)
+#             login(request, user)
+#             continue_url = request.GET.get('next')
+#             if continue_url:
+#                 return HttpResponseRedirect(continue_url)
+#             return HttpResponseRedirect('/register/step-1')
+#     else:
+#         if request.user.is_authenticated:
+#             return HttpResponseRedirect('/')
+#         else:
+#             form = RegisterForm()
+
+#     return render(request, 'registration/register.html', {'form': form})
 
 
 def handle_uploaded_file(f, filename):

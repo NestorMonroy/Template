@@ -26,39 +26,24 @@ class LoginForm(BaseForm):
             field.widget.attrs['class'] = 'form-control'
 
 
-class ProfileForm(BaseForm, forms.ModelForm):
-    user = forms.ModelChoiceField(
-        queryset=models.User.objects.all(), widget=forms.HiddenInput())
-
-    class Meta:
-        model = models.Profile
-        fields = ['user', 'bio', 'city', 'avatar', ]
-
-
 class SignUpForm(BaseForm, UserCreationForm):
-    first_name = forms.CharField(
-        max_length=30, required=False, label='Nombre (s)')
-    last_name = forms.CharField(
-        max_length=30, required=False, label='Apellido')
+
     email = forms.EmailField(widget=forms.HiddenInput(), required=False)
-    username = forms.EmailField(required=True, label='Email')
+    full_name = forms.CharField(
+        max_length=150, required=False, label='Nombre')
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
 
     class Meta:
         model = models.User
-        fields = ['username', 'first_name', 'last_name',
-                  'password1', 'password2', 'email']
-
-    def clean_email(self):
-        email = self.cleaned_data['username']
-        if '@' in email:
-            return email
+        fields = ['email', 'full_name', 'password1', 'password2']
 
     def clean(self):
         cleaned_data = super(SignUpForm, self).clean()
         password = cleaned_data.get('password1')
         confirm_password = cleaned_data.get('password2')
         if password != confirm_password:
-            self.add_error('password2', 'Οι κωδικοί δε ταιριάζουν')
+            self.add_error('password2', 'Passwords dont match')
         return cleaned_data
 
 
@@ -72,7 +57,7 @@ class SignUpFormEng(SignUpForm):
 
 class ProfileForm(BaseForm, forms.ModelForm):
     user = forms.ModelChoiceField(queryset=models.User.objects.filter(
-        is_staff=False), widget=forms.HiddenInput(), required=False)
+        staff=False), widget=forms.HiddenInput(), required=False)
 
     class Meta:
         model = models.Profile
@@ -102,13 +87,6 @@ class UpdatePasswordForm(BaseForm, PasswordChangeForm):
     pass
 
 
-class RegisterForm(forms.Form):
-    # username = forms.CharField(label='Username', max_length=100)
-    firstname = forms.CharField(label="First Name", max_length=100)
-    lastname = forms.CharField(label="Last Name", max_length=100)
-    email = forms.EmailField(label='Email')
-    username = forms.CharField(label='Username', max_length=255)
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
 
 
 class Step1Form(forms.Form):

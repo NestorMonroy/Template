@@ -7,35 +7,37 @@ from django.utils import timezone
 
 
 class UserProfileManager(BaseUserManager):
-    use_in_migrations = True
+    def create_user(self, email, full_name=None, password=None, is_active=True, is_staff=False, is_admin=False):
+        if not email:
+            raise ValueError("Users must have an email address")
+        if not password:
+            raise ValueError("Users must have a password")
+        user_obj = self.model(
+            email=self.normalize_email(email),
+            full_name=full_name
+        )
+        user_obj.set_password(password)  # change user password
+        user_obj.staff = is_staff
+        user_obj.admin = is_admin
+        user_obj.is_active = is_active
+        user_obj.save(using=self._db)
+        return user_obj
 
-    def _create_user(self, username, email, password, **extra_fields):
-        """
-        Create and save a user with the given username, email, and password.
-        """
-        if not username:
-            raise ValueError('The given username must be set')
-        email = self.normalize_email(email)
-        username = self.model.normalize_username(username)
-        user = self.model(username=username, email=email, **extra_fields)
-        
-        user.set_password(password)
-        user.save(using=self._db)
-        
+    def create_staffuser(self, email, full_name=None, password=None):
+        user = self.create_user(
+            email,
+            full_name=full_name,
+            password=password,
+            is_staff=True
+        )
         return user
 
-    def create_user(self, username, email=None, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', False)
-        extra_fields.setdefault('is_superuser', False)
-        return self._create_user(username, email, password, **extra_fields)
-
-    def create_superuser(self, username, email=None, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
-
-        return self._create_user(username, email, password, **extra_fields)
+    def create_superuser(self, email, full_name=None, password=None):
+        user = self.create_user(
+            email,
+            full_name=full_name,
+            password=password,
+            is_staff=True,
+            is_admin=True
+        )
+        return user

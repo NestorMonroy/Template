@@ -2,80 +2,9 @@
 {% load widget_tweaks %}
 
 {% block content %}
-<div class='container'>
-    <div class="row">
-        <div class="col-md-8 ml-auto mr-auto">
-            <div class='text-center'>
-                <h1>Completa tus datos</h1>
-            </div>
-
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="page-title">
-                                <h2>Crear una cuenta</h2>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <nav aria-label="breadcrumb" class="theme-breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{% url 'posts:homepage' %}">Home</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Crear una cuenta</li>
-                                </ol>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-
-            <!--section start-->
-            <section class="register-page section-b-space">
-                <div class="container">
-                    <div class="row">
-                    <div class="col-xs-12 col-sm-4 col-md-3 col-centered">
-  <div style="margin-top:20%">
-    <h1 class="text-center">Register</h1>
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <form action="{% url 'accounts:register' %}?{{ request.GET.urlencode }}" method="post">
-          {% csrf_token %}
-          {{ form.non_field_errors }}
-          <div class="form-group">
-            {{ form.firstname.errors }}
-            {{ form.firstname.label }}
-            {{ form.firstname|add_class:"form-control" }}
-          </div>
-          <div class="form-group">
-            {{ form.lastname.errors }}
-            {{ form.lastname.label }}
-            {{ form.lastname|add_class:"form-control" }}
-          </div>
-          <div class="form-group">
-            {{ form.username.errors }}
-            {{ form.username.label }}
-            {{ form.username|add_class:"form-control" }}
-          </div>
-          <div class="form-group">
-            {{ form.email.errors }}
-            {{ form.email.label }}
-            {{ form.email|add_class:"form-control" }}
-          </div>
-          <div class="form-group">
-            {{ form.password.errors }}
-            {{ form.password.label }}
-            {{ form.password|add_class:"form-control" }}
-          </div>
-          <button type="submit" class="btn btn-primary btn-block btn-lg">Register</button>
-        </form>
-      </div>
-    </div>
-    <p class="text-center">Already have an account? <a href="{% url 'accounts:user_login' %}?{{ request.GET.urlencode }}">Login</a></p>
-  </div>
-</div>
-
-                    </div>
-                </div>
-            </section>
-                    </div>
-                </div>
-</div>
+    <h1>Register</h1>
+    <form method='POST'> {% csrf_token %}
+      {{ form }}
+      <button type='submit' class='btn btn-default'>Submit</button>
+    </form>
 {% endblock content %}
