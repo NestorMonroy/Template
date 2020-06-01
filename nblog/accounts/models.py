@@ -9,6 +9,7 @@ from django.core.mail import send_mail
 import datetime
 import os
 import uuid
+from django.shortcuts import reverse
 
 from django.contrib.auth.models import PermissionsMixin
 from django.utils.translation import gettext_lazy as _
@@ -88,10 +89,13 @@ class Profile(models.Model):
         user = User.objects.create_user(email, password, full_name)
         user.full_name = full_name
         user.save()
-        print('Your username is  {user}')    
+        print('Your username is  {user}')
         profile = Profile(user=user, active=False)
         profile.save()
         return user
+
+    def get_absolute_url(self):
+        return reverse('accounts:user_create', args=[str(self.user)])
 
 
 class ProfileStatus(models.Model):

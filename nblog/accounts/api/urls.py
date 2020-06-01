@@ -7,16 +7,8 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     url(r'^login/$', views.LoginView.as_view(), name='user_login'),
-    url(r'^profile/$', views.UserDashboardView.as_view(), name='user_profile'),
-    url(r'^register/step-1$', views.step1Handler, name='register-step-1'),
-    url(r'^register/step-2$', views.step2Handler, name='register-step-2'),
-    url(r'^register/', views.register_view, name='register'),
-    url(r'^activate/(?P<token>.+)$', views.activeAccountHandler, name='activate'),
+    url(r'^register/$', views.RegisterView.as_view(), name='user_create'),
+    url(r'^profile/(?P<pk>[0-9]+)/$',
+        views.ProfileDetailView.as_view(), name='user_detail'),
     url(r'^logout$', views.logoutHandler, name='logout'),
-    url(r'^reset_password/(?P<token>.+)$',
-        views.resetPasswordHandler, name='reset-password'),
-    url(r'^reset_password$', views.resetPasswordFormHandler,
-        name='reset-password-form'),
-
-
 ]
