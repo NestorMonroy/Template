@@ -26,9 +26,20 @@ class LoginForm(BaseForm):
             field.widget.attrs['class'] = 'form-control'
 
 
+class ProfileForm(BaseForm, forms.ModelForm):
+    user = forms.ModelChoiceField(
+        queryset=models.User.objects.all(), widget=forms.HiddenInput())
+
+    class Meta:
+        model = models.Profile
+        fields = ['user', 'bio', 'city', 'avatar', ]
+
+
 class SignUpForm(BaseForm, UserCreationForm):
-    first_name = forms.CharField(max_length=30, required=False, label='Ονομα')
-    last_name = forms.CharField(max_length=30, required=False, label='Eπιθετο')
+    first_name = forms.CharField(
+        max_length=30, required=False, label='Nombre (s)')
+    last_name = forms.CharField(
+        max_length=30, required=False, label='Apellido')
     email = forms.EmailField(widget=forms.HiddenInput(), required=False)
     username = forms.EmailField(required=True, label='Email')
 
@@ -89,3 +100,20 @@ class ProfileFrontEndEngForm(ProfileFrontEndForm):
 
 class UpdatePasswordForm(BaseForm, PasswordChangeForm):
     pass
+
+
+class RegisterForm(forms.Form):
+    # username = forms.CharField(label='Username', max_length=100)
+    firstname = forms.CharField(label="First Name", max_length=100)
+    lastname = forms.CharField(label="Last Name", max_length=100)
+    email = forms.EmailField(label='Email')
+    username = forms.CharField(label='Username', max_length=255)
+    password = forms.CharField(label='Password', widget=forms.PasswordInput)
+
+
+class Step1Form(forms.Form):
+    avatar = forms.ImageField(label='Avatar')
+
+
+class Step2Form(forms.Form):
+    token = forms.CharField(max_length=100)

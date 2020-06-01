@@ -8,47 +8,42 @@
                 <h1>Completa tus datos</h1>
             </div>
 
-            <div class="breadcrumb-section">
                 <div class="container">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="page-title">
-                                <h2>Δημιουργια Λογαριασμου</h2>
+                                <h2>Crear una cuenta</h2>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <nav aria-label="breadcrumb" class="theme-breadcrumb">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{% url 'homepage' %}">Αρχικη Σελιδα</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Δημιουργία Λογαριασμου</li>
+                                    <li class="breadcrumb-item"><a href="{% url 'posts:homepage' %}">Home</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Crear una cuenta</li>
                                 </ol>
                             </nav>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- breadcrumb End -->
-
 
             <!--section start-->
             <section class="register-page section-b-space">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-12">
-                            <h3>Συμπληρωστε την φορμα</h3>
+                            <h3>Rellenar el formulario</h3>
                             <div class="theme-card">
                                 <form class="theme-form" method="post">{% csrf_token %}
                                    {{ form }}
                                     <br> <br>
-                                    <button type="submit" class="btn btn-solid">Δημιουργία λογαριασμού</button>
-
+                                    <button type="submit" class="btn btn-solid">Crear una cuenta</button>
                                     <br>
 
                                 </form>
                                 <br><br>
-                                <p>Για να συνδεθείτε πατήστε <a href="{% url 'accounts:user_login' %}" > εδω.</a></p>
+                                <p>Haz clic para conectarte <a href="{% url 'accounts:user_login' %}" > aquí.</a></p>
                                 <br>
-                                <a style="display: inline;margin-top: 300px;" href="{% url 'social:begin' 'facebook' %}" class="btn btn-solid btn-info right">Σύνδεση μεσω facebοοκ</a>
+                                <a style="display: inline;margin-top: 300px;" class="btn btn-solid btn-info right">Enlaces atravez de facebook</a>
                             </div>
                         </div>
                     </div>

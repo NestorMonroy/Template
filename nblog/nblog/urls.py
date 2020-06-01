@@ -30,8 +30,6 @@ urlpatterns = [
     path('', include(('accounts.api.urls',
                                  'accounts'), namespace='accounts')),
 
-    # url(r'^api/comments/', include(('comments.api.urls',
-    #                                 'comments-api'), namespace='comments-api')),
 ]
 
 

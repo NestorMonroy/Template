@@ -2,6 +2,7 @@
 from django.shortcuts import resolve_url
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, reverse, render, HttpResponseRedirect, get_object_or_404
+import uuid
 
 from django.http import HttpResponseRedirect, QueryDict
 from django.conf import settings
@@ -34,7 +35,8 @@ from django.contrib.auth import (
 )
 
 from .. import models
-from ..forms import LoginForm, SignUpForm, ProfileFrontEndForm, UpdatePasswordForm, ForgotPasswordForm
+from ..forms import LoginForm, SignUpForm, ProfileFrontEndForm, UpdatePasswordForm, ForgotPasswordForm, RegisterForm
+from ..emails import send_password_reset_email, send_account_activate_email
 
 SITE_EMAIL = settings.SITE_EMAIL
 
@@ -138,6 +140,7 @@ def register_view(request):
         username = form.cleaned_data.get('username')
         password = form.cleaned_data.get('password1')
         user = authenticate(username=username, password=password)
+
         if user:
             login(request, user)
             send_mail('Gracias por registrate',
@@ -151,3 +154,77 @@ def register_view(request):
         messages.warning(request, form.errors)
     context = locals()
     return render(request, 'accounts/register.html', context)
+
+
+
+def registerHandler(request):
+
+	form = None
+	if request.method == 'POST':
+		form = RegisterForm(request.POST)
+		if form.is_valid():
+			# Check for dupe users
+			email = form.cleaned_data['email']
+			username = form.cleaned_data['username']
+			users = models.User.objects.filter(email=email)
+			if len(users) > 0:
+				# User already exists with this email
+				form.add_error(None, 'User exists with that email already. Did you mean to login?')
+				return render(request, 'registration/register.html', {'form': form})
+			firstname = form.cleaned_data['firstname']
+			lastname = form.cleaned_data['lastname']
+			username = form.cleaned_data['email'][:30]
+			password = form.cleaned_data['password']
+
+			# Shiny new saved user
+			user = models.Profile.new(username, email, password, firstname, lastname)
+
+			# Email activation
+			token = models.AccountActivationToken(user=user, token=uuid.uuid4())
+			token.save()
+			send_account_activate_email(request, token)
+
+			user = authenticate(username=username, password=password)
+			login(request, user)
+			continue_url = request.GET.get('next')
+			if continue_url:
+				return HttpResponseRedirect(continue_url)
+			return HttpResponseRedirect('/register/step-1')
+	else:
+		if request.user.is_authenticated():
+			return HttpResponseRedirect('/')
+		else:
+			form = RegisterForm()
+
+	return render(request, 'registration/register.html', {'form': form})
+
+def handle_uploaded_file(f, filename):
+	with open('some/file/name.txt', 'wb+') as destination:
+		for chunk in f.chunks():
+			destination.write(chunk)
+
+@login_required
+def step1Handler(request):
+	if request.method == 'POST':
+			form = Step1Form(request.POST, request.FILES)
+			if form.is_valid():
+					request.user.profile.avatar = form.cleaned_data['avatar']
+					request.user.profile.save()
+			return redirect(reverse('user:register-step-2'))
+	else:
+		form = Step1Form()
+	return render(request, 'registration/step-1.html')
+
+@login_required
+def step2Handler(request):
+	if request.method == 'POST':
+		form = Step2Form(request.POST)
+		# if form.is_valid():
+		# 	source = customer.sources.create(source=form.cleaned_data['token'])
+		# 	if request.user.customer.default_source == '':
+		# 		request.user.customer.default_source = source.get('id')
+		# 		request.user.customer.save()
+		return redirect(reverse('core:home'))
+	else:
+			form = Step1Form()
+	return render(request, 'registration/step-2.html')
