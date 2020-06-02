@@ -7,7 +7,9 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     url(r'^login/$', views.LoginView.as_view(), name='user_login'),
-    url(r'^register/$', views.RegisterView.as_view(), name='user_create'),
+    url(r'^register/$', views.register_view, name='user_create'),
+    url(r'^profile/',
+        views.ProfileListView.as_view(), name='user_profile'),
     url(r'^profile/(?P<pk>[0-9]+)/$',
         views.ProfileDetailView.as_view(), name='user_detail'),
     url(r'^logout$', views.logoutHandler, name='logout'),

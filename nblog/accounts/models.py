@@ -74,6 +74,9 @@ class Profile(models.Model):
     def is_active(self):
         return self.active
 
+    def is_user(self):
+        return self.user
+
     def save(self, *args, **kwargs):
         try:
             existing = Profile.objects.all().get(user=self.user)
@@ -96,6 +99,16 @@ class Profile(models.Model):
 
     def get_absolute_url(self):
         return reverse('accounts:user_create', args=[str(self.user)])
+
+    @staticmethod
+    def filter_data(queryset, request):
+        search_name = request.GET.get('search_name', None)
+        active_name = request.GET.getlist('active_name', None)
+        menu_name = request.GET.getlist('menu_name', None)
+        queryset = queryset.filter(name__icontains=search_name.capitalize()) if search_name else queryset
+        queryset = queryset.filter(active=True) if active_name else queryset
+        queryset = queryset.filter(show_on_menu=True) if 'a' in menu_name else queryset.filter(show_on_menu=False) if 'b' in menu_name else queryset
+        return queryset
 
 
 class ProfileStatus(models.Model):

@@ -173,7 +173,7 @@ MARKDOWN_DEUX_STYLES = {
 
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'accounts:user_profile'
+LOGIN_REDIRECT_URL = 'accounts:user_detail'
 LOGOUT_URL = 'logout'
 LOGOUT_REDIRECT_URL = 'login'
 
