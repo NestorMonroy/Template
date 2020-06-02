@@ -78,8 +78,9 @@ class Post(_Abstract):
         (1, 'PUBLISHED', 'Published',),
     )
 
-    channel = models.ForeignKey(
-        Channel, on_delete=models.CASCADE,),
+    # channel = models.ForeignKey(
+    #     Channel, on_delete=models.CASCADE,),
+    channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
     author = models.ForeignKey(
         User, on_delete=models.CASCADE,)
     status = models.IntegerField(
