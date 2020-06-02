@@ -1,4 +1,3 @@
-
 from django.db import models
 from django.db.models import Q
 from django.db.models.query import QuerySet
@@ -7,13 +6,14 @@ from django.utils import timezone
 
 class PostQuerySet(QuerySet):
 
-    def active(self, *args, **kwargs):
-        # Post.objects.all() = super(PostManager, self).all()
-        return super(PostQuerySet, self).filter(draft=False).filter(publish__lte=timezone.now())
+    def active(self):
+        return self.filter(status=self.model.STATUSES.PUBLISHED, created_at__lte=timezone.now()).distinct()
 
     def get_for_user(self, user):
         if user.id == None:
-            return self.filter(is_public=True).active()
+            return self.filter(channel__public=True).active()
+        else:
+            return self.filter(Q(channel__public=True) | Q(channel__followers=user)).active()
 
 
 class ChannelQuerySet(QuerySet):

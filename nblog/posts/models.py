@@ -6,127 +6,111 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.db import models
 from django.db.models.signals import pre_save
+from model_utils import Choices
 
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 
-
 from markdown_deux import markdown
 from comments.models import Comment
 
 from .utils import get_read_time, upload_image_path, unique_slug_generator, upload_icon_path
 
-from django.contrib.auth.models import User
-from .managers import PostQuerySet
+from accounts.models import User
+
+from .managers import PostQuerySet, ChannelQuerySet, TagQuerySet
 
 
-class Category(models.Model):
-    name = models.CharField('Nombre de la categoría', max_length=255)
-
-    def __str__(self):
-        """str."""
-        return self.name
+class Enrollments(models.TextChoices):
+    SELF = '0', "Self",
+    AUTHOR = '1' "Author",
 
 
-class Tag(models.Model):
-    name = models.CharField('Nombre de etiqueta', max_length=255)
-
-    def __str__(self):
-        """str."""
-        return self.name
-
-
-class Post(models.Model):
-    # user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=120)
+class _Abstract(models.Model):  # microblog compatible.
     slug = models.SlugField(unique=True)
-    category = models.ForeignKey(
-        Category, verbose_name='Categoria', on_delete=models.PROTECT, blank=True, null=True)
-    tag = models.ManyToManyField(Tag, blank=True, verbose_name='Tags')
-    image = models.ImageField(upload_to=upload_image_path,
-                              null=True,
-                              blank=True,
-                              width_field="width_field",
-                              height_field="height_field")
-    height_field = models.IntegerField(default=0)
-    width_field = models.IntegerField(default=0)
-    content = models.TextField()
-    is_public = models.BooleanField('¿Está abierto al público?', default=True)
-    draft = models.BooleanField(default=False)
-    publish = models.DateField(auto_now=False, auto_now_add=False)
-    description = models.TextField('Descripción del articulo', blank=True)
-    read_time = models.IntegerField(default=0)
-    updated = models.DateTimeField(auto_now=True, auto_now_add=False)
-    timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
-    created_at = models.DateTimeField(
-        'Fecha de creación', default=timezone.now)
-
-    objects = PostQuerySet.as_manager()
+    title = models.CharField(max_length=140, unique=True)
+    text = models.TextField(default='')
 
     def __str__(self):
         return self.title
 
-    def get_description(self):
-        if self.description:
-            return self.description
-        else:
-            description = 'Categoria:{0} Etiquetas:{1}'
-            category = self.category
-            tags = ' '.join(tag.name for tag in self.tag.all())
-            description = description.format(category, tags)
-            return description
+    class Meta:
+        abstract = True
+
+
+class Channel(_Abstract):
+    ENROLLMENTS = Choices(
+        (0, 'SELF', 'Self'),
+        (1, 'AUTHOR', 'Author'),
+    )
+    followers = models.ManyToManyField(User)
+    public = models.BooleanField(
+        default=True, help_text="If False, only followers will be able to see content.")
+
+    enrollment = models.IntegerField(
+        default=ENROLLMENTS.SELF, choices=ENROLLMENTS)
+
+    objects = ChannelQuerySet.as_manager()
 
     def get_absolute_url(self):
-        return reverse("posts:detail", kwargs={"slug": self.slug})
-
-    def get_api_url(self):
-        return reverse("posts-api:detail", kwargs={"slug": self.slug})
+        return reverse('channel_view', kwargs={'slug': self.slug, })
 
     class Meta:
-        ordering = ["-timestamp", "-updated"]
-
-    def get_markdown(self):
-        content = self.content
-        markdown_text = markdown(content)
-        return mark_safe(markdown_text)
-
-    def get_next(self):
-        next_post = Post.objects.filter(
-            is_publick=True, created_at__gt=self.created_at
-        ).order_by('-created_at')
-        if next_post:
-            return next_post.last()
-        return None
-
-    def get_prev(self):
-        prev_post = Post.objects.filter(
-            is_publick=True, created_at__lt=self.created_at
-        ).order_by('-created_at')
-        if prev_post:
-            return prev_post.first()
-        return None
-
-    @property
-    def comments(self):
-        instance = self
-        qs = Comment.objects.filter_by_instance(instance)
-        return qs
-
-    @property
-    def get_content_type(self):
-        instance = self
-        content_type = ContentType.objects.get_for_model(instance.__class__)
-        return content_type
+        ordering = ['title']
 
 
-def pre_save_post_receiver(sender, instance, *args, **kwargs):
-    if not instance.slug:
-        instance.slug = unique_slug_generator(instance)
+class Tag(_Abstract):
+
+    objects = TagQuerySet.as_manager()
+
+    def get_absolute_url(self):
+        return reverse('tag_view', kwargs={'slug': self.slug, })
 
 
-pre_save.connect(pre_save_post_receiver, sender=Post)
+class Post(_Abstract):
+
+    SUMMARY_LENGTH = 50
+
+    STATUSES = Choices(
+        (0, 'DRAFT',     'Draft',),
+        (1, 'PUBLISHED', 'Published',),
+    )
+
+    channel = models.ForeignKey(
+        Channel, on_delete=models.CASCADE,),
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE,)
+    status = models.IntegerField(
+        default=STATUSES.DRAFT, choices=STATUSES,)
+    custom_summary = models.TextField(default='')
+    timestamp = models.DateTimeField(auto_now_add=True, editable=False)
+    updated = models.DateTimeField(auto_now=True, editable=False)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    tags = models.ManyToManyField(Tag)
+
+    objects = PostQuerySet.as_manager()
+
+    def _get_teaser(self):
+        "A small excerpt of text that can be used in the absence of a custom summary."
+        return self.text[:Post.SUMMARY_LENGTH]
+
+    teaser = property(_get_teaser)
+
+    def _get_summary(self):
+        "Returns custom_summary, or teaser if not available."
+        if len(self.custom_summary) > 0:
+            return self.custom_summary
+        else:
+            return self.teaser
+
+    summary = property(_get_summary)
+
+    def get_absolute_url(self):
+        return reverse('post_view', kwargs={'slug': self.slug, })
+
 
 class File(models.Model):
     """Adjuntos asociados con artículos y comentarios"""
@@ -135,7 +119,8 @@ class File(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
-    created_at = models.DateTimeField('Fecha de creación', default=timezone.now)
+    created_at = models.DateTimeField(
+        'Fecha de creación', default=timezone.now)
 
     def __str__(self):
         return 'modelo:{} pk:{} url:{}'.format(self.content_type, self.object_id, self.src.url)
