@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load urlify %}
 {% load crispy_forms_tags %}
 
 
@@ -35,10 +34,10 @@
                         Facebook
                     </a>
 
-                    <a
+                    {% comment %} <a
                         href="https://twitter.com/home?status={{ instance.content|truncatechars:80|urlify }}%20{{ request.build_absolute_uri }}">
                         Twitter
-                    </a>
+                    </a> {% endcomment %}
 
                     <a href='https://plus.google.com/share?url={{ request.build_absolute_uri }}'>
 

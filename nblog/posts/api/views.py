@@ -30,6 +30,7 @@ class ChannelIndexView(ListView):
         return qs.get_for_user(self.request.user)
 
 
+
 class ChannelDetailView(ListView):
     model = Post
     template_name = 'posts/channel_view.html'
