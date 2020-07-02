@@ -31,7 +31,12 @@
 <link rel="stylesheet" type="text/css" href="{% static 'frontend/assets/css/bootstrap.css' %}">
 
 <!-- Theme css -->
-<link rel="stylesheet" type="text/css" href="{% static 'frontend/assets/css/color1.css' %}" media="screen" id="color">
+{% comment %} <link rel="stylesheet" type="text/css" href="{% static 'frontend/assets/css/color1.css' %}" media="screen" id="color"> {% endcomment %}
+
+{% compress css %}
+        <link rel="stylesheet" type="text/x-scss" href="{% static 'scss/color1.scss' %}" />
+{% endcompress %}
+
 
 <link rel="icon" href="{% static 'frontend/my_assets/icon1.png' %}" type="image/x-icon">
 

@@ -6,6 +6,7 @@
  Author: Pixelstrap
  Author URI: https://themeforest.net/user/pixelstrap
 
+ 
  ----------------------------------------------------------------------------------- */
 // 01.Pre loader
 // 02.Tap on Top
