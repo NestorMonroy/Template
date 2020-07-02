@@ -9,8 +9,6 @@ media
 env/
 .env
 venv
-nblog/
-
 .vscode
 vscode/
 .vscode/
