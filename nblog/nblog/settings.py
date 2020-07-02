@@ -24,8 +24,18 @@ SECRET_KEY = '$*pyxr7#h@%&q0jtjae$$!7fgrnrxd!#hvk#2pplva65ws1n6n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+PRODUCTION = False
 
-ALLOWED_HOSTS = []
+if PRODUCTION:
+    ALLOWED_HOSTS = ['www.nestorblog.com']
+else:
+    ALLOWED_HOSTS = ['*']
+
+if PRODUCTION:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Application definition
