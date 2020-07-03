@@ -2,10 +2,9 @@ from .base import *
 
 PRODUCTION = True
 
-if PRODUCTION:
-    ALLOWED_HOSTS = ['www.nestormonroy.com']
-else:
-    ALLOWED_HOSTS = ['*']
+
+ALLOWED_HOSTS = ['www.nestormonroy.com']
+
 
 if PRODUCTION:
     SESSION_COOKIE_SECURE = True
