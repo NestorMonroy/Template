@@ -14,6 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_DIR = os.path.dirname(__file__)
 
 
 # Quick-start development settings - unsuitable for production
@@ -135,7 +136,30 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static_team"),
+]
+
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static_cdn/')
+PROTECTED_ROOT = os.path.join(os.path.dirname(
+    BASE_DIR), "static_cdn", "protected_media")
+
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "static_team"),
+# ]
+
+# STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(os.path.dirname(
+#     BASE_DIR), "static_cdn", "static_root")
+
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(os.path.dirname(
+#     BASE_DIR), "static_cdn", "media_root")
+
+# PROTECTED_ROOT = os.path.join(os.path.dirname(
+#     BASE_DIR), "static_cdn", "protected_media")
 
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -148,22 +172,8 @@ COMPRESS_PRECOMPILERS = (
     ('text/x-sass', 'django_libsass.SassCompiler'),
 )
 
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static_mxTemplate"),
-]
-
-
-STATIC_ROOT = os.path.join(os.path.dirname(
-    BASE_DIR), "static_cdn", "static_root")
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(os.path.dirname(
-    BASE_DIR), "static_cdn", "media_root")
-
-PROTECTED_ROOT = os.path.join(os.path.dirname(
-    BASE_DIR), "static_cdn", "protected_media")
-
+COMPRESS_URL = STATIC_URL
+COMPRESS_ROOT = STATIC_ROOT
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
