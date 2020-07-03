@@ -9,3 +9,10 @@
 [2020-07-03 06:24:58 +0000] [21907] [INFO] Listening at: http://127.0.0.1:8000 (21907)
 [2020-07-03 06:24:58 +0000] [21907] [INFO] Using worker: sync
 [2020-07-03 06:24:58 +0000] [21919] [INFO] Booting worker with pid: 21919
+[2020-07-03 06:41:58 +0000] [21907] [INFO] Handling signal: term
+[2020-07-03 06:41:58 +0000] [21919] [INFO] Worker exiting (pid: 21919)
+[2020-07-03 06:41:58 +0000] [21907] [INFO] Shutting down: Master
+[2020-07-03 06:41:59 +0000] [22117] [INFO] Starting gunicorn 20.0.4
+[2020-07-03 06:41:59 +0000] [22117] [INFO] Listening at: http://127.0.0.1:8000 (22117)
+[2020-07-03 06:41:59 +0000] [22117] [INFO] Using worker: sync
+[2020-07-03 06:41:59 +0000] [22130] [INFO] Booting worker with pid: 22130
