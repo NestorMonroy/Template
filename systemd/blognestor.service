@@ -5,5 +5,5 @@
 User=root
 Group=root
 WorkingDirectory=/usr/local/apps/blog-nestor/nblog
-Enviromentfile=/usr/local/apps/blog-nestor/etc/blognestor.env
+EnviromentFile=/usr/local/apps/blog-nestor/etc/blognestor.env
 ExecStart=/usr/local/apps/blog-nestor/env/bin/gunicorn config.wsgi:app
