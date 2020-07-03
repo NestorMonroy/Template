@@ -27,6 +27,8 @@ SECRET_KEY = '(evj^kth%kz2@#dr9s1$vd6h(igx+c=ykb@oldafyb*ixt6t9-'
 DEBUG = True
 PRODUCTION = False
 
+
+
 if PRODUCTION:
     ALLOWED_HOSTS = ['www.nestormonroy.com']
 else:
