@@ -27,7 +27,7 @@ DEBUG = True
 PRODUCTION = False
 
 if PRODUCTION:
-    ALLOWED_HOSTS = ['www.nestorblog.com']
+    ALLOWED_HOSTS = ['www.nestormonroy.com']
 else:
     ALLOWED_HOSTS = ['*']
 
@@ -85,7 +85,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'nblog.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.app'
 
 
 # Database
@@ -189,5 +189,5 @@ LOGOUT_REDIRECT_URL = 'login'
 
 SITE_EMAIL = 'nestor.monroy.90@gmail.com'
 
-ROOT_URLCONF = 'nblog.urls'
+ROOT_URLCONF = 'config.urls'
 AUTH_USER_MODEL = 'accounts.User'
