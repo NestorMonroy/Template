@@ -6,4 +6,4 @@ User=root
 Group=root
 WorkingDirectory=/usr/local/apps/blog-nestor/nblog
 EnviromentFile=/usr/local/apps/blog-nestor/etc/blognestor.env
-ExecStart=/usr/local/apps/blog-nestor/env/bin/gunicorn config.wsgi:app
+ExecStart=/usr/local/apps/blog-nestor/env/bin/gunicorn config.wsgi:app --config /usr/local/apps/blog-nestor/etc/gunicorn.conf.py
