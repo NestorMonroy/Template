@@ -11,5 +11,6 @@ urlpatterns = [
     # url(r'^register/$', user_views.register, name='register'),
     # url(r'^signup/$', user_views.signup_view, name='signup'),
     url(r'^otro/$', user_v.emailsending, name='otro'),
+    url(r'^me/$', user_v.UserDetailView.as_view() , name='me'),
 
 ]

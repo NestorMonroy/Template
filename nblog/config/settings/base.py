@@ -50,9 +50,15 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'compressor',
 
+    'rest_framework',
+    'rest_framework.authtoken',
+
+    'dj_rest_auth',
+
     'allauth',
     'allauth.account',
-    'allauth.socialaccount',
+    'dj_rest_auth.registration',
+    # 'allauth.socialaccount',
 
     # 'allauth.socialaccount.providers.facebook',
     # 'allauth.socialaccount.providers.google',
@@ -98,6 +104,12 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
 
 WSGI_APPLICATION = 'config.wsgi.app'
 

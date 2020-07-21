@@ -1,3 +1,8 @@
+ 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+
 from django.conf import settings
 from django.core.mail import send_mail
 
@@ -24,3 +29,10 @@ def emailsending(request):
     toaddress = ['nestor.monroy.90@gmail.com']
     send_mail(subject, message, email_from, toaddress)
     return render(request, 'frontend/otro.html')
+
+
+class UserDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        return Response({ "email": request.user.email })
