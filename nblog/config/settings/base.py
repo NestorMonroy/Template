@@ -47,10 +47,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'compressor',
 
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+
+    # 'allauth.socialaccount.providers.facebook',
+    # 'allauth.socialaccount.providers.google',
+
+
     'accounts',
-    'frontend'
+    'frontend',
 
 ]
 
@@ -81,6 +90,14 @@ TEMPLATES = [
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
 
 WSGI_APPLICATION = 'config.wsgi.app'
 
@@ -164,7 +181,7 @@ PROTECTED_ROOT = os.path.join(os.path.dirname(
 AUTH_USER_MODEL = 'accounts.User'
 
 # Emails
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST = 'smtp.gmail.com'
@@ -172,3 +189,10 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'contacto@nestorblog.com'
 EMAIL_HOST_PASSWORD = 'AzulR0j01990*'
 DEFAULT_FROM_EMAIL = 'Nestor <contacto@nestorblog.com>'
+
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = "/"
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION=True

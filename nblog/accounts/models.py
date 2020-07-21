@@ -75,6 +75,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         blank=True, null=True, max_length=150, verbose_name='Nombre')
     last_name = models.CharField(
         blank=True, null=True, max_length=150, verbose_name='Apellido')
+    username = models.CharField(blank=True, null=True, max_length=100)
     is_active = models.BooleanField(default=True,
                                     verbose_name=_('Is active'))
     is_staff = models.BooleanField(default=False,
@@ -88,6 +89,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     timezone = models.CharField(max_length=100,
                                 default=settings.TIME_ZONE,
                                 verbose_name=_('Timezone'))
+
     require_2fa = models.BooleanField(
         default=False,
         verbose_name=_('Two-factor authentication is required to log in')
