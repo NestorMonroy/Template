@@ -49,6 +49,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'compressor',
 
+    'accounts',
+    'frontend'
+
 ]
 
 MIDDLEWARE = [
@@ -157,3 +160,15 @@ MEDIA_ROOT = os.path.join(os.path.dirname(
 
 PROTECTED_ROOT = os.path.join(os.path.dirname(
     BASE_DIR), "static_cdn", "protected_media")
+
+AUTH_USER_MODEL = 'accounts.User'
+
+# Emails
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'contacto@nestorblog.com'
+EMAIL_HOST_PASSWORD = 'AzulR0j01990*'
+DEFAULT_FROM_EMAIL = 'Nestor <contacto@nestorblog.com>'

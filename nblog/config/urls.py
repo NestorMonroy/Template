@@ -15,10 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.conf.urls import url
-from .views import home_page
+from django.conf.urls import include,url
+from frontend.views.user_v import home_page
+
+import frontend.urls
 
 urlpatterns = [
     url(r'^$', home_page, name='home'),
+    url(r'^control/', include((frontend.urls, 'frontend'))),
     path('admin/', admin.site.urls),
 ]
