@@ -1,0 +1,235 @@
+// Disable animation if transitions are disabled
+@if $enable-transitions {
+  @keyframes progress-bar-stripes {
+    from { background-position: $progress-height 0; }
+    to { background-position: 0 0; }
+  }
+}
+
+.progress {
+  display: flex;
+  height: $progress-height;
+  overflow: hidden; // force rounded corners by cropping it
+  line-height: 0;
+  @include font-size($progress-font-size);
+  background-color: $progress-bg;
+  @include border-radius($progress-border-radius);
+  @include box-shadow($progress-box-shadow);
+}
+
+.progress-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  color: $progress-bar-color;
+  text-align: center;
+  white-space: nowrap;
+  background-color: $progress-bar-bg;
+  @include transition($progress-bar-transition);
+}
+
+.progress-bar-striped {
+  @include gradient-striped();
+  background-size: $progress-height $progress-height;
+}
+
+@if $enable-transitions {
+  .progress-bar-animated {
+    animation: progress-bar-stripes $progress-bar-animation-timing;
+
+    @if $enable-prefers-reduced-motion-media-query {
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
+    }
+  }
+}
+
+.progress {
+  height: 4px;
+  border-radius: 0;
+  box-shadow: none;
+  background: #DDDDDD;
+  margin-bottom: 20px;
+  .progress-bar {
+      box-shadow: none;
+      @include variations(unquote(".progress-bar"), unquote(""), background-color, $brand-ctt-1);
+      &.progress-bar-primary{
+          background: $brand-ctt-1 !important;
+      }
+      &.progress-bar-info{
+          background: $brand-info;
+      }
+      &.progress-bar-success{
+          background: $brand-success;
+      }
+      &.progress-bar-warning{
+          background: $brand-warning;
+      }
+      &.progress-bar-danger{
+          background: $brand-danger;
+      }
+      &.progress-bar-tpe1{
+        background: $brand-ctpe-1;
+      }
+      &.progress-bar-tpe2{
+        background: $brand-ctpe-2;
+      }
+      &.progress-bar-tpe3{
+        background: $brand-ctpe-3;
+      }
+      &.progress-bar-tpe4{
+        background: $brand-ctpe-4;
+      }
+      &.progress-bar-tp1{
+        background: $brand-ctp-1;
+      }
+      &.progress-bar-tp2{
+        background: $brand-ctp-2;
+      }
+      &.progress-bar-tp3{
+        background: $brand-ctp-3;
+      }
+      &.progress-bar-tp4{
+        background: $brand-ctp-4;
+      }
+      &.progress-bar-tp5{
+        background: $brand-ctp-5;
+      }
+      &.progress-bar-ts1{
+        background: $brand-cts-1;
+      }
+      &.progress-bar-ts2{
+        background: $brand-cts-2;
+      }
+      &.progress-bar-ts3{
+        background: $brand-cts-3;
+      }
+      &.progress-bar-ts4{
+        background: $brand-cts-4;
+      }
+      &.progress-bar-ts5{
+        background: $brand-cts-5;
+      }
+      &.progress-bar-tt1{
+        background: $brand-ctt-1;
+      }
+      &.progress-bar-tt2{
+        background: $brand-ctt-2;
+      }
+      &.progress-bar-tt3{
+        background: $brand-ctt-3;
+      }
+      &.progress-bar-tt4{
+        background: $brand-ctt-4;
+      }
+      &.progress-bar-tt5{
+        background: $brand-ctt-5;
+      }
+      &.progress-bar-tf1{
+        background: $brand-ctf-1;
+      }
+      &.progress-bar-tf2{
+        background: $brand-ctf-2;
+      }
+      &.progress-bar-tf3{
+        background: $brand-ctf-3;
+      }
+      &.progress-bar-tf4{
+        background: $brand-ctf-4;
+      }
+      &.progress-bar-tf5{
+        background: $brand-ctf-5;
+      }
+    }
+
+  &.progress-line-primary{
+      background: rgba($brand-ctt-1,.2);
+  }
+  &.progress-line-info{
+      background: rgba($brand-info,.2);
+  }
+  &.progress-line-success{
+      background: rgba($brand-success,.2);
+  }
+  &.progress-line-warning{
+      background: rgba($brand-warning,.2);
+  }
+  &.progress-line-danger{
+      background: rgba($brand-danger,.2);
+  }
+  &.progress-line-tpe1{
+    background: rgba($brand-ctpe-1,.2);
+  }
+  &.progress-line-tpe2{
+    background: rgba($brand-ctpe-2,.2);
+  }
+  &.progress-line-tpe3{
+    background: rgba($brand-ctpe-3,.2);
+  }
+  &.progress-line-tpe4{
+    background: rgba($brand-ctpe-4,.2);
+  }
+  &.progress-line-tp1{
+    background: rgba($brand-ctp-1,.2);
+  }
+  &.progress-line-tp2{
+    background: rgba($brand-ctp-2,.2);
+  }
+  &.progress-line-tp3{
+    background: rgba($brand-ctp-3,.2);
+  }
+  &.progress-line-tp4{
+    background: rgba($brand-ctp-4,.2);
+  }
+  &.progress-line-tp5{
+    background: rgba($brand-ctp-5,.2);
+  }
+  &.progress-line-ts1{
+    background: rgba($brand-cts-1,.2);
+  }
+  &.progress-line-ts2{
+    background: rgba($brand-cts-2,.2);
+  }
+  &.progress-line-ts3{
+    background: rgba($brand-cts-3,.2);
+  }
+  &.progress-line-ts4{
+    background: rgba($brand-cts-4,.2);
+  }
+  &.progress-line-ts5{
+    background: rgba($brand-cts-5,.2);
+  }
+  &.progress-line-tt1{
+    background: rgba($brand-ctt-1,.2);
+  }
+  &.progress-line-tt2{
+    background: rgba($brand-ctt-2,.2);
+  }
+  &.progress-line-tt3{
+    background: rgba($brand-ctt-3,.2);
+  }
+  &.progress-line-tt4{
+    background: rgba($brand-ctt-4,.2);
+  }
+  &.progress-line-tt5{
+    background: rgba($brand-ctt-5,.2);
+  }
+  &.progress-line-tf1{
+    background: rgba($brand-ctf-1,.2);
+  }
+  &.progress-line-tf2{
+    background: rgba($brand-ctf-2,.2);
+  }
+  &.progress-line-tf3{
+    background: rgba($brand-ctf-3,.2);
+  }
+  &.progress-line-tf4{
+    background: rgba($brand-ctf-4,.2);
+  }
+  &.progress-line-tf5{
+    background: rgba($brand-ctf-5,.2);
+  }
+
+}
