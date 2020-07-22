@@ -1,32 +1,21 @@
 {% load static %}
 {% load compress %}
 
-{% compress css %}
-<link rel="stylesheet" type="text/x-scss" href="{% static 'scss/admin.scss' %}" />
-<link rel="stylesheet" type="text/x-scss" href="{% static 'scss/color1.scss' %}" />
-{% endcompress %}
-
 <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
-
 
 <!-- Icons -->
 <link rel="stylesheet" type="text/css" href="{% static 'frontend/assets/css/fontawesome.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/assets/css/themify-icons.css' %}"> <!--I-->
 
-<!--Slick slider css-->
-<link rel="stylesheet" type="text/css" href="{% static 'frontend/assets/css/slick.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'frontend/assets/css/slick-theme.css' %}">
+{% compress css %}
+<link rel="stylesheet" type="text/x-scss" href='{% static "frontend/scss/admin.scss" %}' />
+<link rel="stylesheet" type="text/x-scss" href='{% static "frontend/scss/color1.scss" %}' />
 
-<!-- Animate icon -->
-<link rel="stylesheet" type="text/css" href="{% static 'frontend/assets/css/animate.css' %}">
+{% endcompress %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- Themify icon -->
-<link rel="stylesheet" type="text/css" href="{% static 'frontend/assets/css/themify-icons.css' %}">
 
-<!-- Bootstrap css -->
-<link rel="stylesheet" type="text/css" href="{% static 'frontend/assets/css/bootstrap.css' %}">
-
-<!-- Theme css -->
-<link rel="stylesheet" type="text/css" href="{% static 'frontend/assets/css/color1.css' %}" media="screen" id="color">
+<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
 
 <link rel="icon" href="{% static 'frontend/my_assets/icon1.png' %}" type="image/x-icon">
 

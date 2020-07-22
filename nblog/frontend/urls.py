@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^otro/$', user_v.emailsending, name='otro'),
     url(r'^me/$', user_v.UserDetailView.as_view() , name='me'),
 
+
 ]

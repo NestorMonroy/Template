@@ -17,25 +17,17 @@ from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import include, url
 from frontend.views.user_v import home_page
-from dj_rest_auth.registration.views import VerifyEmailView, RegisterView
 
 import frontend.urls
+import accounts.urls
 
 
 urlpatterns = [
-    # url('', home_page, name='home'),
-
     url(r'^$', home_page, name='home'),
-     url(r'^control/', include((frontend.urls, 'frontend'))),
+    url(r'^control/', include(frontend.urls)),
     path('admin/', admin.site.urls),
-    # path('accounts/', include('allauth.urls')),
-    path('auth/', include('dj_rest_auth.urls')),
-    path('auth/registration/', include('dj_rest_auth.registration.urls')),
-    # path('registration/', RegisterView.as_view(), name='account_signup'),
-    re_path(r'^account-confirm-email/', VerifyEmailView.as_view(),
-            name='account_email_verification_sent'),
-    re_path(r'^account-confirm-email/(?P<key>[-:\w]+)/$', VerifyEmailView.as_view(),
-            name='account_confirm_email'),
+
+    url('', include(accounts.urls)),
 
 
 ]

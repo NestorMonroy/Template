@@ -1,0 +1,251 @@
+// Base class
+//
+// Easily usable on <ul>, <ol>, or <div>.
+
+.list-group {
+	display: flex;
+	flex-direction: column;
+
+	// No need to set list-style: none; since .list-group-item is block level
+	padding-left: 0; // reset padding because ul and ol
+	margin-bottom: 0;
+	@include border-radius($list-group-border-radius);
+}
+
+// Interactive list items
+//
+// Use anchor or button elements instead of `li`s or `div`s to create interactive
+// list items. Includes an extra `.active` modifier class for selected items.
+
+.list-group-item-action {
+	width: 100%; // For `<button>`s (anchors become 100% by default though)
+	color: $list-group-action-color;
+	text-align: inherit; // For `<button>`s (anchors inherit)
+
+	// Hover state
+	@include hover-focus() {
+		z-index: 1; // Place hover/focus items above their siblings for proper border styling
+		color: $list-group-action-hover-color;
+		text-decoration: none;
+		background-color: $list-group-hover-bg;
+	}
+
+	&:active {
+		color: $list-group-action-active-color;
+		background-color: $list-group-action-active-bg;
+	}
+}
+
+// Individual list items
+//
+// Use on `li`s or `div`s within the `.list-group` parent.
+
+.list-group-item {
+	position: relative;
+	display: block;
+	padding: $list-group-item-padding-y $list-group-item-padding-x;
+	color: $list-group-color;
+	text-decoration: if($link-decoration == none, null, none);
+	background-color: $list-group-bg;
+	border: $list-group-border-width solid $list-group-border-color;
+
+	&:first-child {
+		@include border-top-radius(inherit);
+	}
+
+	&:last-child {
+		@include border-bottom-radius(inherit);
+	}
+
+	&.disabled,
+	&:disabled {
+		color: $list-group-disabled-color;
+		pointer-events: none;
+		background-color: $list-group-disabled-bg;
+	}
+
+	// Include both here for `<a>`s and `<button>`s
+	&.active {
+		z-index: 2; // Place active items above their siblings for proper border styling
+		color: $list-group-active-color;
+		background-color: $list-group-active-bg;
+		border-color: $list-group-active-border-color;
+	}
+
+	& + & {
+		border-top-width: 0;
+
+		&.active {
+			margin-top: -$list-group-border-width;
+			border-top-width: $list-group-border-width;
+		}
+	}
+}
+
+// Horizontal
+//
+// Change the layout of list group items from vertical (default) to horizontal.
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+	@include media-breakpoint-up($breakpoint) {
+		$infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+		.list-group-horizontal#{$infix} {
+			flex-direction: row;
+
+			> .list-group-item {
+				&:first-child {
+					@include border-bottom-left-radius($list-group-border-radius);
+					@include border-top-right-radius(0);
+				}
+
+				&:last-child {
+					@include border-top-right-radius($list-group-border-radius);
+					@include border-bottom-left-radius(0);
+				}
+
+				&.active {
+					margin-top: 0;
+				}
+
+				& + .list-group-item {
+					border-top-width: $list-group-border-width;
+					border-left-width: 0;
+
+					&.active {
+						margin-left: -$list-group-border-width;
+						border-left-width: $list-group-border-width;
+					}
+				}
+			}
+		}
+	}
+}
+
+// Flush list items
+//
+// Remove borders and border-radius to keep list group items edge-to-edge. Most
+// useful within other components (e.g., cards).
+
+.list-group-flush {
+	@include border-radius(0);
+
+	> .list-group-item {
+		border-width: 0 0 $list-group-border-width;
+
+		&:last-child {
+			border-bottom-width: 0;
+		}
+	}
+}
+
+// Contextual variants
+//
+// Add modifier classes to change text and background color on individual items.
+// Organizationally, this must come after the `:hover` states.
+
+@each $color, $value in $theme-colors {
+	@include list-group-item-variant($color, theme-color-level($color, -9), theme-color-level($color, 6));
+}
+
+// https://www.google.com/design/spec/components/lists.html#lists-specs
+
+// - single line 48dp
+// - single line avatar 56dp
+// - double line (with and w/o avatar) 72dp
+// - triple line 88dp
+
+.list-group {
+	// #853 start -- https://github.com/twbs/bootstrap/pull/18981/files
+	@if $enable-flex {
+		display: flex;
+		flex-direction: column;
+	}
+	// #853 end -- https://github.com/twbs/bootstrap/pull/18981/files
+
+	flex-grow: 1;
+
+	// Add 8dp of padding at the top and bottom of a list. One exception is at the top of a list with a subheader, because subheaders contain their own padding.
+	padding: .5rem 0;
+
+	// dense size variation
+	&.bmd-list-group-sm {
+		padding: .25rem 0;
+
+		.list-group-item {
+			padding: .5rem 1rem;
+		}
+	}
+}
+
+.bmd-list-group-col {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	//flex-shrink: 0;
+}
+
+.list-group-item {
+	// #853 start -- https://github.com/twbs/bootstrap/pull/18981/files
+	@if $enable-flex {
+		display: flex;
+		flex-flow: row wrap;
+		align-items: center;
+	} @else {
+		display: block;
+	}
+	// #853 end -- https://github.com/twbs/bootstrap/pull/18981/files
+	padding: 1rem;
+	line-height: 1;
+
+	.list-group-item-text {
+		// word wrap? http://stackoverflow.com/a/26535469/2363935
+		//flex-flow: row wrap;
+		min-width: 0;
+		max-height: 2.188rem; // 88dp tile total height
+		// FIXME: text overflow with ellipsis is not working
+		//flex: 0 1 auto; //    http://stackoverflow.com/questions/12022288/how-to-keep-a-flex-item-from-overflowing-due-to-its-text
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	//------
+	// NOTE: there are many variations of icon/labels in a list, each one of these rules exist for a reason.
+
+	// first icon/label on the left
+	:first-child {
+		margin-right: 2rem; // single line icon is 72dp to text (16 pad + 24 icon + 32 margin)
+	}
+
+	// second icon/label, or only icon/label marked as 'pull-*-right', or any direct child element marked as right
+	> .pull-xs-right,
+	> .pull-sm-right,
+	> .pull-md-right,
+	> .pull-lg-right,
+	> .pull-xl-right,
+	> * ~ .label:last-child,
+	> * ~ .material-icons:last-child {
+		margin-right: 0; // some variations actually match the first-child
+		margin-left: auto;
+	}
+
+	// add the padding to icons (margin-left is used for alignment)
+	.material-icons.pull-xs-right,
+	// need the specificity .material-icons.pull-sm-right,
+	.material-icons.pull-md-right,
+	.material-icons.pull-lg-right,
+	.material-icons.pull-xl-right,
+	.material-icons ~ .material-icons:last-child {
+		padding-left: 1rem; // guarantee space per spec
+	}
+	//------
+
+	.list-group-item-heading {
+		//font-size: 1rem;
+	}
+
+	.list-group-item-text {
+		font-size: .875rem;
+		color: $gray;
+	}
+}

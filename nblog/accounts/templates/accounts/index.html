@@ -1,0 +1,81 @@
+{% extends "frontend/base.html" %}
+{% block content %}
+<div class="container">
+    <br><br>
+    <div class="row white">
+        <div class="large-12 columns">
+            <a href="/logout" class="right">Logout</a>
+            <h2>Hi, <span id="user">{{request.user.username}}</span></h2>
+        </div>
+    </div>
+
+    <div class="row white">
+        <div class="columns large-12">
+            <form method="POST" id="post-form">
+                {% csrf_token %}
+                <div class="fieldWrapper" id="the_post">
+                    {{ form.text }}
+                </div>
+                <div id="results"></div>
+                <input type="submit" value="Post" class="tiny button">
+            </form>
+        </div>
+    </div>
+
+    <!-- The feed -->
+    <div class="row white">
+        <div class="columns large-12">
+            <ul id="talk">
+                {% for post in all_posts %}
+                <li id='post-{{post.pk}}'>
+                    <strong>{{ post.text }}</strong> -
+                    <em>{{ post.author }}</em> -
+                    <span>{{ post.created }}</span> -
+                    <a id='delete-post-{{post.id}}'>delete me</a>
+                </li>
+                {% endfor %}
+            </ul>
+            <span id="next"></span>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script>
+
+    // load_posts()
+
+    // // Load all posts on page load
+    // function load_posts() {
+    //     $.ajax({
+    //         url: "api/v1/posts/", // the endpoint
+    //         type: "GET", // http method
+    //         // handle a successful response
+    //         success: function (json) {
+    //             for (var i = 0; i < json.length; i++) {
+    //                 console.log(json[i])
+    //                 $("#talk").prepend("<li id='post-" + json[i].id + "'><strong>" + json[i].text + "</strong> - <em> " + json[i].author + "</em> - <span> " + json[i].created +
+    //                     "</span> - <a id='delete-post-" + json[i].id + "'>delete me</a></li>");
+    //             }
+    //         },
+    //         // handle a non-successful response
+    //         error: function (xhr, errmsg, err) {
+    //             $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: " + errmsg +
+    //                 " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+    //             console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+    //         }
+    //     });
+    // };
+
+    $("#talk").on('click', 'a[id^=delete-post-]', function () {
+        var post_primary_key = $(this).attr('id').split('-')[2];
+        console.log(post_primary_key) // sanity check
+        delete_post(post_primary_key);
+    });
+</script>
+
+{% endblock %}

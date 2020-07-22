@@ -1,0 +1,708 @@
+// stylelint-disable selector-no-qualifying-type
+
+//
+// Textual form controls
+//
+
+.form-control {
+  display: block;
+  width: 100%;
+  height: $input-height;
+  padding: $input-padding-y $input-padding-x;
+  font-family: $input-font-family;
+  @include font-size($input-font-size);
+  font-weight: $input-font-weight;
+  line-height: $input-line-height;
+  color: $input-color;
+  background-color: $input-bg;
+  background-clip: padding-box;
+  border: $input-border-width solid $input-border-color;
+
+  // Note: This has no effect on <select>s in some browsers, due to the limited stylability of `<select>`s in CSS.
+  @include border-radius($input-border-radius, 0);
+
+  @include box-shadow($input-box-shadow);
+  @include transition($input-transition);
+
+  // Unstyle the caret on `<select>`s in IE10+.
+  &::-ms-expand {
+    background-color: transparent;
+    border: 0;
+  }
+
+  // Remove select outline from select box in FF
+  &:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 $input-color;
+  }
+
+  // Customize the `:focus` state to imitate native WebKit styles.
+  @include form-control-focus($ignore-warning: true);
+
+  // Placeholder
+  &::placeholder {
+    color: $input-placeholder-color;
+    // Override Firefox's unusual default opacity; see https://github.com/twbs/bootstrap/pull/11526.
+    opacity: 1;
+  }
+
+  // Disabled and read-only inputs
+  //
+  // HTML5 says that controls under a fieldset > legend:first-child won't be
+  // disabled if the fieldset is disabled. Due to implementation difficulty, we
+  // don't honor that edge case; we style them as disabled anyway.
+  &:disabled,
+  &[readonly] {
+    background-color: $input-disabled-bg;
+    // iOS fix for unreadable disabled content; see https://github.com/twbs/bootstrap/issues/11655.
+    opacity: 1;
+  }
+}
+
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="month"] {
+  &.form-control {
+    appearance: none; // Fix appearance for date inputs in Safari
+  }
+}
+
+select.form-control {
+  &:focus::-ms-value {
+    // Suppress the nested default white text on blue background highlight given to
+    // the selected option text when the (still closed) <select> receives focus
+    // in IE and (under certain conditions) Edge, as it looks bad and cannot be made to
+    // match the appearance of the native widget.
+    // See https://github.com/twbs/bootstrap/issues/19398.
+    color: $input-color;
+    background-color: $input-bg;
+  }
+}
+
+// Make file inputs better match text inputs by forcing them to new lines.
+.form-control-file,
+.form-control-range {
+  display: block;
+  width: 100%;
+}
+
+
+//
+// Labels
+//
+
+// For use with horizontal and inline forms, when you need the label (or legend)
+// text to align with the form controls.
+.col-form-label {
+  padding-top: add($input-padding-y, $input-border-width);
+  padding-bottom: add($input-padding-y, $input-border-width);
+  margin-bottom: 0; // Override the `<label>/<legend>` default
+  @include font-size(inherit); // Override the `<legend>` default
+  line-height: $input-line-height;
+}
+
+.col-form-label-lg {
+  padding-top: add($input-padding-y-lg, $input-border-width);
+  padding-bottom: add($input-padding-y-lg, $input-border-width);
+  @include font-size($input-font-size-lg);
+  line-height: $input-line-height-lg;
+}
+
+.col-form-label-sm {
+  padding-top: add($input-padding-y-sm, $input-border-width);
+  padding-bottom: add($input-padding-y-sm, $input-border-width);
+  @include font-size($input-font-size-sm);
+  line-height: $input-line-height-sm;
+}
+
+
+// Readonly controls as plain text
+//
+// Apply class to a readonly input to make it appear like regular plain
+// text (without any border, background color, focus indicator)
+
+.form-control-plaintext {
+  display: block;
+  width: 100%;
+  padding: $input-padding-y 0;
+  margin-bottom: 0; // match inputs if this class comes on inputs with default margins
+  @include font-size($input-font-size);
+  line-height: $input-line-height;
+  color: $input-plaintext-color;
+  background-color: transparent;
+  border: solid transparent;
+  border-width: $input-border-width 0;
+
+  &.form-control-sm,
+  &.form-control-lg {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+
+// Form control sizing
+//
+// Build on `.form-control` with modifier classes to decrease or increase the
+// height and font-size of form controls.
+//
+// Repeated in `_input_group.scss` to avoid Sass extend issues.
+
+.form-control-sm {
+  height: $input-height-sm;
+  padding: $input-padding-y-sm $input-padding-x-sm;
+  @include font-size($input-font-size-sm);
+  line-height: $input-line-height-sm;
+  @include border-radius($input-border-radius-sm);
+}
+
+.form-control-lg {
+  height: $input-height-lg;
+  padding: $input-padding-y-lg $input-padding-x-lg;
+  @include font-size($input-font-size-lg);
+  line-height: $input-line-height-lg;
+  @include border-radius($input-border-radius-lg);
+}
+
+// stylelint-disable-next-line no-duplicate-selectors
+select.form-control {
+  &[size],
+  &[multiple] {
+    height: auto;
+  }
+}
+
+textarea.form-control {
+  height: auto;
+}
+
+// Form groups
+//
+// Designed to help with the organization and spacing of vertical forms. For
+// horizontal forms, use the predefined grid classes.
+
+.form-group {
+  margin-bottom: $form-group-margin-bottom;
+}
+
+.form-text {
+  display: block;
+  margin-top: $form-text-margin-top;
+}
+
+
+// Form grid
+//
+// Special replacement for our grid system's `.row` for tighter form layouts.
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -$form-grid-gutter-width / 2;
+  margin-left: -$form-grid-gutter-width / 2;
+
+  > .col,
+  > [class*="col-"] {
+    padding-right: $form-grid-gutter-width / 2;
+    padding-left: $form-grid-gutter-width / 2;
+  }
+}
+
+
+// Checkboxes and radios
+//
+// Indent the labels to position radios/checkboxes as hanging controls.
+
+.form-check {
+  position: relative;
+  display: block;
+  padding-left: $form-check-input-gutter;
+}
+
+.form-check-input {
+  position: absolute;
+  margin-top: $form-check-input-margin-y;
+  margin-left: -$form-check-input-gutter;
+
+  // Use [disabled] and :disabled for workaround https://github.com/twbs/bootstrap/issues/28247
+  &[disabled] ~ .form-check-label,
+  &:disabled ~ .form-check-label {
+    color: $text-muted;
+  }
+}
+
+.form-check-label {
+  margin-bottom: 0; // Override default `<label>` bottom margin
+}
+
+.form-check-inline {
+  display: inline-flex;
+  align-items: center;
+  padding-left: 0; // Override base .form-check
+  margin-right: $form-check-inline-margin-x;
+
+  // Undo .form-check-input defaults and add some `margin-right`.
+  .form-check-input {
+    position: static;
+    margin-top: 0;
+    margin-right: $form-check-inline-input-margin-x;
+    margin-left: 0;
+  }
+}
+
+
+// Form validation
+//
+// Provide feedback to users when form field values are valid or invalid. Works
+// primarily for client-side validation via scoped `:invalid` and `:valid`
+// pseudo-classes but also includes `.is-invalid` and `.is-valid` classes for
+// server side validation.
+
+@each $state, $data in $form-validation-states {
+  @include form-validation-state($state, map-get($data, color), map-get($data, icon));
+}
+
+// Inline forms
+//
+// Make forms appear inline(-block) by adding the `.form-inline` class. Inline
+// forms begin stacked on extra small (mobile) devices and then go inline when
+// viewports reach <768px.
+//
+// Requires wrapping inputs and labels with `.form-group` for proper display of
+// default HTML form controls and our custom form controls (e.g., input groups).
+
+.form-inline {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center; // Prevent shorter elements from growing to same height as others (e.g., small buttons growing to normal sized button height)
+
+  // Because we use flex, the initial sizing of checkboxes is collapsed and
+  // doesn't occupy the full-width (which is what we want for xs grid tier),
+  // so we force that here.
+  .form-check {
+    width: 100%;
+  }
+
+  // Kick in the inline
+  @include media-breakpoint-up(sm) {
+    label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0;
+    }
+
+    // Inline-block all the things for "inline"
+    .form-group {
+      display: flex;
+      flex: 0 0 auto;
+      flex-flow: row wrap;
+      align-items: center;
+      margin-bottom: 0;
+    }
+
+    // Allow folks to *not* use `.form-group`
+    .form-control {
+      display: inline-block;
+      width: auto; // Prevent labels from stacking above inputs in `.form-group`
+      vertical-align: middle;
+    }
+
+    // Make static controls behave like regular ones
+    .form-control-plaintext {
+      display: inline-block;
+    }
+
+    .input-group,
+    .custom-select {
+      width: auto;
+    }
+
+    // Remove default margin on radios/checkboxes that were used for stacking, and
+    // then undo the floating of radios and checkboxes to match.
+    .form-check {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: auto;
+      padding-left: 0;
+    }
+    .form-check-input {
+      position: relative;
+      flex-shrink: 0;
+      margin-top: 0;
+      margin-right: $form-check-input-margin-x;
+      margin-left: 0;
+    }
+
+    .custom-control {
+      align-items: center;
+      justify-content: center;
+    }
+    .custom-control-label {
+      margin-bottom: 0;
+    }
+  }
+}
+/// Material 
+form {
+  // ensure enough room at the bottom of any form to display a one-line bmd-help
+  margin-bottom: ($bmd-help-size-ratio * $font-size-base) * $line-height-base;
+
+  .card &{
+      margin: 0;
+  }
+  // reverse the above for navbars (no help expected in a navbar form)
+  .navbar & {
+    margin-bottom: 0; // only adjust bottom so that pull-xs-right flexed margin-left: auto works
+
+    .bmd-form-group {
+      display: inline-block;
+      padding-top: 0;
+    }
+
+    .btn {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// -----
+// Inputs
+//
+// Reference http://www.google.com/design/spec/components/text-fields.html
+// MDL implementation: http://www.getmdl.io/components/index.html#textfields-section
+.form-control {
+  background: $bmd-form-control-bg-repeat-y $bmd-form-control-bg-position;
+  background-size: $bmd-form-control-bg-size;
+  border: 0;
+  height: 36px;
+  transition: background 0s ease-out;
+  padding-left: 0;
+  padding-right: 0;
+  border-radius: 0;
+  font-size: $mdb-input-font-size-base;
+
+  // The border bottom should be static in all states, the decorator will be animated over this.
+  &:focus,
+  .bmd-form-group.is-focused & {
+    background-size: $bmd-form-control-bg-size-active;
+    //border-bottom: $input-btn-border-width solid $input-border-color;
+    transition-duration: 0.3s;
+    box-shadow: none;
+  }
+
+  @include material-placeholder() {
+      color: $mdb-input-placeholder-color;
+      font-weight: 400;
+      font-size: $mdb-input-font-size-base;
+}
+
+  .has-white &{
+      @include material-placeholder(){
+          color: $white-color;
+      }
+  }
+}
+
+
+
+// Help blocks (not in v4)
+//  position: absolute approach - uses no vertical space and there is no form jumping, but text wrapping - not so good.
+//  FIXME: width/wrapping isn't automatic and overflows occur.  What are some solutions?
+//
+.bmd-help {
+  position: absolute;
+  display: none;
+  font-size: .8rem;
+  font-weight: normal;
+  @extend .text-muted;
+
+  .bmd-form-group.is-focused & {
+    display: block;
+  }
+
+  //--------------------------------------
+  // Multiple help blocks
+  // - absolute positioning is used above to prevent bouncing
+  // - when there is more than one, this will bounce but will at least show
+  &:nth-of-type(2) {
+    padding-top: 1rem; // the first one requires top padding to push it below the first one which is absolute positioned
+  }
+
+  + .bmd-help {
+    position: relative;
+    margin-bottom: 0;
+  }
+}
+
+// -----
+// State coloring: default, success, info, warning, danger
+//
+@include bmd-selection-color();
+@include bmd-form-color($bmd-label-color, $bmd-label-color-focus, $input-border-color, $input-border-color);
+
+.has-success {
+  @include bmd-form-color($brand-success, $brand-success, $brand-success, $input-border-color);
+}
+
+.has-info {
+  @include bmd-form-color($brand-info, $brand-info, $brand-info, $input-border-color);
+}
+
+.has-white{
+  @include bmd-form-color($white-color, $white-color, $white-color, $input-border-color-white);
+
+    .form-control{
+        &:focus{
+            color: $white-color;
+        }
+    }
+}
+
+.has-warning {
+  @include bmd-form-color($brand-warning, $brand-warning, $brand-warning, $input-border-color);
+}
+
+.has-danger {
+  @include bmd-form-color($brand-danger, $brand-danger, $brand-danger, $input-border-color);
+}
+
+.has-rose {
+  @include bmd-form-color($brand-rose, $brand-rose, $brand-rose, $input-border-color);
+}
+
+// Reference http://www.google.com/design/spec/components/text-fields.html
+// MDL implementation: http://www.getmdl.io/components/index.html#textfields-section
+//.variations(unquote(" label"), color, $bmd-input-placeholder-color);  // default label color variations
+
+// Whereas .form-group adds structure, bmd-form-group just needs to make sure we have enough padding for our labels to work.  That's the only purpose.
+.bmd-form-group {
+  position: relative;
+  padding-top: 27px;
+
+  // -----
+  // Labels
+  //
+  // Reference http://www.google.com/design/spec/components/text-fields.html
+  // MDL implementation: http://www.getmdl.io/components/index.html#textfields-section
+
+    &:not(.has-success):not(.has-danger){
+        [class^='bmd-label'],
+        [class*=' bmd-label']{
+            &.bmd-label-floating{
+                color: $mdb-input-placeholder-color;
+            }
+        }
+    }
+  [class^='bmd-label'],
+  [class*=' bmd-label'] {
+    position: absolute;
+    pointer-events: none;
+    transition: 0.3s ease all;
+
+    // hint to browser for optimization
+    &.bmd-label-floating {
+      will-change: left, top, contents;
+      margin: 0;
+      line-height: 1.4;
+      font-weight: 400;
+    }
+  }
+
+  // hide label-placeholders when the field is filled
+  &.is-filled .bmd-label-placeholder {
+    display: none;
+  }
+
+  // Optional class to make the text field inline collapsible/expandable (collapsed by default)
+  //    This uses the BS collapse js to make the width expand.
+  //    `width` class must also be on the element FIXME: do this with JS, it is a marker class and should be implicit because after all, we are an bmd-collapse-inline
+  //    FIXME: js needs to do the focus on shown.bs.collapse event http://v4-alpha.getbootstrap.com/components/collapse/#events
+  &.bmd-collapse-inline {
+    display: flex;
+    align-items: center;
+    padding: 0; // get rid of any padding as this is a width transition
+    min-height: 2.1em;
+
+    // Expandable Holder.
+    .collapse {
+      flex: 1;
+      display: none;
+      &.show {
+        // This is an unfortunate hack. Animating between widths in percent (%)
+        // in many browsers (Chrome, Firefox) only animates the inner visual style
+        // of the input - the outer bounding box still 'jumps'.
+        // Thus assume a sensible maximum, and animate to/from that value.
+        max-width: 1200px;
+      }
+    }
+
+    .collapsing,
+    .width:not(.collapse),
+    // collapsing is removed and momentarily only width is present
+    .collapse.show {
+      display: block;
+    }
+
+    .collapsing {
+      @include material-animation-default();
+    }
+  }
+
+  // default floating size/location with an bmd-form-group
+  @include bmd-form-size-variant($font-size-base, $bmd-label-top-margin-base, $input-padding-y, $bmd-form-line-height, "bmd-form-group default");
+
+  // sm floating size/location
+  &.bmd-form-group-sm {
+    @include bmd-form-size-variant($font-size-sm, $bmd-label-top-margin-sm, $input-padding-y-sm, $bmd-form-line-height-sm, "bmd-form-group sm");
+  }
+
+  // lg floating size/location
+  &.bmd-form-group-lg {
+    @include bmd-form-size-variant($font-size-lg, $bmd-label-top-margin-lg, $input-padding-y-lg, $bmd-form-line-height-sm, "bmd-form-group lg");
+  }
+}
+
+// default floating size/location without a form-group (will skip form-group styles, and just render default sizing variation) - IMPORTANT for non-form-group spacing such as radio/checkbox/switch
+@include bmd-form-size-variant($font-size-base, $bmd-label-top-margin-base, $input-padding-y, $bmd-form-line-height);
+
+select {
+  &,
+  &.form-control {
+    // Use vendor prefixes as `appearance` isn't part of the CSS spec. OSX doesn't obey the border-radius: 0 without this.
+    -moz-appearance: none;
+    -webkit-appearance: none;
+  }
+}
+
+// Input files - hide actual input - requires specific markup in the sample.
+//.bmd-form-group input[type=file] {
+//  opacity: 0;
+//  position: absolute;
+//  top: 0;
+//  right: 0;
+//  bottom: 0;
+//  left: 0;
+//  width: 100%;
+//  height: 100%;
+//  z-index: 100;
+//}
+
+//
+//
+//.form-horizontal {
+//
+//  // Consistent vertical alignment of radios and checkboxes
+//  .radio,
+//  .checkbox,
+//  .radio-inline,
+//  .checkbox-inline {
+//    padding-top: 0;
+//  }
+//
+//  .radio {
+//    margin-bottom: 10px;
+//  }
+//
+//  label {
+//    text-align: right;
+//  }
+//
+//  label {
+//    margin: 0;
+//  }
+//}
+
+
+.form-inline {
+  @include media-breakpoint-up(sm) {
+    .input-group {
+      display: inline-flex;
+      align-items: center;
+    }
+  }
+}
+
+.form-control-feedback{
+    position: absolute;
+    top: 33px;
+    right: 0;
+    z-index: 2;
+    display: block;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    text-align: center;
+    pointer-events: none;
+    opacity: 0;
+
+    .has-success &{
+        color: $green;
+        opacity: 1;
+    }
+
+    .has-danger &{
+        color: $red;
+        opacity: 1;
+    }
+}
+
+.form-group{
+    margin-bottom: 17px;
+    position: relative;
+}
+
+textarea{
+    height: auto !important;
+    resize: none;
+    line-height: $bmd-line-height !important;
+}
+
+.form-group input[type=file] {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.form-newsletter{
+    .input-group,
+    .form-group{
+        float: left;
+        width: 78%;
+        margin-right: 2%;
+        margin-top: 9px;
+        padding-top: 5px;
+    }
+
+    .btn{
+        float: left;
+        width: 20%;
+        margin: 9px 0 0;
+    }
+}
+
+.form-file-upload{
+    .input-group-btn:last-child>.btn-round{
+        border-radius: 30px;
+    }
+
+    .input-group-btn .btn{
+        margin: 0;
+    }
+
+    .input-group{
+        width: 100%;
+    }
+}
+
+.input-group .input-group-btn{
+    padding: 0 12px;
+}

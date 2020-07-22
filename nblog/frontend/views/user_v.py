@@ -1,4 +1,4 @@
- 
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -7,7 +7,6 @@ from django.conf import settings
 from django.core.mail import send_mail
 
 from django.shortcuts import redirect, render
-
 
 def home_page(request):
     # print(request.session.get("first_name", "Unknown"))
@@ -35,4 +34,6 @@ class UserDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        return Response({ "email": request.user.email })
+        return Response({"email": request.user.email})
+
+
