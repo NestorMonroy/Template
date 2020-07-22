@@ -5,7 +5,8 @@
 
 <!-- Icons -->
 <link rel="stylesheet" type="text/css" href="{% static 'frontend/assets/css/fontawesome.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'frontend/assets/css/themify-icons.css' %}"> <!--I-->
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/assets/css/themify-icons.css' %}">
+<!--I-->
 
 {% compress css %}
 <link rel="stylesheet" type="text/x-scss" href='{% static "frontend/scss/admin.scss" %}' />
@@ -22,3 +23,7 @@
 <link rel="shortcut icon" href="{% static 'frontend/my_assets/icon1.png' %}" type="image/x-icon">
 
 <link rel="stylesheet" type="text/css" href="{% static 'frontend/my_css.css' %}" />
+
+{% block extra_css %}
+
+{% endblock %}

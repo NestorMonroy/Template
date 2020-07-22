@@ -1,51 +1,80 @@
 {% extends "frontend/base.html" %}
+
+
 {% block content %}
 <div class="container">
-    <br><br>
-    <div class="row white">
-        <div class="large-12 columns">
-            <a href="/logout" class="right">Logout</a>
-            <h2>Hi, <span id="user">{{request.user.username}}</span></h2>
-        </div>
-    </div>
+    <div class="row">
+        <div class="col-md-10 ml-auto mr-auto">
+            <div class="card card-signup">
+                <h2 class="card-title text-center">Hola, <span id="user">{{request.user.username}}</h2>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="container">
 
-    <div class="row white">
-        <div class="columns large-12">
-            <form method="POST" id="post-form">
-                {% csrf_token %}
-                <div class="fieldWrapper" id="the_post">
-                    {{ form.text }}
+                            <div id="task-container">
+                                <div id="form-wrapper">
+                                    <form id="form">
+                                        <div class="flex-wrapper">
+                                            <div style="flex: 6">
+                                                <input id="title" class="form-control" type="text" name="title"
+                                                    placeholder="Add Post">
+                                            </div>
+                                            <div style="flex: 1">
+                                                <input id="submit" class="btn" type="submit">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div id="list-wrapper">
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10 ml-auto mr-auto">
+                            <form class="form" method="POST" id="post-form">
+                                {% csrf_token %}
+
+                                <div class="fieldWrapper" id="the_post">
+                                    {{ form.text }}
+                                </div>
+                                <div id="results"></div>
+
+                                <input type="submit" value="Post" class="btn btn-primary btn-round">
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-10 ml-auto mr-auto">
+                            <ul id="talk">
+                                {% for post in all_posts %}
+                                <li id='post-{{post.pk}}'>
+                                    <strong>{{ post.text }}</strong> -
+                                    <em>{{ post.author }}</em> -
+                                    <span>{{ post.created }}</span> -
+                                    <a id='delete-post-{{post.id}}'>delete me</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <span id="next"></span>
+                        </div>
+                    </div>
                 </div>
-                <div id="results"></div>
-                <input type="submit" value="Post" class="tiny button">
-            </form>
+            </div>
         </div>
     </div>
-
-    <!-- The feed -->
-    <div class="row white">
-        <div class="columns large-12">
-            <ul id="talk">
-                {% for post in all_posts %}
-                <li id='post-{{post.pk}}'>
-                    <strong>{{ post.text }}</strong> -
-                    <em>{{ post.author }}</em> -
-                    <span>{{ post.created }}</span> -
-                    <a id='delete-post-{{post.id}}'>delete me</a>
-                </li>
-                {% endfor %}
-            </ul>
-            <span id="next"></span>
-        </div>
-    </div>
-
 </div>
 
 {% endblock %}
 
 {% block extra_js %}
 
-<script>
+<script type="text/javascript">
 
     // load_posts()
 
@@ -70,6 +99,40 @@
     //         }
     //     });
     // };
+
+    buildList()
+    function buildList() {
+        var wrapper = document.getElementById('list-wrapper')
+        //wrapper.innerHTML = ''
+        var url = 'http://127.0.0.1:8000/api/v1/posts/'
+
+        fetch(url)
+            .then((resp) => resp.json())
+            .then(function (data) {
+                console.log('Data:', data)
+
+                var list = data
+                for (var i in list) {
+                    var item = `
+						<div id="data-row-${i}" class="task-wrapper flex-wrapper">
+                            <div style="flex:7">
+                                <span class="title">${list[1].title} </span>
+								${title}
+							</div>
+							<div style="flex:1">
+								<button class="btn btn-sm btn-outline-info edit">Edit </button>
+							</div>
+							<div style="flex:1">
+								<button class="btn btn-sm btn-outline-dark delete">-</button>
+							</div>
+						</div>
+
+					`
+
+                }
+
+            })
+    }
 
     $("#talk").on('click', 'a[id^=delete-post-]', function () {
         var post_primary_key = $(this).attr('id').split('-')[2];

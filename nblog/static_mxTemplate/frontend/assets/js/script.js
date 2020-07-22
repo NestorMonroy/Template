@@ -901,26 +901,26 @@
 
 
     /*=====================
-     14.Header z-index js
+     14.Header z-index js   document.getElementById("mySidenav").classList.add('open-side');
      ==========================*/
-    if ($(window).width() < 1199) {
-        $('.header-2 .navbar .sidebar-bar, .header-2 .navbar .sidebar-back, .header-2 .mobile-search img').on('click', function () {
-            if ($('#mySidenav').hasClass('open-side')) {
-                $('.header-2 #main-nav .toggle-nav').css('z-index', '99');
-            } else {
-                $('.header-2 #main-nav .toggle-nav').css('z-index', '1');
-            }
-        });
-        $('.sidebar-overlay').on('click', function () {
-            $('.header-2 #main-nav .toggle-nav').css('z-index', '99');
-        });
-        $('.header-2 #search-overlay .closebtn').on('click', function () {
-            $('.header-2 #main-nav .toggle-nav').css('z-index', '99');
-        });
-        $('.layout3-menu .mobile-search .ti-search, .header-2 .mobile-search .ti-search').on('click', function () {
-            $('.layout3-menu #main-nav .toggle-nav, .header-2 #main-nav .toggle-nav').css('z-index', '1');
-        });
-    }
+    // if ($(window).width() < 1199) {
+    //     $('.header-2 .navbar .sidebar-bar, .header-2 .navbar .sidebar-back, .header-2 .mobile-search img').on('click', function () {
+    //         if ($('#mySidenav').hasClass('open-side')) {
+    //              $('.header-2 #main-nav ').css('z-index', '99');
+    //         } else {
+    //             $('.header-2 #main-nav ').css('z-index', '1');
+    //         }
+    //     });
+    //     $('.sidebar-overlay').on('click', function () {
+    //         $('.header-2 #main-nav .toggle-nav').css('z-index', '99');
+    //     });
+    //     $('.header-2 #search-overlay .closebtn').on('click', function () {
+    //         $('.header-2 #main-nav .toggle-nav').css('z-index', '99');
+    //     });
+    //     $('.layout3-menu .mobile-search .ti-search, .header-2 .mobile-search .ti-search').on('click', function () {
+    //         $('.layout3-menu #main-nav .toggle-nav, .header-2 #main-nav .toggle-nav').css('z-index', '1');
+    //     });
+    // }
 
 
     /*=====================
@@ -1328,6 +1328,15 @@ function openNav() {
 function closeNav() {
     document.getElementById("mySidenav").classList.remove('open-side');
 }
+
+function openNavR() {
+    document.getElementById("mySidenavR").classList.add('open-side');
+}
+function closeNavR() {
+    document.getElementById("mySidenavR").classList.remove('open-side');
+}
+
+
 $(function() {
     $('#main-menu').smartmenus({
         subMenusSubOffsetX: 1,

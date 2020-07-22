@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'dj_rest_auth',
     'dj_rest_auth.registration',
+
     # 'allauth.socialaccount',
 
     # 'allauth.socialaccount.providers.facebook',
@@ -66,6 +67,7 @@ INSTALLED_APPS = [
 
     'accounts',
     'frontend',
+    'post',
 
 ]
 
