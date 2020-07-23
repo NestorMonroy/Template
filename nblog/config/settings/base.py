@@ -28,7 +28,7 @@ DEBUG = True
 PRODUCTION = False
 
 if PRODUCTION:
-    ALLOWED_HOSTS = ['www.nestormonroy.com']
+    ALLOWED_HOSTS = ['www.nestorblog.com']
 else:
     ALLOWED_HOSTS = ['*']
 
@@ -210,3 +210,6 @@ LOGIN_REDIRECT_URL = "/"
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION=True
+
+
+MAX_POST_LENGTH = 240

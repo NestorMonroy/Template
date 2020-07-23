@@ -20,11 +20,15 @@ from frontend.views.user_v import home_page
 
 import frontend.urls
 import accounts.urls
+import post.urls
+
 
 
 urlpatterns = [
     url(r'^$', home_page, name='home'),
     url(r'^control/', include(frontend.urls)),
+    url(r'^posts/', include(post.urls)),
+
     path('admin/', admin.site.urls),
 
     url('', include(accounts.urls)),

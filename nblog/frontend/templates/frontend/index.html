@@ -3,31 +3,87 @@
 
 
 <section class="ratio_square section-b-space">
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <div class="theme-tab">
-                <ul class="tabs tab-title">
-                    <li class="current"><a href="tab-4">ALGO</a></li>
-                    <li class=""><a href="tab-6">MAIN</a></li>
+    <div class="container">
+        <div class="row mb-3 ">
+            <div class="col-md-4 mx-auto col-10 border rounded">
+                <form class="form" method="POST" action="posts/create">
+                    {% csrf_token %}
+                    <input type="hidden" value="/" name='next' />
+                    <textarea class="form-control" name='content' placeholder="Your Post"></textarea>
+                    <button type="submit" class="btn btn-tp3">Post</button>
+                </form>
+            </div>
 
-                </ul>
-                <div class="tab-content-cls">
+        </div>
+    </div>
+    <div class="container">
 
-                    <div id="tab-4" class="tab-content active default">
-                        <div class="no-slider row">
-
-                        </div>
-                    </div>
-
-                    <div id="tab-6" class="tab-content">
-                        <div class="no-slider row">
-                        </div>
-                    </div>
+        <div class="row">
+            <div class="col">
+                <div id='posts'>
+                    Loadding ..
                 </div>
             </div>
         </div>
+
     </div>
-</div>
 </section>
+
+<script>
+    const postsElement = document.getElementById("posts")
+    // postsElement.innerHTML = 'Cargando...'
+
+    // var el1 = "<h1> Hi 1 </h1>"
+    // var el2 = "<h1> Hi 2 </h1>"
+    // var el3 = "<h1> Hi 3 </h1>"
+
+    // postsElement.innerHTML = el1 +el2 + el3
+
+    const xhr = new XMLHttpRequest()
+    const method = 'GET'
+    const url = '/posts'
+    const responseTYpe = 'json'
+
+    function handleDidLike(post_id, currentCount) {
+        console.log(post_id, currentCount)
+        // return
+    }
+
+    function LikeBtn(post) {
+        return "<button class='btn btn-tp4 btn-small' onClick=handleDidLike(" +
+            post.id + "," + post.likes + ")>" + post.likes + " Like</button>"
+    }
+
+    function formatPostElement(post) {
+        var formattedPost = "<div class='col-12 col-md-10 mx-auto border rounded py-3 mb-4' id='post-" + post.id
+            + "'><p>" + post.content +
+            "</p> <div class='btn-group'>" + LikeBtn(post) +
+            "</div></div>"
+        return formattedPost
+
+    }
+    xhr.responseType = responseTYpe
+    xhr.open(method, url)
+    xhr.onload = function () {
+        const serverResponse = xhr.response
+        var listedItems = serverResponse.response
+        var finalPostStr = ""
+        var i;
+        for (i = 0; i < listedItems.length; i++) {
+            console.log(i)
+            console.log(listedItems[i])
+            var postObj = listedItems[i]
+            var currentItem = formatPostElement(postObj)
+            finalPostStr += currentItem
+        }
+        postsElement.innerHTML = finalPostStr
+        //console.log()
+
+
+    }
+    xhr.send()
+
+
+
+</script>
 {% endblock %}
