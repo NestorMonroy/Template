@@ -20,14 +20,14 @@ from frontend.views.user_v import home_page
 
 import frontend.urls
 import accounts.urls
-import post.urls
+import post.api.urls
 
 
 
 urlpatterns = [
     url(r'^$', home_page, name='home'),
     url(r'^control/', include(frontend.urls)),
-    url(r'^posts/', include(post.urls)),
+    url(r'^posts/', include(post.api.urls)),
 
     path('admin/', admin.site.urls),
 

@@ -213,3 +213,4 @@ ACCOUNT_EMAIL_VERIFICATION=True
 
 
 MAX_POST_LENGTH = 240
+POST_ACTION_OPTIONS = ["like", "unlike", "retweet"]

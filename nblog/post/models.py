@@ -16,7 +16,7 @@ class PostLike(models.Model):
 
 class Post(models.Model):
 
-    # parent = models.ForeignKey("self", null=True, on_delete=models.SET_NULL)
+    parent = models.ForeignKey("self", null=True, on_delete=models.SET_NULL)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tweets") # many users can many tweets
     likes = models.ManyToManyField(User, related_name='post_user', blank=True, through=PostLike)
     content = models.TextField(blank=True, null=True)
@@ -30,9 +30,9 @@ class Post(models.Model):
     class Meta:
         ordering = ['-id']
     
-    # @property
-    # def is_retweet(self):
-    #     return self.parent != None
+    @property
+    def is_repost(self):
+        return self.parent != None
     
     def save(self, *args, **kwargs):
         super(Post, self).save(*args, **kwargs)
