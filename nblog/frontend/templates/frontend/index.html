@@ -9,8 +9,11 @@
                 <form class="form" id='post-create-form' method="POST" action="posts/create">
                     {% csrf_token %}
                     <input type="hidden" value="/" name='next' />
-                    <textarea class="form-control" name='content' placeholder="Your Post"></textarea>
-                    <button type="submit" class="btn btn-tp3">Post</button>
+                    <textarea required='required' class="form-control" name='content' placeholder="Your Post"></textarea>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-tp1">Post</button>
+
+                    </div>
                 </form>
             </div>
 
@@ -47,7 +50,7 @@
         return cookieValue;
     }
 
-    function handleTweetFormError(msg, display) {
+    function handlePostFormError(msg, display) {
         var myErrorDiv = document.getElementById("tweet-create-form-error")
         if (display === true) {
             // show error
@@ -74,12 +77,12 @@
         xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
         xhr.onload = function () {
             if (xhr.status === 201) {
-                handlePostFormError("", false)
+                // handlePostFormError("", false)
+                console.log(xhr.response)
                 const newPostJson = xhr.response
-
-                console.log(newPostElement.likes)
                 const newPostElement = formatPostElement(newPostJson)
-                const ogHtml = postsContainerElement.innerHTML
+                console.log(newPostElement)
+                // const ogHtml = postsContainerElement.innerHTML
                 postsContainerElement.innerHTML = newPostElement + ogHtml
                 myForm.reset()
             } else if (xhr.status === 400) {
@@ -164,14 +167,15 @@
     }
 
     function LikeBtn(post) {
-        return "<button class='btn btn-tp4 btn-small' onClick=handlePostActionBtn(" +
+        return "<button class='btn btn-tf4 btn-small' onClick=handlePostActionBtn(" +
             post.id + "," + post.likes + ")>" + post.likes + " Like</button>"
     }
 
     function formatPostElement(post) {
         var formattedPost = "<div class='col-12 col-md-10 mx-auto border rounded py-3 mb-4' id='post-" + post.id
             + "'><p>" + post.content +
-            "</p> <div class='btn-group'>" + LikeBtn(post) +
+            "</p> <div class='btn-group'>" +
+            LikeBtn(post) +
             "</div></div>"
         return formattedPost
 

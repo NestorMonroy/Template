@@ -55,40 +55,40 @@ def post_delete_view(request, tweet_id, *args, **kwargs):
 
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def post_action_view(request, *args, **kwargs):
-    '''
-    id is required.
-    Action options are: like, unlike, retpost
-    '''
-    serializer = PostActionSerializer(data=request.data)
-    if serializer.is_valid(raise_exception=True):
-        data = serializer.validated_data
-        tweet_id = data.get("id")
-        action = data.get("action")
-        content = data.get("content")
-        qs = Post.objects.filter(id=tweet_id)
-        if not qs.exists():
-            return Response({}, status=404)
-        obj = qs.first()
-        if action == "like":
-            obj.likes.add(request.user)
-            serializer = PostSerializer(obj)
-            return Response(serializer.data, status=200)
-        elif action == "unlike":
-            obj.likes.remove(request.user)
-            serializer = PostSerializer(obj)
-            return Response(serializer.data, status=200)
-        elif action == "repost":
-            new_post = Post.objects.create(
-                    user=request.user, 
-                    parent=obj,
-                    content=content,
-                    )
-            serializer = PostSerializer(new_post)
-            return Response(serializer.data, status=201)
-    return Response({}, status=200)
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def post_action_view(request, *args, **kwargs):
+#     '''
+#     id is required.
+#     Action options are: like, unlike, retpost
+#     '''
+#     serializer = PostActionSerializer(data=request.data)
+#     if serializer.is_valid(raise_exception=True):
+#         data = serializer.validated_data
+#         tweet_id = data.get("id")
+#         action = data.get("action")
+#         content = data.get("content")
+#         qs = Post.objects.filter(id=tweet_id)
+#         if not qs.exists():
+#             return Response({}, status=404)
+#         obj = qs.first()
+#         if action == "like":
+#             obj.likes.add(request.user)
+#             serializer = PostSerializer(obj)
+#             return Response(serializer.data, status=200)
+#         elif action == "unlike":
+#             obj.likes.remove(request.user)
+#             serializer = PostSerializer(obj)
+#             return Response(serializer.data, status=200)
+#         elif action == "repost":
+#             new_post = Post.objects.create(
+#                     user=request.user, 
+#                     parent=obj,
+#                     content=content,
+#                     )
+#             serializer = PostSerializer(new_post)
+#             return Response(serializer.data, status=201)
+#     return Response({}, status=200)
 
 
 def get_paginated_queryset_response(qs, request):
@@ -97,11 +97,6 @@ def get_paginated_queryset_response(qs, request):
     paginated_qs = paginator.paginate_queryset(qs, request)
     serializer = PostSerializer(paginated_qs, many=True, context={"request": request})
     return paginator.get_paginated_response(serializer.data) # Response( serializer.data, status=200)
-
-
-
-
-
 
 
 def posts_list_view(request, *args, **kwargs):
@@ -115,28 +110,31 @@ def posts_list_view(request, *args, **kwargs):
     return JsonResponse(data)
     # return render(request, "post/list.html")
 
-# def post_create_view(request, *arg, **kwargs):
-#     user = request.user
-#     if not request.user.is_authenticated:
-#         user = None
-#         if request.is_ajax():
-#             return JsonResponse({}, status=401)
-#         return redirect(settings.LOGIN_URL)
-#     form = PostForm(request.POST or None)
-#     next_url = request.POST.get("next") or None
-#     if form.is_valid():
-#         obj = form.save(commit=False)
-#         obj.user = user
-#         obj.save()
-#         if request.is_ajax():
-#             return JsonResponse(obj.serialize(), status=201) # 201 == created items
-#         if next_url != None and is_safe_url(next_url, ALLOWED_HOSTS):
-#             return redirect(next_url)
-#         form = PostForm()
-#     if form.errors:
-#         if request.is_ajax():
-#             return JsonResponse(form.errors, status=400)
-#     return render(request, 'post/components/forms.html', context={"form":form})
+
+def post_create_view(request, *arg, **kwargs):
+    # user = request.user
+    # if not request.user.is_authenticated:
+    #     user = None
+    #     if request.is_ajax():
+    #         return JsonResponse({}, status=401)
+    #     return redirect(settings.LOGIN_URL)
+    # print("ajax", request.is_ajax())
+    form = PostForm(request.POST or None)
+    next_url = request.POST.get("next") or None
+    if form.is_valid():
+        obj = form.save(commit=False)
+        # obj.user = user
+        obj.save()
+        if request.is_ajax():
+            return JsonResponse(obj.serialize(), status=201) # 201 == created items
+        if next_url != None and is_safe_url(next_url, ALLOWED_HOSTS):
+            return redirect(next_url)
+        form = PostForm()
+    if form.errors:
+        if request.is_ajax():
+            return JsonResponse(form.errors, status=400)
+    return render(request, 'post/components/forms.html', context={"form":form})
+
 
 def posts_detail_view(request, post_id, *args, **kwargs):
     data = {
