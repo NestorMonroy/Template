@@ -8,8 +8,10 @@
             <div class="col-md-4 mx-auto col-10 border rounded">
                 <form class="form" id='post-create-form' method="POST" action="posts/create">
                     {% csrf_token %}
+                    <div class='d-none alert alert-danger' id='post-create-form-error'></div>
                     <input type="hidden" value="/" name='next' />
-                    <textarea required='required' class="form-control" name='content' placeholder="Your Post"></textarea>
+                    <textarea required='required' class="form-control" name='content'
+                        placeholder="Your Post"></textarea>
                     <div class="text-center">
                         <button type="submit" class="btn btn-tp1">Post</button>
 
@@ -51,7 +53,7 @@
     }
 
     function handlePostFormError(msg, display) {
-        var myErrorDiv = document.getElementById("tweet-create-form-error")
+        var myErrorDiv = document.getElementById("post-create-form-error")
         if (display === true) {
             // show error
             myErrorDiv.setAttribute("class", "d-block alert alert-danger")
@@ -77,18 +79,29 @@
         xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
         xhr.onload = function () {
             if (xhr.status === 201) {
-                // handlePostFormError("", false)
-                console.log(xhr.response)
+                handlePostFormError("", false)
+                // console.log(xhr.response)
                 const newPostJson = xhr.response
                 const newPostElement = formatPostElement(newPostJson)
-                console.log(newPostElement)
-                // const ogHtml = postsContainerElement.innerHTML
+                // console.log(newPostElement)
+                const ogHtml = postsContainerElement.innerHTML
                 postsContainerElement.innerHTML = newPostElement + ogHtml
                 myForm.reset()
             } else if (xhr.status === 400) {
                 const errorJson = xhr.response
-                alert("An error occured. Please try again.")
-
+                const contentError = errorJson.content
+                let contentErrorMsg;
+                if (contentError) {
+                    contentErrorMsg = contentError[0]
+                    if (contentErrorMsg) {
+                        handlePostFormError(contentErrorMsg, true)
+                    } else {
+                        alert("An error occured. Please try again.")
+                    }
+                } else {
+                    alert("An error occured. Please try again.")
+                }
+                // console.log(errorJson)
             } else if (xhr.status === 401) {
                 alert("You must login!")
                 window.location.href = "/accounts/login/"
