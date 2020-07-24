@@ -1,6 +1,6 @@
 from django.conf import settings
 from rest_framework import serializers
-# from profiles.serializers import PublicProfileSerializer
+from profiles.serializers import PublicProfileSerializer
 from .models import Post
 
 MAX_POST_LENGTH = settings.MAX_POST_LENGTH
@@ -19,7 +19,7 @@ class PostActionSerializer(serializers.Serializer):
 
 
 class PostCreateSerializer(serializers.ModelSerializer):
-    # user = PublicProfileSerializer(source='user.profile', read_only=True) # serializers.SerializerMethodField(read_only=True)
+    user = PublicProfileSerializer(source='user.profile', read_only=True) # serializers.SerializerMethodField(read_only=True)
     likes = serializers.SerializerMethodField(read_only=True)
     
     class Meta:
@@ -40,18 +40,21 @@ class PostCreateSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     # user = PublicProfileSerializer(source='user.profile', read_only=True)
-    likes = serializers.SerializerMethodField(read_only=True)
-    parent = PostCreateSerializer(read_only=True)
+    # likes = serializers.SerializerMethodField(read_only=True)
+    # parent = PostCreateSerializer(read_only=True)
     class Meta:
         model = Post
         fields = [
                 # 'user', 
-                'id', 
+                # 'id', 
                 'content',
-                'likes',
-                'is_retweet',
-                'parent',
-                'timestamp']
+                # 'likes',
+                # 'is_retweet',
+                # 'parent',
+                # 'timestamp'
+                ]
 
-    def get_likes(self, obj):
-        return obj.likes.count()
+    def validate_content(self, value):
+        if len(value) > MAX_TWEET_LENGTH:
+            raise serializers.ValidationError("This tweet is too long")
+        return value

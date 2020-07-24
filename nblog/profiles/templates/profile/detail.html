@@ -1,0 +1,9 @@
+{% extends "frontend/base.html" %}
+{% block content %}
+
+<div class="container">
+    <h1>    {% if request.user.email  %}{{ request.user.email }} {% else %} {{ request.user }}
+        {% endif %}</h1>
+</div>
+
+{% endblock content %}

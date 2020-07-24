@@ -136,7 +136,9 @@
         xhr.open(method, url)
         xhr.onload = function () {
             const serverResponse = xhr.response
-            var listedItems = serverResponse.response// array
+            var listedItems = serverResponse// array
+            console.log(serverResponse)
+            console.log(listedItems)
             var finalPostStr = ""
             var i;
             for (i = 0; i < listedItems.length; i++) {

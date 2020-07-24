@@ -70,7 +70,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, db_index=True, null=True, blank=True,
                               verbose_name=_('E-mail'), max_length=190)
     fullname = models.CharField(max_length=255, blank=True, null=True,
-                                verbose_name=_('Nombre'))
+                                verbose_name=_('Nombre Completo'))
     first_name = models.CharField(
         blank=True, null=True, max_length=150, verbose_name='Nombre')
     last_name = models.CharField(

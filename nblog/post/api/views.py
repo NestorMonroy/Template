@@ -23,11 +23,21 @@ ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 # @authentication_classes([SessionAuthentication, MyCustomAuth])
 @permission_classes([IsAuthenticated]) # REST API course
 def post_create_view(request, *args, **kwargs):
-    serializer = PostCreateSerializer(data=request.data)
+    serializer = PostCreateSerializer(data=request.POST)
+    print(serializer)
     if serializer.is_valid(raise_exception=True):
         serializer.save(user=request.user)
         return Response(serializer.data, status=201)
     return Response({}, status=400)
+
+
+@api_view(['GET'])
+def posts_list_view(request, *args, **kwargs):
+    qs = Post.objects.all()
+    username = request.GET.get('username') # ?username=Justin
+    if username != None:
+        qs = qs.by_username(username)
+    return get_paginated_queryset_response(qs, request)
 
 
 @api_view(['GET'])
@@ -99,41 +109,41 @@ def get_paginated_queryset_response(qs, request):
     return paginator.get_paginated_response(serializer.data) # Response( serializer.data, status=200)
 
 
-def posts_list_view(request, *args, **kwargs):
-    qs = Post.objects.all()
-    post_list = [x.serialize() for x in qs ]
+# def posts_list_view(request, *args, **kwargs):
+#     qs = Post.objects.all()
+#     post_list = [x.serialize() for x in qs ]
 
-    data = {
-        "isUser":False,
-        "response": post_list
-    }
-    return JsonResponse(data)
-    # return render(request, "post/list.html")
+#     data = {
+#         "isUser":False,
+#         "response": post_list
+#     }
+#     return JsonResponse(data)
+#     # return render(request, "post/list.html")
 
 
-def post_create_view(request, *arg, **kwargs):
-    user = request.user
-    if not request.user.is_authenticated:
-        user = None
-        if request.is_ajax():
-            return JsonResponse({}, status=401)
-        return redirect(settings.LOGIN_URL)
-    print("ajax", request.is_ajax(), request.user)
-    form = PostForm(request.POST or None)
-    next_url = request.POST.get("next") or None
-    if form.is_valid():
-        obj = form.save(commit=False)
-        obj.user = user or None
-        obj.save()
-        if request.is_ajax():
-            return JsonResponse(obj.serialize(), status=201) # 201 == created items
-        if next_url != None and is_safe_url(next_url, ALLOWED_HOSTS):
-            return redirect(next_url)
-        form = PostForm()
-    if form.errors:
-        if request.is_ajax():
-            return JsonResponse(form.errors, status=400)
-    return render(request, 'post/components/forms.html', context={"form":form})
+# def post_create_view(request, *arg, **kwargs):
+#     user = request.user
+#     if not request.user.is_authenticated:
+#         user = None
+#         if request.is_ajax():
+#             return JsonResponse({}, status=401)
+#         return redirect(settings.LOGIN_URL)
+#     print("ajax", request.is_ajax(), request.user)
+#     form = PostForm(request.POST or None)
+#     next_url = request.POST.get("next") or None
+#     if form.is_valid():
+#         obj = form.save(commit=False)
+#         obj.user = user or None
+#         obj.save()
+#         if request.is_ajax():
+#             return JsonResponse(obj.serialize(), status=201) # 201 == created items
+#         if next_url != None and is_safe_url(next_url, ALLOWED_HOSTS):
+#             return redirect(next_url)
+#         form = PostForm()
+#     if form.errors:
+#         if request.is_ajax():
+#             return JsonResponse(form.errors, status=400)
+#     return render(request, 'post/components/forms.html', context={"form":form})
 
 
 def posts_detail_view(request, post_id, *args, **kwargs):

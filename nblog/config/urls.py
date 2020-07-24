@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import include, url
 from frontend.views.user_v import home_page
+from dj_rest_auth.registration.views import VerifyEmailView, RegisterView
 
 import frontend.urls
 import accounts.urls
@@ -31,7 +32,14 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
 
-    path('', include((accounts.urls, 'accounts'), namespace='accounts')),
+    path('', include('dj_rest_auth.urls')),
+    path('registration/', include('dj_rest_auth.registration.urls')),
+    path('registration/', RegisterView.as_view(), name='account_signup'),
+    re_path(r'^account-confirm-email/', VerifyEmailView.as_view(),
+     name='account_email_verification_sent'),
+    re_path(r'^account-confirm-email/(?P<key>[-:\w]+)/$', VerifyEmailView.as_view(),
+     name='account_confirm_email'),
+    # path('', include((accounts.urls, 'accounts'), namespace='accounts')),
 
 
 ]
