@@ -4,16 +4,30 @@ from django.http import HttpResponse, Http404, JsonResponse
 from django.shortcuts import render, redirect
 from django.utils.http import is_safe_url
 
-from .forms import PostForm
-from .models import Post
+from ..forms import PostForm
+from ..models import Post
 
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 def posts_list_view(request, *args, **kwargs):
     qs = Post.objects.all()
-    post_list = [{"id":x.id, "content": x.content, "likes":random.randint(0, 1110) } for x in qs ]
+    post_list = [x.serialize() for x in qs ]
 
     data = {
+        "isUser":False,
         "response": post_list
     }
     return JsonResponse(data)
