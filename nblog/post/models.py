@@ -17,7 +17,7 @@ class PostLike(models.Model):
 class Post(models.Model):
 
     # parent = models.ForeignKey("self", null=True, on_delete=models.SET_NULL)
-    # user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tweets") # many users can many tweets
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     likes = models.PositiveIntegerField(null=True, blank=True)
     content = models.TextField(blank=True, null=True)
     image = models.FileField(upload_to='images/', blank=True, null=True)

@@ -112,18 +112,18 @@ def posts_list_view(request, *args, **kwargs):
 
 
 def post_create_view(request, *arg, **kwargs):
-    # user = request.user
-    # if not request.user.is_authenticated:
-    #     user = None
-    #     if request.is_ajax():
-    #         return JsonResponse({}, status=401)
-    #     return redirect(settings.LOGIN_URL)
-    # print("ajax", request.is_ajax())
+    user = request.user
+    if not request.user.is_authenticated:
+        user = None
+        if request.is_ajax():
+            return JsonResponse({}, status=401)
+        return redirect(settings.LOGIN_URL)
+    print("ajax", request.is_ajax(), request.user)
     form = PostForm(request.POST or None)
     next_url = request.POST.get("next") or None
     if form.is_valid():
         obj = form.save(commit=False)
-        # obj.user = user
+        obj.user = user or None
         obj.save()
         if request.is_ajax():
             return JsonResponse(obj.serialize(), status=201) # 201 == created items

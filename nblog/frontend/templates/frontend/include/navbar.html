@@ -43,7 +43,7 @@
                                 <li><a href="" data-lng="en">Manejo de sitio</a></li>
                                 {% endif %}
                                 <li><a href="" data-lng="en">Profile</a></li>
-                                <li><a href="" data-lng="es">Logout</a></li>
+                                <li><a href="{% url 'accounts:logout' %}" data-lng="es">Logout</a></li>
                             </ul>
                         </li>
                         {% else  %}

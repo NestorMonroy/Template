@@ -31,7 +31,7 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
 
-    url('', include(accounts.urls)),
+    path('', include((accounts.urls, 'accounts'), namespace='accounts')),
 
 
 ]
