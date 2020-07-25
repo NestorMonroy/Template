@@ -195,7 +195,7 @@ class SendEmailVerificationSerializer(ErrorsSerializerMixin, serializers.Seriali
 
 
 
-class KnoxTokenSerializer(serializers.Serializer):
+class TokenSerializer(serializers.Serializer):
     user = LoginSerializer()
     token = serializers.SerializerMethodField()
 

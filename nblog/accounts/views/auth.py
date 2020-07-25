@@ -33,7 +33,7 @@ from dj_rest_auth.registration.views import (
 # from astrosat_users.conf import app_settings as astrosat_users_settings
 from ..serializers import (
     UserSerializerLite,
-    KnoxTokenSerializer,
+    TokenSerializer,
     VerifyEmailSerializer,
     SendEmailVerificationSerializer,
 )
@@ -126,7 +126,7 @@ _register_schema = openapi.Schema(
 
 @method_decorator(
     swagger_auto_schema(
-        request_body=_login_schema, responses={status.HTTP_200_OK: KnoxTokenSerializer}
+        request_body=_login_schema, responses={status.HTTP_200_OK: TokenSerializer}
     ),
     name="post",
 )
