@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
 
-
+    'drf_yasg',
     'allauth',
     'allauth.account',
     'dj_rest_auth',
@@ -109,6 +109,9 @@ AUTHENTICATION_BACKENDS = [
 
 
 REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'accounts.views.permission.IsNotAuthenticated',
+    ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ]
