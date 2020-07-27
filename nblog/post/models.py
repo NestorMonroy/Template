@@ -43,7 +43,7 @@ class Post(models.Model):
 
     # parent = models.ForeignKey("self", null=True, on_delete=models.SET_NULL)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    likes = models.PositiveIntegerField(null=True, blank=True)
+    likes = models.ManyToManyField(User, related_name='post_user', blank=True, through=PostLike)
     content = models.TextField(blank=True, null=True)
     image = models.FileField(upload_to='images/', blank=True, null=True)
     other = models.CharField(blank=True, null=True, max_length=100)

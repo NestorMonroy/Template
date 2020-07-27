@@ -107,6 +107,14 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+DEFAULT_RENDERER_CLASSES = [
+        'rest_framework.renderers.JSONRenderer',
+    ]
+
+if DEBUG:
+    DEFAULT_RENDERER_CLASSES += [
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ]
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
@@ -115,6 +123,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
+    'DEFAULT_RENDERER_CLASSES': DEFAULT_RENDERER_CLASSES
 }
 
 WSGI_APPLICATION = 'config.wsgi.app'
@@ -222,4 +231,4 @@ ACCOUNT_EMAIL_VERIFICATION=True
 
 
 MAX_POST_LENGTH = 240
-POST_ACTION_OPTIONS = ["like", "unlike", "retweet"]
+POST_ACTION_OPTIONS = ["like", "unlike", "repost"]

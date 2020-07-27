@@ -40,7 +40,7 @@ class PostCreateSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     user = PublicProfileSerializer(source='user.profile', read_only=True)
-    # likes = serializers.SerializerMethodField(read_only=True)
+    likes = serializers.SerializerMethodField(read_only=True)
     # parent = PostCreateSerializer(read_only=True)
     class Meta:
         model = Post
@@ -58,3 +58,7 @@ class PostSerializer(serializers.ModelSerializer):
         if len(value) > MAX_POST_LENGTH:
             raise serializers.ValidationError("This tweet is too long")
         return value
+
+    def get_likes(self, obj):
+        return obj.likes.count()
+    
