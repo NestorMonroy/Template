@@ -20,17 +20,17 @@ class PostActionSerializer(serializers.Serializer):
 
 class PostCreateSerializer(serializers.ModelSerializer):
     user = PublicProfileSerializer(source='user.profile', read_only=True) # serializers.SerializerMethodField(read_only=True)
-    likes = serializers.SerializerMethodField(read_only=True)
+    # likes = serializers.SerializerMethodField(read_only=True)
     
     class Meta:
         model = Post
-        fields = ['id', 'content', 'likes', 'timestamp']
+        fields = ['user', 'id', 'content', 'likes', 'timestamp']
     
-    def get_likes(self, obj):
-        return obj.likes.count()
+    # def get_likes(self, obj):
+    #     return obj.likes.count()
     
     def validate_content(self, value):
-        if len(value) > MAX_TWEET_LENGTH:
+        if len(value) > MAX_POST_LENGTH:
             raise serializers.ValidationError("This tweet is too long")
         return value
 
@@ -39,22 +39,22 @@ class PostCreateSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    # user = PublicProfileSerializer(source='user.profile', read_only=True)
+    user = PublicProfileSerializer(source='user.profile', read_only=True)
     # likes = serializers.SerializerMethodField(read_only=True)
     # parent = PostCreateSerializer(read_only=True)
     class Meta:
         model = Post
         fields = [
-                # 'user', 
-                # 'id', 
+                'user', 
+                'id', 
                 'content',
-                # 'likes',
+                'likes',
                 # 'is_retweet',
                 # 'parent',
-                # 'timestamp'
+                'timestamp'
                 ]
 
     def validate_content(self, value):
-        if len(value) > MAX_TWEET_LENGTH:
+        if len(value) > MAX_POST_LENGTH:
             raise serializers.ValidationError("This tweet is too long")
         return value

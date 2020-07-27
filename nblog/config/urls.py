@@ -20,20 +20,21 @@ from frontend.views.user_v import home_page
 from dj_rest_auth.registration.views import VerifyEmailView, RegisterView
 
 import frontend.urls
-import accounts.urls
-import post.api.urls
+# import accounts.urls
+# import post.api.urls
 
 
 
 urlpatterns = [
     url(r'^$', home_page, name='home'),
     url(r'^control/', include(frontend.urls)),
-    url(r'^posts/', include(post.api.urls)),
+    # url(r'^posts/', include(post.api.urls)),
 
     path('admin/', admin.site.urls),
+    path('api/post/',include('post.api.urls') ),
     path('api/accounts/', include('accounts.urls')),
-
     path('', include('dj_rest_auth.urls')),
+
     # path('registration/', include('dj_rest_auth.registration.urls')),
     # path('registration/', RegisterView.as_view(), name='account_signup'),
     # re_path(r'^account-confirm-email/', VerifyEmailView.as_view(),

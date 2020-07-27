@@ -7,6 +7,28 @@ User = settings.AUTH_USER_MODEL
 
 # Create your models here.
 
+class PostQuerySet(models.QuerySet):
+    def by_email(self, email):
+        return self.filter(user__email__iexact=email)
+
+    def feed(self, user):
+        profiles_exist = user.following.exists()
+        followed_users_id = []
+        if profiles_exist:
+            followed_users_id = user.following.values_list("user__id", flat=True) # [x.user.id for x in profiles]
+        return self.filter(
+            Q(user__id__in=followed_users_id) |
+            Q(user=user)
+        ).distinct().order_by("-timestamp")
+
+
+class PostManager(models.Manager):
+    def get_queryset(self, *args, **kwargs):
+        return PostQuerySet(self.model, using=self._db)
+
+    def feed(self, user):
+        return self.get_queryset().feed(user)
+
 
 class PostLike(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -24,7 +46,8 @@ class Post(models.Model):
     other = models.CharField(blank=True, null=True, max_length=100)
     timestamp = models.DateTimeField(auto_now_add=True)
 
-    # objects = TweetManager()
+    objects = PostManager()
+    
     # def __str__(self):
     #     return self.content
     
