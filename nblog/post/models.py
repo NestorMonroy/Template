@@ -11,6 +11,9 @@ class PostQuerySet(models.QuerySet):
     def by_email(self, email):
         return self.filter(user__email__iexact=email)
 
+    def by_id(self, id):
+        return self.filter(user__id__iexact=id)
+
     def feed(self, user):
         profiles_exist = user.following.exists()
         followed_users_id = []

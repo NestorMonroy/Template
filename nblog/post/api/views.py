@@ -48,18 +48,24 @@ class PostViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
-    @action(methods=['GET'], detail=True)
     def get_queryset(self):
-
-        email = self.request.user.id
-
-        if email != None:
-            print(email, '1')
-            #  self.queryset.by_email(email)
-            return self.queryset.by_email(email)
+        user = self.request.user.id
+        print(user)
+        if user != None:
+            return self.queryset.by_id(user)
         else:
-            print(self.queryset)
             return self.queryset
+
+
+        # email = self.request.user.id
+
+        # if email != None:
+        #     print(email, '1')
+        #     #  self.queryset.by_email(email)
+        #     return self.queryset.by_email(email)
+        # else:
+        #     print(self.queryset)
+        #     return self.queryset
     # def set_password(self, request, pk=None):
     #     user = self.get_object()
     #     serializer = PasswordSerializer(data=request.data)
