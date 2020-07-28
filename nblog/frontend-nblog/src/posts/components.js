@@ -3,16 +3,21 @@ import { loadPost } from '../lookup'
 
 export function PostsComponent(props) {
     const textAreaRef = React.createRef()
+    const [newPosts, setNewPosts] = useState([])
     const handleSubmit = (event) => {
         event.preventDefault()
-        // console.log(event)
-        // console.log(textAreaRef.current.value)
         const newVal = textAreaRef.current.value
-        console.log(newVal)
-        
+        let tempNewPosts = [...newPosts]        
+        tempNewPosts.unshift({
+            content: newVal,
+            likes:0,
+            id:124
+        })
+        setNewPosts(tempNewPosts)
         textAreaRef.current.value = ''
 
     }
+
 
     return <div className={props.className}>
         <div className='col-12 mb-3'>
@@ -23,25 +28,33 @@ export function PostsComponent(props) {
                 <button type='submit' className='btn btn-primary my-3' > Post</button>
             </form>
         </div>
-    <PostsList/>
+    <PostsList newPosts={newPosts} />
     </div>
 }
 
 export function PostsList(props) {
+    const [postsInit, setPostsInit] = useState([])
     const [posts, setPosts] = useState([])
+
+    useEffect(()=>{
+        const final = [...props.newPosts].concat(postsInit)
+        if(final.length !== posts.length){
+            setPosts(final)
+        }
+    }, [props.newPosts, posts, postsInit])
 
     useEffect(() => {
         const myCallback = (response, status) => {
-            console.log(response, status)
+            // console.log(response, status)
             if (status === 200) {
-                setPosts(response)
+                setPostsInit(response)
             } else {
                 alert("Error")
             }
         }
         loadPost(myCallback)
+    }, [postsInit])
 
-    }, [])
     return posts.map((item, index) => {
         return <Post post={item} className='my-5 py-5 border border-white' key={`${index}-{item.id}`} />
     })

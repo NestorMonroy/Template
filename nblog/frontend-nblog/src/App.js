@@ -4,8 +4,6 @@ import './App.css';
 
 import { PostsComponent } from './posts'
 
-
-
 function App() {
 
   return (
