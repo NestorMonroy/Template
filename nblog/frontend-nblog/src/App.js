@@ -21,13 +21,25 @@ function loadPost(callback) {
   xhr.send()
 }
 
+function LikeBtn(props) {
+  const {post} =props
+  const className = props.className ? props.className: 'btn btn-primary btn-small'
+  return <button className={className}> {post.likes} Like</button>
+}
+
 function Post(props){
   const {post} = props
-  return <div className='col-10 mx-auto col-md-6'>
-    <p>{post.content}</p>
+  const className = props.className ? props.className: 'col-10 mx-auto col-md-6'
+  return <div className={className}>
+    <p>{post.id} -{post.content}</p>
+    <div className='btn btn-group'>
+      <LikeBtn post={post} />
+
+    </div>
   </div>
 
 }
+
 function App() {
   const [posts, setPosts] = useState([])
 
@@ -53,11 +65,11 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <p>
-          {posts.map((post, index) => {
-            return <li>{post.content} </li>
+        <div>
+          {posts.map((item, index) => {
+            return <Post post={item} className='my-5 py-5 border border-white' key={`${index}-{item.id}`} />
           })}
-        </p>
+        </div>
         <a
           className="App-link"
           href="https://reactjs.org"
