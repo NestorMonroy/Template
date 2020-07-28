@@ -68,7 +68,6 @@ INSTALLED_APPS = [
 
     'core',
     'accounts',
-    'frontend',
     'post',
     'profiles',
 
