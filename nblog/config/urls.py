@@ -13,13 +13,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import include, url
-from frontend.views.user_v import home_page
+from core.views import home_page
 from dj_rest_auth.registration.views import VerifyEmailView, RegisterView
 
-import frontend.urls
+# import frontend.urls
 # import accounts.urls
 # import post.api.urls
 
@@ -27,7 +29,7 @@ import frontend.urls
 
 urlpatterns = [
     url(r'^$', home_page, name='home'),
-    url(r'^control/', include(frontend.urls)),
+    # url(r'^control/', include(frontend.urls)),
     # url(r'^posts/', include(post.api.urls)),
 
     path('admin/', admin.site.urls),
@@ -43,5 +45,8 @@ urlpatterns = [
     #  name='account_confirm_email'),
     # path('', include((accounts.urls, 'accounts'), namespace='accounts')),
 
-
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, 
+                document_root=settings.STATIC_ROOT)
