@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Grommet } from 'grommet';
+import { aruba } from 'grommet-theme-aruba';
 
 const theme = {
   global: {
