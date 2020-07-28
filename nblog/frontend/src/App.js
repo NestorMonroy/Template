@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, Heading, Grommet } from 'grommet';
+import { Box, Button, Collapsible, Heading, Grommet } from 'grommet';
 import { Notification } from 'grommet-icons';
 
 const theme = {
@@ -38,25 +38,25 @@ function App() {
           <Heading level='3' margin='none'>Nestor Blog</Heading>
           <Button 
             icon={<Notification />} 
-            onClick={() => { }} />
+            onClick={() => setShowSidebar(!showSidebar)}
+            />
         </AppBar>
         <Box direction='row' flex overflow={{ horizontal: 'hidden' }}>
           <Box flex align='center' justify='center'>
             app Body
           </Box>
-          <Box
-             width='medium'
-             background='light-2'
-             elevation='small'
-             align='center'
-             justify='center'
-            >
-            sidebar
-          </Box>
-
+          {showSidebar && (
+            <Box
+               width='medium'
+               background='light-2'
+               elevation='small'
+               align='center'
+               justify='center'
+              >
+              sidebar
+            </Box>
+          )}
         </Box>
-
-
       </Box>
     </Grommet>
   );
