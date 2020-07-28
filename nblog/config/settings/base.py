@@ -30,7 +30,8 @@ PRODUCTION = False
 if PRODUCTION:
     ALLOWED_HOSTS = ['www.nestorblog.com']
 else:
-    ALLOWED_HOSTS = ['*']
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
 
 if PRODUCTION:
     SESSION_COOKIE_SECURE = True
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'compressor',
+    'corsheaders',
 
     'rest_framework',
     'rest_framework.authtoken',
@@ -75,6 +77,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -106,6 +109,10 @@ AUTHENTICATION_BACKENDS = [
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_URLS_REGEX = r'^/api/.*$'
+
 
 DEFAULT_RENDERER_CLASSES = [
         'rest_framework.renderers.JSONRenderer',
