@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-import { Box, Button, Collapsible, Heading, Grid, Grommet, Layer, ResponsiveContext } from 'grommet';
-import { Notification, FormClose } from 'grommet-icons';
+import { Anchor, Box, Button, Collapsible, Header, Nav, Heading, Grid, Grommet, Layer, Menu, Text, ResponsiveContext } from 'grommet';
+import { Notification, FormClose, FormDown } from 'grommet-icons';
+
+import { PostsComponent } from './posts'
+
 
 const theme = {
   global: {
@@ -65,6 +68,56 @@ const theme = {
       },
     },
   },
+  // breakpoints: {
+  //   small: {
+  //     value: 600,
+  //     edgeSize: {
+  //       small: '1px',
+  //     },
+  //     borderSize: {
+  //       small: '2px',
+  //     },
+  //     size: {
+  //       xxsmall: '24px',
+  //     },
+  //   },
+  //   medium: {
+  //     value: 900,
+  //     borderSize: {
+  //       small: '2px',
+  //     },
+  //     edgeSize: {
+  //       small: '1px',
+  //     },
+  //     size: {
+  //       xxsmall: '24px',
+  //     },
+  //   },
+  //   large: {
+  //     value: 3000,
+  //     borderSize: {
+  //       small: '2px',
+  //     },
+  //     edgeSize: {
+  //       small: '1px',
+  //     },
+  //     size: {
+  //       xxsmall: '24px',
+  //     },
+  //   },
+  //   xlarge: {
+  //     value: 3000,
+  //     borderSize: {
+  //       small: '2px',
+  //     },
+  //     edgeSize: {
+  //       small: '1px',
+  //     },
+  //     size: {
+  //       xxsmall: '24px',
+  //     },
+  //   },
+  // },
 };
 
 const AppBar = (props) => (
@@ -85,24 +138,100 @@ function App() {
   const [showSidebar, setShowSidebar] = useState(false);
   return (
     <Grommet theme={theme} full>
+
       <ResponsiveContext.Consumer>
         {size => (
           <Box fill>
-            <AppBar>
+            {/* <AppBar>
               <Heading level='3' margin='none'>Nestor Blog</Heading>
               <Button
                 icon={<Notification />}
                 onClick={() => setShowSidebar(!showSidebar)}
               />
-            </AppBar>
+              <Menu
+                dropProps={{ align: { top: 'bottom', left: 'left' } }}
+
+                icon={false}
+                items={[
+                  { label: 'Launch', onClick: () => { } },
+                  { label: 'Abort', onClick: () => { } },
+                ]}
+              >
+                {({ drop, hover }) => {
+                  const color = hover && !drop ? 'brand' : undefined;
+                  return (
+                    <Box
+                      direction="row"
+                      gap="small"
+                      pad="small"
+                      background={hover && drop ? 'light-2' : undefined}
+                    >
+                      <Text color={color}>actions</Text>
+                      <FormDown color={color} />
+                    </Box>
+                  );
+                }}
+              </Menu>
+            </AppBar> */}
+            <Header background="dark-1" pad="medium">
+              {/* <Box direction="row" align="center" gap="small">
+                Resize the page to collapse the Nav into a Menu
+              </Box> */}
+              <Heading level='3' margin='none'>Nestor Blog</Heading>
+              <Button
+                icon={<Notification />}
+                onClick={() => setShowSidebar(!showSidebar)}
+              />
+              <ResponsiveContext.Consumer>
+                {responsive =>
+                  responsive === 'small' ? (
+                    <Menu
+                      dropProps={{ align: { top: 'bottom', left: 'left' } }}
+
+                      icon={false}
+                      items={[
+                        { label: 'Launch', onClick: () => { } },
+                        { label: 'Abort', onClick: () => { } },
+                      ]}
+                    >
+                      {({ drop, hover }) => {
+                        const color = hover && !drop ? 'brand' : undefined;
+                        return (
+                          <Box
+                            direction="row"
+                            gap="small"
+                            pad="small"
+                            background={hover && drop ? 'light-2' : undefined}
+                          >
+                            <Text color={color}>actions</Text>
+                            <FormDown color={color} />
+                          </Box>
+                        );
+                      }}
+                    </Menu>
+                    // <Menu
+                    //   label="Click me"
+                    //   items={[
+                    //     { label: 'This is', onClick: () => { } },
+                    //     { label: 'The Menu', onClick: () => { } },
+                    //     { label: 'Component', onClick: () => { } },
+                    //   ]}
+                    // />
+                  ) : (
+                      <Nav direction="row">
+                        <Anchor href="#" label="This is" />
+                        <Anchor href="#" label="The Nav" />
+                        <Anchor href="#" label="Component" />
+                      </Nav>
+                    )
+                }
+              </ResponsiveContext.Consumer>
+            </Header>
             <Box direction='row' flex overflow={{ horizontal: 'hidden' }}>
-              <Box flex align='center' justify='center'>
-                app Body
-          </Box>
               {(!showSidebar || size !== 'small') ? (
                 <Collapsible direction="horizontal" open={showSidebar}>
                   <Box
-                    width='medium'
+                    width='small'
                     background='light-2'
                     elevation='small'
                     align='center'
@@ -135,7 +264,11 @@ function App() {
                       </Box>
                   </Layer>
                 )}
+              <Box flex align='center' justify='center'>
+                <PostsComponent />
+              </Box>
             </Box>
+
           </Box>
         )}
       </ResponsiveContext.Consumer>
