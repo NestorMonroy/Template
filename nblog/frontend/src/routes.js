@@ -2,7 +2,7 @@ import React, { lazy } from 'react';
 import { Redirect } from 'react-router-dom';
 import AuthLayout from './layouts/Auth';
 import ErrorLayout from './layouts/Error';
-import DashboardLayout from './layouts/Dashboard';
+import Dashboard from './layouts/Dashboard';
 import PrivateRoute from './privateRoute';
 import DefaultLayout from "./layouts/DefaultLayout";
 import Home from "./views/Home";
@@ -15,10 +15,9 @@ export default [
   {
     path: '/',
     exact: true,
-    component: () => <Redirect to="/" />
+    component: Home
   },
   {
-
     path: '/auth',
     component: AuthLayout,
     routes: [
@@ -63,7 +62,7 @@ export default [
   },
   {
     route: '*',
-    component: DashboardLayout,
+    component: Dashboard,
 
     // component: (props) => <PrivateRoute component={DefaultLayout} {...props}/>,
     routes: [
@@ -72,11 +71,11 @@ export default [
         exact: true,
         component: Home
       },
-      {
-        path: '/presentation',
-        exact: true,
-        component: TypographyView
-      },
+      // {
+      //   path: '/presentation',
+      //   exact: true,
+      //   component: TypographyView
+      // },
       // {
       //   path: '/profile',
       //   exact: true,

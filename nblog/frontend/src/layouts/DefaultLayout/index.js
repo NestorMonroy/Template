@@ -41,8 +41,8 @@ function DefaultLayout({route}) {
   );
 }
 
-DefaultLayout.propTypes = {
-  route: PropTypes.object
-};
+// DefaultLayout.propTypes = {
+//   route: PropTypes.object
+// };
 
 export default DefaultLayout;

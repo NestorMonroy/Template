@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import {Page} from '../../'
-// import { Page } from '/';
+
+// import { Page } from '../../components'
 
 import {
   Header,
@@ -19,7 +19,7 @@ const Presentation = () => {
   const classes = useStyles();
 
   return (
-    <Header />
+    <h1>H</h1>
     // <Page
     //   className={classes.root}
     //   title="Presentation"
