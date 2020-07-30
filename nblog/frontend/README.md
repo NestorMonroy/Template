@@ -1,68 +1,71 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Devias Material Kit Pro
 
-## Available Scripts
+## Client & Admin Dashboard Kit
 
-In the project directory, you can run:
+A professional kit that comes with plenty of ready-to-use Material-UI© components developed with one common goal in mind, help you build faster & beautiful applications. Each component is fully customizable, responsive and easy to integrate.
 
-### `npm start`
+### Features
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- 32 Pages Examples
+- Fully Responsive
+- Built with React Hooks API
+- Redux as State Manager
+- Routing System
+- Light Functionality Components
+- Ready-to-deploy folder structure
+- Complete User Flows
+- Easy Color Changes
+- Consistent Updates
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### Examples
 
-### `npm test`
+- [Overview](https://react-material-kit.devias.io/overview)
+- [Default Dashboard Page](https://react-material-kit.devias.io/dashboards/default)
+- [Analytics Dashboard Page](https://react-material-kit.devias.io/dashboards/analytics)
+- [User Management List Page](https://react-material-kit.devias.io/management/customers)
+- [User Management Summary Page](https://react-material-kit.devias.io/management/customers/1/summary)
+- [User Management Invoices Page](https://react-material-kit.devias.io/management/customers/1/invoices)
+- [User Management Logs Page](https://react-material-kit.devias.io/management/customers/1/logs)
+- [Product Management List Page](https://react-material-kit.devias.io/management/projects)
+- [Order Management List Page](https://react-material-kit.devias.io/management/orders)
+- [Order Management Details Page](https://react-material-kit.devias.io/management/orders/1)
+- [Social Feed Page](https://react-material-kit.devias.io/social-feed)
+- [User Timeline Page](https://react-material-kit.devias.io/profile/1/timeline)
+- [User Connections Page](https://react-material-kit.devias.io/profile/1/connections)
+- [User Projects Page](https://react-material-kit.devias.io/profile/1/projects)
+- [User Reviews Page](https://react-material-kit.devias.io/profile/1/reviews)
+- [Project List Page](https://react-material-kit.devias.io/projects)
+- [Project Create Page](https://react-material-kit.devias.io/projects/create)
+- [Project Overview Page](https://react-material-kit.devias.io/projects/1/overview)
+- [Project Files Page](https://react-material-kit.devias.io/projects/1/files)
+- [Project Activity Page](https://react-material-kit.devias.io/projects/1/activity)
+- [Project Subscribers Page](https://react-material-kit.devias.io/projects/1/subscribers)
+- [Invoice Details Page](https://react-material-kit.devias.io/invoices/1)
+- [KanbanBoard Application](https://react-material-kit.devias.io/kanban-board)
+- [Mail Application](https://react-material-kit.devias.io/mail)
+- [Chat Application](https://react-material-kit.devias.io/chat)
+- [Calendar Application](https://react-material-kit.devias.io/calendar)
+- [Settings Page](https://react-material-kit.devias.io/settings)
+- [Sign Up Page](https://react-material-kit.devias.io/auth/register)
+- [Sign In Page](https://react-material-kit.devias.io/auth/login)
+- [Error 401 Page](https://react-material-kit.devias.io/errors/error-401)
+- [Error 404 Page](https://react-material-kit.devias.io/errors/error-404)
+- [Error 500 Page](https://react-material-kit.devias.io/errors/error-500)
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Build with
 
-### `npm run build`
+- React
+- Material-UI
+- Redux
+- DraftJS
+- ChartJS
+- PrismJS
+- React Markdown
+- React Full Calendar
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Quick start
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+- Install dependencies: `npm install` or `yarn`
+- Start the server: `npm run start` or `yarn start`
+- Views are on: `localhost:3000`
+- Latest node & react versions recommended
