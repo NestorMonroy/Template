@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const popularSearches = [
-  'Devias React Dashboards',
+  'Busqueda 1',
   'Devias',
   'Admin Pannel',
   'Project',
@@ -152,20 +152,24 @@ function TopBar({
       color="primary"
     >
       <Toolbar>
-        <Hidden lgUp>
-          <IconButton
+        {/* <Hidden lgUp>
+
+        </Hidden> */}
+        <IconButton
             className={classes.menuButton}
             color="inherit"
             onClick={onOpenNavBarMobile}
           >
             <MenuIcon/>
           </IconButton>
-        </Hidden>
         <RouterLink to="/">
-          <img
+          <div>
+            TeamSolutions
+          </div>
+          {/* <img
             alt="Logo"
             src="/images/logos/logo--white.svg"
-          />
+          /> */}
         </RouterLink>
         <div className={classes.flexGrow}/>
         <Hidden smDown>

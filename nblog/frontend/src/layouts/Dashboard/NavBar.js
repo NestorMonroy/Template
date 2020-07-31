@@ -23,7 +23,7 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import NavItem from 'src/components/NavItem';
 import navConfig from './navConfig';
 import { authService } from '../../services/authService';
-import PresentationView from '../../views/Presentation';
+// import PresentationViewPresentationView from '../../views/Presentation';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -234,7 +234,7 @@ function NavBar({
 
   return (
     <>
-      <Hidden lgUp>
+      <Hidden xlUp>
         <Drawer
           anchor="left"
           classes={{
@@ -247,7 +247,7 @@ function NavBar({
           {content}
         </Drawer>
       </Hidden>
-      <Hidden mdDown>
+      <Hidden xlDown>
         <Drawer
           anchor="left"
           classes={{

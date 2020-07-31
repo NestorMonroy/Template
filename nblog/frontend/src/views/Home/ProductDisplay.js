@@ -38,7 +38,7 @@ function ProductDisplay({product}) {
   };
 
   return (
-    <div className={classes.root}>
+    <div C>
       <Paper className={classes.paper}>
         <Grid container spacing={2}>
           <Grid item>

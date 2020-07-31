@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+
 function Dashboard({ route }) {
   const classes = useStyles();
   const [openNavBarMobile, setOpenNavBarMobile] = useState(false);
