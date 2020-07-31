@@ -13,10 +13,13 @@ import { Typography } from "@material-ui/core";
 
 import { PostsComponent } from '../posts'
 
-import { PostsList } from '../posts'
+import { PostsList, PostsDetails } from '../posts/components'
+
+// import { PostsDetails } from '../posts/post-details'
 
 function Home() {
   const [posts, setPosts] = useState([]);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => { 
     fetch("http://127.0.0.1:8000/api/post/posts", {
@@ -31,18 +34,19 @@ function Home() {
     .catch(error => console.log(error))
   }, [])
 
-
-
+  const postClicked = post => {
+    setSelectedPost(post);
+    console.log(setSelectedPost.id);
+  }
 
   return (
     <Fragment>
       <Grid container>
         <Grid item md={2}>
-          <h1>Hello</h1>
-         <PostsList posts= {posts}/> 
+         <PostsList posts= {posts} postClicked= {postClicked} /> 
         </Grid>
         <Grid item md={10}>
-
+        <PostsDetails post= {selectedPost}  />
         </Grid>
       </Grid>
     </Fragment>
