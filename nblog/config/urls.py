@@ -35,7 +35,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/post/',include('post.api.urls') ),
     path('api/accounts/', include('accounts.urls')),
-    path('', include('dj_rest_auth.urls')),
+    # path('', include('dj_rest_auth.urls')),
 
     # path('registration/', include('dj_rest_auth.registration.urls')),
     # path('registration/', RegisterView.as_view(), name='account_signup'),

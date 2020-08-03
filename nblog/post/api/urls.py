@@ -5,6 +5,7 @@ from . import views
 
 router = DefaultRouter()
 router.register('posts', views.PostViewSet, basename='post')
+router.register('ratings', views.RatingViewSet, basename='ratings')
 
 app_name = 'post'
 

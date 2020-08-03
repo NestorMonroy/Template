@@ -1,5 +1,6 @@
 import random
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.http import HttpResponse, Http404, JsonResponse
 from django.shortcuts import render, redirect
 from django.utils.http import is_safe_url
@@ -14,9 +15,10 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from accounts.views.permission import IsAuthorOrReadOnly
 from rest_framework.response import Response
 from ..forms import PostForm
-from ..models import Post
+from ..models import Post, Rating
 from ..serializers import (
-    PostSerializer, 
+    PostSerializer,
+    RatingSerializer,
     PostActionSerializer,
     PostCreateSerializer
 )
@@ -24,6 +26,7 @@ from ..serializers import (
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
 
+User = get_user_model()
 
 # class BasePostAttrViewSet(viewsets.GenericViewSet,
 #                             mixins.ListModelMixin,
@@ -48,6 +51,36 @@ class PostViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
+    @action(methods=['POST'], detail=True)
+    def rate_post(self, request, pk=None):
+        if 'stars' in request.data:
+            response ={'message':'work'}
+            post = Post.objects.get(id=pk)
+            stars = request.data['stars']
+            user = request.user
+
+            try:
+                rating = Rating.objects.get(user=user.id, post=post.id)
+                rating.stars = stars
+                rating.save()
+                serializer = RatingSerializer(rating, many= False)
+                response={'message':'Rating updated', 'result':serializer.data}
+                return Response(response, status=status.HTTP_200_OK)
+            except:
+                rating = Rating.objects.create(user=user, post=post, stars=stars)
+                serializer = RatingSerializer(rating, many= False)
+                response={'message':'Rating created', 'result':serializer.data}
+                return Response(response, status=status.HTTP_200_OK)
+                
+
+        else:
+            response ={'message':'Necesitas agregar stars'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+        
+
     def get_queryset(self):
         user = self.request.user.id
         # print(user, 'nl')
@@ -56,239 +89,17 @@ class PostViewSet(viewsets.ModelViewSet):
         else:
             return self.queryset
 
-    # def get_serializer_class(self):
-    #     """Return appropriate serializer class"""
-    #     if self.action == 'retrieve':
-    #         return serializers.RecipeDetailSerializer
-        # elif self.action == 'upload_image':
-        #     return serializers.RecipeImageSerializer
-
-        # return self.serializer_class
-
     def perform_create(self, serializer):
         """Create a new post"""
         serializer.save(user=self.request.user)
     
-    @action(methods=['POST'], detail=True)
-    def post_action_view(self, request, pk=None):
-        # recipe = self.get_object()
-        serializer = PostActionSerializer(data=request.data)
-        # print(recipe, 'n')
-        # print(serializer, 'n')
-        if serializer.is_valid(raise_exception=True):
-            data = serializer.validated_data
-            post_id = data.get("id")
-            action = data.get("action")
-            content = data.get("content")
-            qs = Post.objects.filter(id=post_id)
-            if not qs.exists():
-                return Response({}, status=404)
-            obj = qs.first()
-            if action == "like":
-                obj.likes.add(request.user)
-                serializer = PostSerializer(obj)
-                return Response(serializer.data, status=200)
-            elif action == "unlike":
-                obj.likes.remove(request.user)
-                serializer = PostSerializer(obj)
-                return Response(serializer.data, status=200)
-            elif action == "repost":
-                new_post = Post.objects.create(
-                        user=request.user, 
-                        parent=obj,
-                        content=content,
-                        )
-                serializer = PostSerializer(new_post)
-                return Response(serializer.data, status=201)
-        return Response({}, status=200)
 
-    # @action(methods=['POST'], detail=True, url_path='upload-image')
-    # def upload_image(self, request, pk=None):
-    #     """Upload an image to a recipe"""
-    #     recipe = self.get_object()
-    #     serializer = self.get_serializer(
-    #         recipe,
-    #         data=request.data
-    #     )
+class RatingViewSet(viewsets.ModelViewSet):
+    queryset = Rating.objects.all()
+    serializer_class = RatingSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(
-    #             serializer.data,
-    #             status=status.HTTP_200_OK
-    #         )
-    #     return Response(
-    #         serializer.errors,
-    #         status=status.HTTP_400_BAD_REQUEST
-    #     )
-
-# class PostActionAPIView(views.APIView):
-#     @action(methods=['POST'], detail=True)
-#     def get_extra_actions(request):
-#         serializer = PostActionSerializer(data=request.data)
-#         return Response(serializer._errors, status=status.HTTP_201_CREATED)
-#     def post(self, request):
-#         serializer = PostActionSerializer(data=request.data)
-#         return Response(serializer._errors, status=status.HTTP_201_CREATED)
-
-# 	# def post(self, request):
-#     #     serializer = PostActionSerializer(data=request.data)
-# 	# 	# serializer = RegistrationSerializer(data=request.data)
-# 	# 	# if serializer.is_valid():
-# 	# 	# 	user = serializer.save()
-# 	# 	# 	print("#Incoming Request#\nType: Register\nUser: "+str(user.id)+"\n#End Request")
-# 	# 	# 	onboarding = generateOnboarding(user.country)
-# 	# 	# 	return Response({'token': Token.objects.get(user=user).key,"userEmail":user.email,"userCountry":user.country,"userId":user.id,'hasDoneOnboarding':user.has_done_onboarding,"onboarding":onboarding},status=status.HTTP_201_CREATED)
-# 	# 	return Response(serializer.errors, status=status.HTTP_201_CREATED)
-    
-
-# @api_view(['POST'])
-# @authentication_classes([TokenAuthentication])
-# @permission_classes([IsAuthenticatedOrReadOnly])
-# def post_action_view(request, *args, **kwargs):
-#     '''
-#     id is required.
-#     Action options are: like, unlike, repost
-#     '''
-#     serializer = PostActionSerializer(data=request.data)
-#     if serializer.is_valid(raise_exception=True):
-#         data = serializer.validated_data
-#         post_id = data.get("id")
-#         action = data.get("action")
-#         content = data.get("content")
-#         qs = Post.objects.filter(id=post_id)
-#         if not qs.exists():
-#             return Response({}, status=404)
-#         obj = qs.first()
-#         if action == "like":
-#             obj.likes.add(request.user)
-#             serializer = PostSerializer(obj)
-#             return Response(serializer.data, status=200)
-#         elif action == "unlike":
-#             obj.likes.remove(request.user)
-#             serializer = PostSerializer(obj)
-#             return Response(serializer.data, status=200)
-#         elif action == "repost":
-#             new_post = Post.objects.create(
-#                     user=request.user, 
-#                     parent=obj,
-#                     content=content,
-#                     )
-#             serializer = PostSerializer(new_post)
-#             return Response(serializer.data, status=201)
-#     return Response({}, status=200)
-
-
-
-# @api_view(['POST']) # http method the client == POST
-# # @authentication_classes([SessionAuthentication, MyCustomAuth])
-# @permission_classes([IsAuthenticated]) # REST API course
-# def post_create_view(request, *args, **kwargs):
-#     serializer = PostCreateSerializer(data=request.POST)
-#     # print(serializer)
-#     if serializer.is_valid(raise_exception=True):
-#         serializer.save(user=request.user)
-#         return Response(serializer.data, status=201)
-#     return Response({}, status=400)
-
-
-# # @api_view(['GET'])
-# # def posts_list_view(request, *args, **kwargs):
-# #     qs = Post.objects.all()
-# #     email = request.GET.get('username')
-# #     print(email)
-# #     if email != None:
-# #         qs = qs.by_email(email)
-# #     return get_paginated_queryset_response(qs, request)
-
-
-# @api_view(['GET'])
-# def post_detail_view(request, post_id, *args, **kwargs):
-#     qs = Post.objects.filter(id=post_id)
-#     if not qs.exists():
-#         return Response({}, status=404)
-#     obj = qs.first()
-#     serializer = TweetSerializer(obj)
-#     return Response(serializer.data, status=200)
-
-
-# @api_view(['DELETE', 'POST'])
-# @permission_classes([IsAuthenticated])
-# def post_delete_view(request, tweet_id, *args, **kwargs):
-#     qs = Post.objects.filter(id=tweet_id)
-#     if not qs.exists():
-#         return Response({}, status=404)
-#     qs = qs.filter(user=request.user)
-#     if not qs.exists():
-#         return Response({"message": "You cannot delete this tweet"}, status=401)
-#     obj = qs.first()
-#     obj.delete()
-#     return Response({"message": "Tweet removed"}, status=200)
-
-
-# def get_paginated_queryset_response(qs, request):
-#     paginator = PageNumberPagination()
-#     paginator.page_size = 10
-#     paginated_qs = paginator.paginate_queryset(qs, request)
-#     serializer = PostSerializer(paginated_qs, many=True, context={"request": request})
-#     return paginator.get_paginated_response(serializer.data) # Response( serializer.data, status=200)
-
-
-# def posts_list_view(request, *args, **kwargs):
-#     qs = Post.objects.all()
-#     post_list = [x.serialize() for x in qs ]
-
-#     data = {
-#         "isUser":False,
-#         "response": post_list
-#     }
-#     return JsonResponse(data)
-#     # return render(request, "post/list.html")
-
-
-# # def post_create_view(request, *arg, **kwargs):
-# #     user = request.user
-# #     if not request.user.is_authenticated:
-# #         user = None
-# #         if request.is_ajax():
-# #             return JsonResponse({}, status=401)
-# #         return redirect(settings.LOGIN_URL)
-# #     print("ajax", request.is_ajax(), request.user)
-# #     form = PostForm(request.POST or None)
-# #     next_url = request.POST.get("next") or None
-# #     if form.is_valid():
-# #         obj = form.save(commit=False)
-# #         obj.user = user or None
-# #         obj.save()
-# #         if request.is_ajax():
-# #             return JsonResponse(obj.serialize(), status=201) # 201 == created items
-# #         if next_url != None and is_safe_url(next_url, ALLOWED_HOSTS):
-# #             return redirect(next_url)
-# #         form = PostForm()
-# #     if form.errors:
-# #         if request.is_ajax():
-# #             return JsonResponse(form.errors, status=400)
-# #     return render(request, 'post/components/forms.html', context={"form":form})
-
-
-# def posts_detail_view(request, post_id, *args, **kwargs):
-#     data = {
-#         "id":post_id,
-#     }
-#     status = 200    
-#     try:
-#         obj = Post.objects.get(id=post_id)
-#         data['content'] = obj.content
-#         # data['user'] = obj.user
-#     except:
-#         data['message'] = "Not found"
-#         status = 400
-
-#         # raise Http404
-#     return JsonResponse(data, status=status)
-    
-
-# #     # return HttpResponse(f"<h1>Hello -{post_id} --{obj.content} --{obj.user} </h1>")
-
-
-# #     # return render(request, "post/detail.html", context={"post_id": post_id})
+    def perform_create(self, serializer):
+        """Create a new rating"""
+        serializer.save(user=self.request.user)

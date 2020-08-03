@@ -146,7 +146,7 @@ WSGI_APPLICATION = 'config.wsgi.app'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':'blogW',
+        'NAME':'blogX',
         'USER': 'root',
         'PASSWORD': 'Amarillo90*',
         'HOST': '127.0.0.1',
@@ -243,3 +243,5 @@ ACCOUNT_EMAIL_VERIFICATION=True
 
 MAX_POST_LENGTH = 240
 POST_ACTION_OPTIONS = ["like", "unlike", "repost"]
+
+# APPEND_SLASH=False

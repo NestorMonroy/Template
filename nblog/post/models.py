@@ -2,6 +2,7 @@ import random
 from django.conf import settings
 
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 User = settings.AUTH_USER_MODEL
 
@@ -31,12 +32,16 @@ class PostManager(models.Manager):
 
     def feed(self, user):
         return self.get_queryset().feed(user)
+    
+
 
 
 class PostLike(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey("Post", on_delete=models.CASCADE)
+
     timestamp = models.DateTimeField(auto_now_add=True)
+
 
 
 class Post(models.Model):
@@ -51,8 +56,8 @@ class Post(models.Model):
 
     objects = PostManager()
     
-    # def __str__(self):
-    #     return self.content
+    def __str__(self):
+        return self.content
     
     class Meta:
         ordering = ['-id']
@@ -61,15 +66,35 @@ class Post(models.Model):
     def is_repost(self):
         return self.parent != None
     
+    def no_of_ratings(self):
+        ratings = Rating.objects.filter(post=self)
+        return len(ratings)
+    
+    def avg_ratings(self):
+        ratings = Rating.objects.filter(post=self)
+        sum = 0
+        for rating in ratings:
+            sum += rating.stars
+
+        if len(ratings) > 0:
+            return sum /len(ratings)
+        else:
+            return 0
+
+
+        return sum /len(ratings)
+
+
     # def save(self, *args, **kwargs):
     #     super(Post, self).save(*args, **kwargs)
 
-    def serialize(self):
-        '''
-        Feel free to delete!
-        '''
-        return {
-            "id": self.id,
-            "content": self.content,
-            "likes": random.randint(1, 200)
-        }
+
+class Rating(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    stars = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together=(('user', 'post'),)
+        index_together=(('user', 'post'))

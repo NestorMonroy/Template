@@ -3,10 +3,15 @@ from collections import OrderedDict
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from django.utils.translation import gettext_lazy as _
-
-from rest_framework import status
+from rest_framework import views, viewsets, mixins, status
+from rest_framework import status, generics, authentication, permissions
+from rest_framework.views import APIView
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.settings import api_settings
+from django.contrib.auth import get_user_model
 from rest_framework.exceptions import ValidationError, PermissionDenied
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
 from rest_framework.response import Response
 
@@ -36,9 +41,16 @@ from ..serializers import (
     TokenSerializer,
     VerifyEmailSerializer,
     SendEmailVerificationSerializer,
+    UserSerializer,
+    RegistrationSerializer,
+    AuthTokenSerializer,
+    RestAuthLoginSerializer
+
+
 )
 from ..utils import create_knox_token
 
+User = get_user_model()
 
 REGISTRATION_CLOSED_MSG = _("We are sorry, but the sign up is currently closed.")
 
@@ -276,3 +288,46 @@ class SendEmailVerificationView(GenericAPIView):
             msg = _(f"No verification email sent; {user} is already verified.")
 
         return Response({"detail": msg})
+
+
+#
+
+class PostViewSet(viewsets.ModelViewSet):
+    """Manage the post in the database"""
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+    authentication_classes = (authentication.TokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+
+class UserViewSet(RetrieveUpdateAPIView):
+    """Manage the authenticated user"""
+    serializer_class = UserSerializer
+    authentication_classes = (authentication.TokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self):
+        """Retrieve and return authenticated user"""
+        return self.request.user
+
+class CreateUserView(generics.CreateAPIView):
+    """Create a new user"""
+    serializer_class = UserSerializer
+
+
+class RegistrationAPIView(APIView):
+    
+    def post(self, request):
+        print(self, "nestor")
+        serializer = RegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            print("#Incoming Request#\nType: Register\nUser: "+str(user.id)+"\n#End Request")
+            return Response({'token': Token.objects.get(user=user).key,"userEmail":user.email,"userId":user.id},status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CreateTokenView(ObtainAuthToken):
+    """Create a new auth token for user"""
+    serializer_class = AuthTokenSerializer
+    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES

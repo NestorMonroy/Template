@@ -1,7 +1,7 @@
 from django.conf import settings
 from rest_framework import serializers
 from profiles.serializers import PublicProfileSerializer
-from .models import Post
+from .models import Post, Rating
 
 MAX_POST_LENGTH = settings.MAX_POST_LENGTH
 POST_ACTION_OPTIONS = settings.POST_ACTION_OPTIONS
@@ -51,7 +51,9 @@ class PostSerializer(serializers.ModelSerializer):
                 'likes',
                 # 'is_retweet',
                 # 'parent',
-                'timestamp'
+                'timestamp',
+                'no_of_ratings',
+                'avg_ratings'
                 ]
 
     def validate_content(self, value):
@@ -61,4 +63,16 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_likes(self, obj):
         return obj.likes.count()
-    
+
+class RatingSerializer(serializers.ModelSerializer):
+    user = PublicProfileSerializer(source='user.profile', read_only=True)
+
+    class Meta:
+        model = Rating
+        fields = [
+                'id',
+                'user', 
+                'post',
+                'stars',
+                # 'timestamp'
+                ]

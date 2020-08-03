@@ -13,4 +13,10 @@ class PostAdmin(admin.ModelAdmin):
     class Meta:
         model = Post
 
+class RatingAdmin(admin.ModelAdmin):
+    list_display = ['__str__', 'user']
+    class Meta:
+        model = Rating
+
 admin.site.register(Post,PostAdmin)
+admin.site.register(Rating,RatingAdmin)
