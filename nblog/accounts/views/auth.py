@@ -84,7 +84,47 @@ class IsNotAuthenticated(BasePermission):
 # swagger stuff #
 #################
 
+class ListRetrieveViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
+):
+    """
+    A generic viewset for listing, retrieving, and updating models.
+    But not creating or deleting them.  Used by all ViewSets below.
+    Creating users is done via the KnoxRegisterView. And deleting
+    users is intentionally unsupported outside of the Django Admin.
+    """
 
+    pass
+
+
+class UserViewSet(ListRetrieveViewSet):
+    """Manage the ListRetrieveViewSet user"""
+    serializer_class = UserSerializer
+    authentication_classes = (authentication.TokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self, *args, **kwargs):
+        """
+        If you passed the reserved word "current",
+        return the user making the request.
+        """
+        if self.kwargs[self.lookup_url_kwarg].upper() == "CURRENT":
+            return self.request.user
+
+        return super().get_object(*args, **kwargs)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+
+        # TODO: ADD SOME LOGIC HERE TO RESTRICT WHICH PROFILES WE CAN SERIALIZE
+        # TODO: (NOT ALL USERS SHOULD MODIFY ALL PROFILES)
+        managed_profiles = [profile_key for profile_key in User.PROFILE_KEYS]
+
+        context.update({"managed_profiles": managed_profiles})
+        return context
 # b/c ACCOUNT_USERNAME_REQURED is False and ACCOUNT_EMAIL_REQUIRED is True, not all fields
 # from the LoginSerializer/RegisterSerializer are used in the LoginView/RegisterView
 # therefore, I overide the swagger documentation w/ the following schemas...
@@ -215,7 +255,7 @@ class PasswordResetConfirmView(RestAuthPasswordResetConfirmView):
 @method_decorator(
     swagger_auto_schema(
         request_body=_register_schema,
-        responses={status.HTTP_200_OK: UserSerializerLite},
+        responses={status.HTTP_200_OK: UserSerializer},
     ),
     name="post",
 )
@@ -226,7 +266,7 @@ class RegisterView(RestAuthRegisterView):
     def get_response_data(self, user):
         # just return a lightweight representation of the user
         # no need to get private details or tokens at this point
-        serializer = UserSerializerLite(instance=user)
+        serializer = UserSerializer(instance=user)
         return serializer.data
 
     def perform_create(self, serializer):
@@ -291,24 +331,6 @@ class SendEmailVerificationView(GenericAPIView):
 
 
 #
-
-class PostViewSet(viewsets.ModelViewSet):
-    """Manage the post in the database"""
-    serializer_class = UserSerializer
-    queryset = User.objects.all()
-    authentication_classes = (authentication.TokenAuthentication,)
-    permission_classes = (permissions.IsAuthenticated,)
-
-
-class UserViewSet(RetrieveUpdateAPIView):
-    """Manage the authenticated user"""
-    serializer_class = UserSerializer
-    authentication_classes = (authentication.TokenAuthentication,)
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def get_object(self):
-        """Retrieve and return authenticated user"""
-        return self.request.user
 
 class CreateUserView(generics.CreateAPIView):
     """Create a new user"""

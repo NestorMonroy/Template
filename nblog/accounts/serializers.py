@@ -113,9 +113,9 @@ class UserSerializerLite(serializers.ModelSerializer):
     """
 
     class Meta:
-        model = get_user_model()
-        fields = ("email", "name", "username", "change_password")
-        read_only_fields = ("email", "name", "username", "change_password")
+        model = User
+        fields = ("email", "name", "change_password")
+        read_only_fields = ("email", "name", "change_password")
 
 
 class LoginSerializer(ErrorsSerializerMixin, RestAuthLoginSerializer):

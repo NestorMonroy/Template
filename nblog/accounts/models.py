@@ -64,8 +64,10 @@ class SuperuserPermissionSet:
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    
+    PROFILE_KEYS = []
 
     email = models.EmailField(unique=True, db_index=True, null=True, blank=True,
                               verbose_name=_('E-mail'), max_length=190)
@@ -156,6 +158,16 @@ class User(AbstractBaseUser, PermissionsMixin):
             return self.fullname
         else:
             return self.email
+
+    @property
+    def profiles(self):
+        """
+        Returns all profiles associated w/ this user.
+        """
+        return {
+            profile_key: getattr(self, profile_key, None)
+            for profile_key in self.PROFILE_KEYS
+        }
 
 
 

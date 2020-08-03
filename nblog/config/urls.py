@@ -20,6 +20,7 @@ from django.urls import path, re_path
 from django.conf.urls import include, url
 from core.views import home_page
 from dj_rest_auth.registration.views import VerifyEmailView, RegisterView
+from .yasg import urlpatterns as doc_urls
 
 # import frontend.urls
 # import accounts.urls
@@ -46,6 +47,8 @@ urlpatterns = [
     # path('', include((accounts.urls, 'accounts'), namespace='accounts')),
 
 ]
+
+urlpatterns += doc_urls
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, 
