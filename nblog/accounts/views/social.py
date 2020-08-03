@@ -12,7 +12,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
 from django.shortcuts import render
 from ..models import ExamplePost
-from ..forms import PostForm
+# from ..forms import PostForm
 from ..serializers import PostSerializer
 
 
@@ -23,9 +23,9 @@ class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
 
 
-def home_users(request):
-    tmpl_vars = {'form': PostForm()}
-    return render(request, 'accounts/index.html', tmpl_vars)
+# def home_users(request):
+#     tmpl_vars = {'form': PostForm()}
+#     return render(request, 'accounts/index.html', tmpl_vars)
 
 ############################
 ### function based views ###

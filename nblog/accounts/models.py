@@ -1,9 +1,13 @@
 
 from django.conf import settings
-
+from django.core.validators import RegexValidator
 from django.contrib.auth.models import (
     AbstractBaseUser, BaseUserManager, PermissionsMixin,
 )
+from django.db.models import Q
+from django.db.models.signals import pre_save, post_save
+# from blissedmaths.utils import unique_otp_generator
+
 from django.db import models
 from django.utils.crypto import get_random_string, salted_hmac
 from django.utils.translation import gettext_lazy as _
@@ -20,6 +24,7 @@ class UserManager(BaseUserManager):
     def create_user(self, email, password=None, is_active=True, is_staff=False, is_superuser=False, str=None, **kwargs):
         if not email:
             raise ValueError("Users must have an email address")
+
         if not password:
             raise ValueError("Users must have a password")
         user_obj = self.model(
@@ -78,6 +83,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(
         blank=True, null=True, max_length=150, verbose_name='Apellido')
     username = models.CharField(blank=True, null=True, max_length=100)
+    
+    phone_regx = RegexValidator(regex=r'^\+?1?\d{9,14}$',message="Phone number must be entered in the from 9 to 14")
+
+    phone = models.CharField(validators=[phone_regx],max_length=15,unique=True, null=True, blank=True)
+    
     is_active = models.BooleanField(default=True,
                                     verbose_name=_('Is active'))
     is_staff = models.BooleanField(default=False,

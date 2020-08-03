@@ -58,10 +58,11 @@ INSTALLED_APPS = [
     'drf_yasg',
     'allauth',
     'allauth.account',
+        # 'allauth.socialaccount',
+
     'dj_rest_auth',
     'dj_rest_auth.registration',
 
-    # 'allauth.socialaccount',
 
     # 'allauth.socialaccount.providers.facebook',
     # 'allauth.socialaccount.providers.google',
@@ -237,6 +238,8 @@ SITE_ID = 1
 
 LOGIN_REDIRECT_URL = "/"
 
+LOGIN_ON_EMAIL_CONFIRMATION = True
+AUTHENTICATED_LOGIN_REDIRECTS ="/"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION=True
 
