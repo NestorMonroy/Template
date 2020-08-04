@@ -10,6 +10,8 @@ from .views import (social, auth)
 # api_router.register("users", auth.UserViewSet, basename="users")
 
 urlpatterns = [
+    path("registration/", auth.RegistrationView.as_view(), name="rest_register"),
+
     path('reset-password/', auth.PasswordResetView.as_view(),
          name='reset-password'),
 ]

@@ -142,7 +142,7 @@ REST_AUTH_SERIALIZERS = {
     # "USER_DETAILS_SERIALIZER": 'accounts.serializers.CustomUserDetailsSerializer',
     # 'LOGIN_SERIALIZER': 'accounts.serializers.CustomUserLoginSerializer',
     # 'TOKEN_SERIALIZER': 'accounts.serializers.TokenSerializer',
-    "PASSWORD_RESET_SERIALIZER": "accounts.serializers.CustomPasswordResetSerializer",
+    "PASSWORD_RESET_SERIALIZER": "accounts.serializers.PasswordResetSerializer",
     'REGISTER_SERIALIZER': "accounts.serializers.RegisterSerializer"
 }
 
