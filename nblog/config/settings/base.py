@@ -138,9 +138,17 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': DEFAULT_RENDERER_CLASSES
 }
 
+REST_AUTH_SERIALIZERS = {
+    # "USER_DETAILS_SERIALIZER": 'accounts.serializers.CustomUserDetailsSerializer',
+    # 'LOGIN_SERIALIZER': 'accounts.serializers.CustomUserLoginSerializer',
+    # 'TOKEN_SERIALIZER': 'accounts.serializers.TokenSerializer',
+    "PASSWORD_RESET_SERIALIZER": "accounts.serializers.CustomPasswordResetSerializer",
+    'REGISTER_SERIALIZER': "accounts.serializers.RegisterSerializer"
+}
+
 WSGI_APPLICATION = 'config.wsgi.app'
 
-
+ACCOUNT_USERNAME_REQUIRED = False 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
