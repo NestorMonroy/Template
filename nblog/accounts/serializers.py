@@ -3,7 +3,7 @@ from django.contrib.auth.forms import PasswordResetForm
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
-from dj_rest_auth.serializers import PasswordResetSerializer as CPasswordResetSerializer
+from dj_rest_auth.serializers import PasswordResetSerializer as RestAuthPasswordChangeSerializer
 from allauth.account import app_settings as allauth_settings
 from allauth.utils import email_address_exists
 from allauth.account.adapter import get_adapter
@@ -19,7 +19,7 @@ class UserDetailsSerializer(serializers.ModelSerializer):
         read_only_fields = ("email",)
 
 
-class CustomPasswordResetSerializer(CPasswordResetSerializer):
+class CustomPasswordResetSerializer(RestAuthPasswordChangeSerializer):
     email = serializers.EmailField()
     password_reset_form_class = PasswordResetForm
 
@@ -84,7 +84,7 @@ class RegisterSerializer(serializers.Serializer):
         user.profile.save()
         return user
 
-class PasswordResetSerializer(CPasswordResetSerializer):
+class PasswordResetSerializer(RestAuthPasswordChangeSerializer):
     email = serializers.EmailField()
     password_reset_form_class = PasswordResetForm
 
@@ -104,6 +104,7 @@ class PasswordResetSerializer(CPasswordResetSerializer):
         request = self.context.get('request')
         # Set some values to trigger the send_email method.
         opts = {
+            'domain_override': getattr(settings, 'FRONT_URL'),
             'use_https': request.is_secure(),
             'from_email': getattr(settings, 'DEFAULT_FROM_EMAIL'),
             'request': request,

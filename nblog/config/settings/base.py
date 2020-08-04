@@ -256,3 +256,5 @@ MAX_POST_LENGTH = 240
 POST_ACTION_OPTIONS = ["like", "unlike", "repost"]
 
 # APPEND_SLASH=False
+
+FRONT_URL = '127.0.0.1:8000'

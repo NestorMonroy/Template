@@ -17,10 +17,6 @@ from ..serializers import (
 class CustomPasswordResetView(PasswordResetView):
     swagger_tags = ["User"]
 
-    @swagger_auto_schema(
-        responses={200: "Password reset e-mail has been sent."},
-        request_body=CustomPasswordResetSerializer,
-    )
 
     def post(self, *args, **kwargs):
         """Password reset
@@ -49,7 +45,13 @@ class PasswordResetView(generics.GenericAPIView):
     """
     serializer_class = PasswordResetSerializer
     permission_classes = (permissions.AllowAny,)
+    
+    swagger_tags = ["User"]
 
+    @swagger_auto_schema(
+        responses={200: "Password reset e-mail has been sent."},
+        request_body=PasswordResetView,
+    )
 
     def post(self, request, *args, **kwargs):
         # Create a serializer with request.data
