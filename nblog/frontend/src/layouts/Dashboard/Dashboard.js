@@ -3,20 +3,39 @@ import { renderRoutes } from 'react-router-config';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { LinearProgress } from '@material-ui/core';
-import NavBar from './NavBar';
-import TopBar from './TopBar';
+// import { NavBar } from './components/NavBar/index'
+import { NavBar } from './components';
+
 
 const useStyles = makeStyles((theme) => ({
   container: {
     minHeight: '100vh',
+    overflow: 'hidden',
     display: 'flex',
     '@media all and (-ms-high-contrast:none)': {
       height: 0 // IE11 fix
     }
   },
+  topBar: {
+    zIndex: 2,
+    position: 'relative'
+  },
+  container: {
+    display: 'flex',
+    flex: '1 1 auto',
+    overflow: 'hidden'
+  },
+  navBar: {
+    zIndex: 3,
+    width: 256,
+    minWidth: 256,
+    flex: '0 0 auto'
+  },
   content: {
-    paddingTop: 64,
+    overflowY: 'auto',
+    flex: '1 1 auto',
     flexGrow: 1,
+    paddingTop: 64,
     maxWidth: '100%',
     overflowX: 'hidden',
     [theme.breakpoints.up('lg')]: {
@@ -43,10 +62,10 @@ function Dashboard({ route }) {
 
   return (
     <div className={classes.root}>
-      <TopBar
+      {/* <TopBar
         className={classes.topBar}
         onOpenNavBarMobile={handleNavBarMobileOpen}
-      />
+      /> */}
       <div className={classes.container}>
         <NavBar
           className={classes.navBar}
@@ -59,7 +78,7 @@ function Dashboard({ route }) {
           </Suspense>
         </main>
       </div>
-      <ChatBar />
+      {/* <ChatBar /> */}
     </div>
   );
 }

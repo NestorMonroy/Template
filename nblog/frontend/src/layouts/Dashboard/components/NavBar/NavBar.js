@@ -7,8 +7,8 @@ import { makeStyles } from '@material-ui/styles';
 import { Drawer, Divider, Paper, Avatar, Typography } from '@material-ui/core';
 import { Hidden } from '@material-ui/core';
 
-import useRouter from 'utils/useRouter';
-import { Navigation } from 'components';
+import useRouter from 'src/utils/useRouter';
+import { Navigation } from 'src/components/Navigation';
 import navigationConfig from './navigationConfig';
 
 const useStyles = makeStyles(theme => ({
@@ -62,25 +62,19 @@ const NavBar = props => {
           alt="Person"
           className={classes.avatar}
           component={RouterLink}
-          src={session.user.avatar}
           to="/profile/1/timeline"
         />
         <Typography
-          className={classes.name}
           variant="h4"
         >
-          {session.user.first_name} {session.user.last_name}
         </Typography>
-        <Typography variant="body2">{session.user.bio}</Typography>
+        <Typography variant="body2"></Typography>
       </div>
       <Divider className={classes.divider} />
       <nav className={classes.navigation}>
         {navigationConfig.map(list => (
           <Navigation
             component="div"
-            key={list.title}
-            pages={list.pages}
-            title={list.title}
           />
         ))}
       </nav>
