@@ -3,8 +3,9 @@ from django.contrib.auth import login as django_login
 from django.utils.translation import ugettext_lazy as _
 from allauth.account import app_settings as allauth_settings
 from allauth.account.utils import complete_signup
+from django.contrib.auth import get_user_model
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status, viewsets
 from rest_framework.response import Response
 from dj_rest_auth.views import (
     LoginView as ChangeLoginView,
@@ -28,11 +29,13 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.authtoken.views import ObtainAuthToken
 
-sensitive_post_parameters_n = method_decorator(
-    sensitive_post_parameters(
-        'password', 'old_password', 'new_password1', 'new_password2'
-    )
-)
+User = get_user_model()
+
+# sensitive_post_parameters_n = method_decorator(
+#     sensitive_post_parameters(
+#         'password', 'old_password', 'new_password1', 'new_password2'
+#     )
+# )
 
 _login_schema = openapi.Schema(
     type=openapi.TYPE_OBJECT,
@@ -72,8 +75,6 @@ _register_schema = openapi.Schema(
         )
     ),
 )
-
-
 
 @method_decorator(
     swagger_auto_schema(
@@ -128,4 +129,3 @@ class PasswordResetView(generics.GenericAPIView):
             {"detail": _("Password reset e-mail has been sent.")},
             status=status.HTTP_200_OK
         )
-

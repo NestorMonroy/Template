@@ -59,7 +59,7 @@ const Header = props => {
           gutterBottom
           variant="h1"
         >
-         TeamSolutions
+         Nestor Blog
         </Typography>
         {/* <Typography
           align="center"

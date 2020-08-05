@@ -58,7 +58,7 @@ class PostViewSet(viewsets.ModelViewSet):
             post = Post.objects.get(id=pk)
             stars = request.data['stars']
             user = request.user
-
+            # print(user.id)
             try:
                 rating = Rating.objects.get(user=user.id, post=post.id)
                 rating.stars = stars
@@ -78,8 +78,6 @@ class PostViewSet(viewsets.ModelViewSet):
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-        
 
     def get_queryset(self):
         user = self.request.user.id
@@ -103,3 +101,11 @@ class RatingViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """Create a new rating"""
         serializer.save(user=self.request.user)
+
+    def update(self, request, *arg, **kwargs):
+            response ={'message':'You cant update ratings like that'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    def create(self, request, *arg, **kwargs):
+            response ={'message':'You cant vreate ratings like that'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
