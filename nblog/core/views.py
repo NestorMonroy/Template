@@ -9,8 +9,18 @@ from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 
 from django.shortcuts import redirect, render
+from django.utils.html import mark_safe
 
 User = get_user_model()
+
+
+def message_view(request, message=None, title=None):
+    """
+    provides a generic way to render any old message in a template
+    (used for when a user is disabled, or unapproved, or unverified, etc.)
+    """
+    context = {"message": mark_safe(message), "title": title or settings.PROJECT_NAME}
+    return render(request, "core/message.html", context)
 
 
 def home_page(request):

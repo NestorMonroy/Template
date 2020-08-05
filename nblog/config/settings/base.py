@@ -60,8 +60,8 @@ INSTALLED_APPS = [
     'allauth.account',
         # 'allauth.socialaccount',
 
-    'dj_rest_auth',
-    'dj_rest_auth.registration',
+    # 'dj_rest_auth',
+    # 'dj_rest_auth.registration',
 
 
     # 'allauth.socialaccount.providers.facebook',
@@ -250,7 +250,15 @@ LOGIN_ON_EMAIL_CONFIRMATION = True
 AUTHENTICATED_LOGIN_REDIRECTS ="/"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION=True
-
+USERS_REQUIRE_APPROVAL = False
+USERS_REQUIRE_TERMS_ACCEPTANCE = False
+USERS_REQUIRE_VERIFICATION = True
+ACCOUNT_CONFIRM_EMAIL_CLIENT_URL = "verify-email/?key={key}"
+ACCOUNT_CONFIRM_PASSWORD_CLIENT_URL =  "confirm-pwd/?key={key}&uid={uid}"
+USERS_ALLOW_REGISTRATION = True
+# allauth
+ACCOUNT_ADAPTER = 'config.adapters.AccountAdapter'
+REST_SESSION_LOGIN = True
 
 MAX_POST_LENGTH = 240
 POST_ACTION_OPTIONS = ["like", "unlike", "repost"]
@@ -258,3 +266,6 @@ POST_ACTION_OPTIONS = ["like", "unlike", "repost"]
 # APPEND_SLASH=False
 
 FRONT_URL = '127.0.0.1:8000'
+
+PROJECT_NAME = 'TeamSolutions'
+# PROJECT_NAME = getattr(settings, "PROJECT_NAME", "TeamSolutions")

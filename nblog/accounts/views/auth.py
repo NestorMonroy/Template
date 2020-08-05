@@ -1,10 +1,14 @@
+from collections import OrderedDict
+from django.contrib.auth import login as django_login
 from django.utils.translation import ugettext_lazy as _
 from allauth.account import app_settings as allauth_settings
 from allauth.account.utils import complete_signup
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from dj_rest_auth.views import LoginView, PasswordResetView
+from dj_rest_auth.views import (
+    LoginView as ChangeLoginView,
+    PasswordResetView  )
 from dj_rest_auth.registration.views import RegisterView
 from django.contrib.auth.forms import PasswordResetForm
 from django.utils.decorators import method_decorator
@@ -12,71 +16,95 @@ from django.views.decorators.debug import sensitive_post_parameters
 from ..serializers import (
     UserDetailsSerializer,
     PasswordResetSerializer,
-    RegisterSerializer
+    RegisterSerializer,
+    AuthTokenSerializer,
+    UserSerializerLite,
 )
-from dj_rest_auth.models import TokenModel
+from django.conf import settings
+from rest_framework.authtoken.models import Token
+from ..utils import create_token
+from rest_framework.settings import api_settings
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.authtoken.views import ObtainAuthToken
 
-
-
-sensitive_post_parameters_m = method_decorator(
-    sensitive_post_parameters('password1', 'password2')
-)
-class RegistrationView(generics.CreateAPIView):
-
-    serializer_class = RegisterSerializer
-    permission_classes = [permissions.AllowAny, ]
-    token_model = TokenModel
-
-    swagger_tags = ["User"]
-
-    @swagger_auto_schema(
-        request_body=RegisterSerializer,
-        responses={201: "Verification e-mail sent."},
+sensitive_post_parameters_n = method_decorator(
+    sensitive_post_parameters(
+        'password', 'old_password', 'new_password1', 'new_password2'
     )
+)
 
-    @sensitive_post_parameters_m
-    def dispatch(self, *args, **kwargs):
-        return super(RegistrationView, self).dispatch(*args, **kwargs)
+_login_schema = openapi.Schema(
+    type=openapi.TYPE_OBJECT,
+    properties=OrderedDict(
+        (
+            (
+                "email",
+                openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    format=openapi.FORMAT_EMAIL,
+                    example="nestor@blog.com",
+                ),
+            ),
+            ("password", openapi.Schema(type=openapi.TYPE_STRING, example="password")),
+        )
+    ),
+)
+
+
+_register_schema = openapi.Schema(
+    type=openapi.TYPE_OBJECT,
+    properties=OrderedDict(
+        (
+            (
+                "email",
+                openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_EMAIL),
+            ),
+            (
+                "password1",
+                openapi.Schema(type=openapi.TYPE_STRING, example="superpassword23"),
+            ),
+            (
+                "password2",
+                openapi.Schema(type=openapi.TYPE_STRING, example="superpassword23"),
+            ),
+            ("accepted_terms", openapi.Schema(type=openapi.TYPE_BOOLEAN)),
+        )
+    ),
+)
+
+
+
+@method_decorator(
+    swagger_auto_schema(
+        request_body=_login_schema, responses={status.HTTP_200_OK: AuthTokenSerializer}
+    ),
+    name="post",
+)
+@method_decorator(sensitive_post_parameters("password"), name="dispatch")
+class CreateTokenView(ObtainAuthToken):
+    """Create a new auth token for user"""
+    serializer_class = AuthTokenSerializer
+    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
+
+
+@method_decorator(
+    swagger_auto_schema(
+        request_body=_register_schema,
+        responses={status.HTTP_200_OK: UserSerializerLite},
+    ),
+    name="post",
+)
+@method_decorator(sensitive_post_parameters("password1", "password2"), name="dispatch")
+class RegistrationView(RegisterView):
+    serializer_class = RegisterSerializer
 
     def get_response_data(self, user):
-        if allauth_settings.EMAIL_VERIFICATION == \
-                allauth_settings.EmailVerificationMethod.MANDATORY:
-            return {"detail": _("Verification e-mail sent.")}
-
-            return TokenSerializer(user.auth_token, context=self.get_serializer_context()).data
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-
-        return Response(self.get_response_data(user),
-                        status=status.HTTP_201_CREATED,
-                        headers=headers)
-
-    def perform_create(self, serializer):
-        user = serializer.save(self.request)
-        if allauth_settings.EMAIL_VERIFICATION != \
-                allauth_settings.EmailVerificationMethod.MANDATORY:
-            if getattr(settings, 'REST_USE_JWT', False):
-                self.access_token, self.refresh_token = jwt_encode(user)
-            else:
-                create_token(self.token_model, user, serializer)
-
-        complete_signup(self.request._request, user,
-                        allauth_settings.EMAIL_VERIFICATION,
-                        None)
-        return user
-
-    
-    def post(self, *args, **kwargs):
-        """Register new user
-
-        Use this endpoint to register a new user using a username/email and password
-        """
-        return super().post(*args, **kwargs)
-
+        print(user)
+        # just return a lightweight representation of the user
+        # no need to get private details or tokens at this point
+        serializer = UserSerializerLite(instance=user)
+        return serializer.data
 
 class PasswordResetView(generics.GenericAPIView):
     """
@@ -88,12 +116,6 @@ class PasswordResetView(generics.GenericAPIView):
     serializer_class = PasswordResetSerializer
     permission_classes = (permissions.AllowAny,)
     
-    swagger_tags = ["User"]
-
-    @swagger_auto_schema(
-        responses={200: "Password reset e-mail has been sent."},
-        request_body=PasswordResetView,
-    )
 
     def post(self, request, *args, **kwargs):
         # Create a serializer with request.data

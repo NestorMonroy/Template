@@ -116,7 +116,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     auth_backend = models.CharField(max_length=255, default='native')
     session_token = models.CharField(
         max_length=32, default=generate_session_token)
-
+    
+    accepted_terms = models.BooleanField(
+        default=False, help_text=_("Has this user accepted the terms & conditions?")
+    )
+    # change_password = models.BooleanField(
+    #     default=False, help_text=_("Force user to change password at next login.")
+    # )
     objects = UserManager()
 
     def __init__(self, *args, **kwargs):
@@ -179,7 +185,16 @@ class User(AbstractBaseUser, PermissionsMixin):
             for profile_key in self.PROFILE_KEYS
         }
 
-
+    @property
+    def is_verified(self):
+        """
+        Checks if the primary email address belonging to this user has been verified.
+        """
+        return (
+            self.emailaddress_set.only("verified", "primary")
+            .filter(primary=True, verified=True)
+            .exists()
+        )
 
 # class ExamplePost(models.Model):
 #     author = models.ForeignKey(User, on_delete=models.CASCADE)
