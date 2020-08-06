@@ -79,13 +79,13 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 
-    def get_queryset(self):
-        user = self.request.user.id
-        # print(user, 'nl')
-        if user != None:
-            return self.queryset.by_id(user)
-        else:
-            return self.queryset
+    # def get_queryset(self):
+    #     # user = self.request.user.id
+    #     # # print(user, 'nl')
+    #     # if user != None:
+    #     #     return self.queryset.by_id(user)
+    #     # else:
+    #     return self.queryset
 
     def perform_create(self, serializer):
         """Create a new post"""

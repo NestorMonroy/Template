@@ -1,102 +1,160 @@
 import React from 'react';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
-import { Card, Typography, CardContent } from '@material-ui/core';
+import { useState, useRef, useEffect } from 'react';
 
-import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
+import { makeStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
+
+import {
+  Card,
+  CardContent,
+  Divider,
+  Input,
+  Paper,
+  Tooltip,
+  Typography,
+  Grid
+} from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
+import SendIcon from '@material-ui/icons/Send';
+import AddPhotoIcon from '@material-ui/icons/AddPhotoAlternate';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
+
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import gradients from 'src/utils/gradients';
+import PostList from './components/PostList/PostList'
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    maxWidth: 345,
+const useStyles = makeStyles((theme) => ({
+  root: {},
+  content: {
+    display: 'flex',
+    alignItems: 'center'
   },
-  media: {
-    height: 0,
-    paddingTop: '56.25%', // 16:9
+  input: {
+    width: '100%'
   },
-
-  label: {
-    marginLeft: theme.spacing(1)
+  fileInput: {
+    display: 'none'
   },
-  expand: {
-    transform: 'rotate(0deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
+  container: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(12, 1fr)',
+    gridGap: theme.spacing(3),
   },
-  expandOpen: {
-    transform: 'rotate(180deg)',
+  paper: {
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+    whiteSpace: 'nowrap',
+    marginBottom: theme.spacing(1),
   },
-
-  avatar: {
-    backgroundImage: gradients.green,
-    height: 48,
-    width: 48
-  }
+  divider: {
+    margin: theme.spacing(2, 0),
+  },
 }));
 
-const PostsList = props => {
+export default function PostsList(props) {
+  const { className, ...rest } = props;
 
   const classes = useStyles();
-  
-  const [expanded, setExpanded] = React.useState(false);
+  const fileInputRef = useRef(null);
+  const [value, setValue] = useState('');
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
+  const [posts, setPost] = useState([])
+
+  useEffect(()=>{
+    fetch("http://127.0.0.1:8000/api/post/posts/", {
+      method: 'GET',
+      headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Token 6165f2762ac4358af1bdfceab20bb75b15d976d6'
+      }
+    })
+    .then(resp => resp.json())
+    .then( resp =>setPost(resp))
+    .catch(error => console.log(error))
+  }, [])
+
+  const handleChange = event => {
+    event.persist();
+
+    setValue(event.target.value);
+  };
+  const handleAttach = () => {
+    fileInputRef.current.click();
   };
 
-
   return (
-    <Card className={classes.root}>
-        <CardContent>
-          <Typography paragraph>Method:</Typography>
-          <Typography paragraph>
-            Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10
-            minutes.
-          </Typography>
-          <Typography paragraph>
-            Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high
-            heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly
-            browned, 6 to 8 minutes. Transfer shrimp to a large plate and set aside, leaving chicken
-            and chorizo in the pan. Add pimentón, bay leaves, garlic, tomatoes, onion, salt and
-            pepper, and cook, stirring often until thickened and fragrant, about 10 minutes. Add
-            saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
-          </Typography>
-          <Typography paragraph>
-            Add rice and stir very gently to distribute. Top with artichokes and peppers, and cook
-            without stirring, until most of the liquid is absorbed, 15 to 18 minutes. Reduce heat to
-            medium-low, add reserved shrimp and mussels, tucking them down into the rice, and cook
-            again without stirring, until mussels have opened and rice is just tender, 5 to 7
-            minutes more. (Discard any mussels that don’t open.)
-          </Typography>
-          <Typography>
-            Set aside off of the heat to let rest for 10 minutes, and then serve.
-          </Typography>
-        </CardContent>
+    <div className={classes.indexpost} >
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <Card
+            {...rest}
+            className={clsx(classes.root, className)}
+          >
+            <CardContent className={classes.content}>
+              <Paper
+                className={classes.paper}
+                elevation={1}
+              >
+                <Input
+                  className={classes.input}
+                  disableUnderline
+                  onChange={handleChange}
+                  placeholder={`What's on your mind, N`}
+                />
+              </Paper>
+              <Tooltip title="Send">
+                <IconButton color={value.length > 0 ? 'primary' : 'default'}>
+                  <SendIcon />
+                </IconButton>
+              </Tooltip>
+              <Divider className={classes.divider} />
+              <Tooltip title="Attach image">
+                <IconButton
+                  edge="end"
+                  onClick={handleAttach}
+                >
+                  <AddPhotoIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Attach file">
+                <IconButton
+                  edge="end"
+                  onClick={handleAttach}
+                >
+                  <AttachFileIcon />
+                </IconButton>
+              </Tooltip>
+              <input
+                className={classes.fileInput}
+                ref={fileInputRef}
+                type="file"
+              />
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+      <Divider className={classes.divider} />
 
-      <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
-      </CardActions>
+      <PostList posts={posts} />
 
-    </Card>
+      {posts.map(post => {
+        return <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Paper className={classes.paper}>
+              <Typography
+                component="h1"
+                variant="h3"
+              >
+                {post.content}
+          </Typography>
+            </Paper>
+          </Grid>
+        </Grid>
+      })}
+
+    </div>
   );
-};
-
-PostsList.propTypes = {
-  className: PropTypes.string
-};
-
-export default PostsList;
+}
