@@ -6,13 +6,13 @@ export default {
   primary: {
     contrastText: white,
     dark: colors.indigo[900],
-    main: colors.indigo[500],
+    main: '#5f787b',
     light: colors.indigo[100]
   },
   secondary: {
     contrastText: white,
     dark: colors.blue[900],
-    main: colors.blue.A700,
+    main: '#262b2b',
     light: colors.blue.A400
   },
   error: {

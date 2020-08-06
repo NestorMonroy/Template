@@ -5,7 +5,7 @@ import ErrorLayout from './layouts/Error';
 import DashboardLayout from './layouts/Dashboard';
 import PrivateRoute from './privateRoute';
 import DefaultLayout from "./layouts/DefaultLayout";
-import HPresentationView from './views/HPresentation';
+import Home from './views/Home';
 // import Home from "./views/Home";
 import Profile from "./views/UserProfile";
 import TypographyView from "./views/Typography";
@@ -14,7 +14,7 @@ export default [
   {
     path: '/',
     exact: true,
-    component: () => <Redirect to="/hpresentation" />
+    component: () => <Redirect to="/home" />
   },
   {
     path: '/auth',
@@ -64,16 +64,21 @@ export default [
     route: '*',
     component: DashboardLayout,
     routes: [
-      // {
-      //   path: '/post/:id',
-      //   exact: true,
-      //   component: lazy(() => import('views/Post'))
-        
-      // },
       {
-        path: '/hpresentation',
+        path: '/post/:id',
         exact: true,
-        component: HPresentationView
+        component: lazy(() => import('src/views/Post'))
+        
+      },
+      {
+        path: '/settings',
+        exact: true,
+        component: lazy(() => import('src/views/Settings'))
+      },
+      {
+        path: '/home',
+        exact: true,
+        component: Home
       },
       // {
       //   path: '/profile',

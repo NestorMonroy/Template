@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 
-import axios from 'utils/axios';
-import { AddPost, PostCard } from 'src/components';
+import axios from 'src/utils/axios';
+// import { AddPost,  } from 'src/components';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -45,8 +45,8 @@ const Timeline = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <AddPost />
-      <div className={classes.posts}>
+      {/* <AddPost /> */}
+      {/* <div className={classes.posts}>
         {posts.map(post => (
           <PostCard
             className={classes.post}
@@ -54,7 +54,7 @@ const Timeline = props => {
             post={post}
           />
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

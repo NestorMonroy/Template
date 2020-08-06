@@ -3,8 +3,7 @@ import { renderRoutes } from 'react-router-config';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { LinearProgress } from '@material-ui/core';
-// import { NavBar } from './components/NavBar/index'
-import { NavBar } from './components';
+import { NavBar, TopBar } from './components';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -62,10 +61,10 @@ function Dashboard({ route }) {
 
   return (
     <div className={classes.root}>
-      {/* <TopBar
+      <TopBar
         className={classes.topBar}
         onOpenNavBarMobile={handleNavBarMobileOpen}
-      /> */}
+      />
       <div className={classes.container}>
         <NavBar
           className={classes.navBar}

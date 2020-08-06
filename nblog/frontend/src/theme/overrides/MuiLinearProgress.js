@@ -6,6 +6,6 @@ export default {
     overflow: 'hidden'
   },
   colorPrimary: {
-    backgroundColor: colors.blueGrey[50]
+    backgroundColor: '#5f787b'
   }
 };

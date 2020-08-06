@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useRef, useEffect } from 'react';
+
 import { Link as RouterLink } from 'react-router-dom';
-import { useHistory } from 'react-router';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -21,22 +21,22 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  ClickAwayListener
+  ClickAwayListener,
+  Avatar
 } from '@material-ui/core';
 import LockIcon from '@material-ui/icons/LockOutlined';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
-import PeopleIcon from '@material-ui/icons/PeopleOutline';
 import InputIcon from '@material-ui/icons/Input';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+
 import axios from 'src/utils/axios';
+import useRouter from 'src/utils/useRouter';
 import NotificationsPopover from 'src/components/NotificationsPopover';
 import PricingModal from 'src/components/PricingModal';
 import { logout } from 'src/actions';
-import ChatBar from './ChatBar';
-import { authService } from '../../services/authService';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     boxShadow: 'none'
   },
@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
   },
   trialButton: {
     marginLeft: theme.spacing(2),
-    color: theme.palette.common.white,
+    color: theme.palette.white,
     backgroundColor: colors.green[600],
     '&:hover': {
       backgroundColor: colors.green[900]
@@ -81,11 +81,11 @@ const useStyles = makeStyles((theme) => ({
   trialIcon: {
     marginRight: theme.spacing(1)
   },
-  menuButton: {
-    marginRight: theme.spacing(1)
-  },
-  chatButton: {
+  notificationsButton: {
     marginLeft: theme.spacing(1)
+  },
+  notificationsBadge: {
+    backgroundColor: colors.orange[600]
   },
   logoutButton: {
     marginLeft: theme.spacing(1)
@@ -95,41 +95,60 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const popularSearches = [
-  'Busqueda 1',
-  'Devias',
-  'Admin Pannel',
-  'Project',
-  'Pages'
-];
+const TopBar = props => {
+  const { onOpenNavBarMobile, className, ...rest } = props;
 
-function TopBar({
-                  onOpenNavBarMobile,
-                  className,
-                  ...rest
-                }) {
   const classes = useStyles();
-  const history = useHistory();
+  const { history } = useRouter();
   const searchRef = useRef(null);
   const dispatch = useDispatch();
+  const notificationsRef = useRef(null);
+  const [pricingModalOpen, setPricingModalOpen] = useState(false);
   const [openSearchPopover, setOpenSearchPopover] = useState(false);
   const [searchValue, setSearchValue] = useState('');
-  const [openChatBar, setOpenChatBar] = useState(false);
-  const [pricingModalOpen, setPricingModalOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [openNotifications, setOpenNotifications] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+
+    // const fetchNotifications = () => {
+    //   axios.get('/api/account/notifications').then(response => {
+    //     if (mounted) {
+    //       setNotifications(response.data.notifications);
+    //     }
+    //   });
+    // };
+
+    // fetchNotifications();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const handleLogout = () => {
-    authService.logout(history);
+    history.push('/auth/login');
+    // dispatch(logout());
   };
 
-  const handlePricingModalOpen = () => {
+  const handlePricingOpen = () => {
     setPricingModalOpen(true);
   };
 
-  const handlePricingModalClose = () => {
+  const handlePricingClose = () => {
     setPricingModalOpen(false);
   };
 
-  const handleSearchChange = (event) => {
+  const handleNotificationsOpen = () => {
+    setOpenNotifications(true);
+  };
+
+  const handleNotificationsClose = () => {
+    setOpenNotifications(false);
+  };
+
+  const handleSearchChange = event => {
     setSearchValue(event.target.value);
 
     if (event.target.value) {
@@ -145,6 +164,14 @@ function TopBar({
     setOpenSearchPopover(false);
   };
 
+  const popularSearches = [
+    'Devias React Dashboard',
+    'Devias',
+    'Admin Pannel',
+    'Project',
+    'Pages'
+  ];
+
   return (
     <AppBar
       {...rest}
@@ -152,32 +179,22 @@ function TopBar({
       color="primary"
     >
       <Toolbar>
-        {/* <Hidden lgUp>
-
-        </Hidden> */}
-        <IconButton
-            className={classes.menuButton}
-            color="inherit"
-            onClick={onOpenNavBarMobile}
-          >
-            <MenuIcon/>
-          </IconButton>
         <RouterLink to="/">
-          <div>
-            TeamSolutions
-          </div>
-          {/* <img
-            alt="Logo"
-            src="/images/logos/logo--white.svg"
-          /> */}
+        <Avatar 
+          alt="Logo"
+          src="/images/Robot_TypeIcon.svg"
+          variant="square" 
+          className={classes.square}>
+        </Avatar>
+
         </RouterLink>
-        <div className={classes.flexGrow}/>
+        <div className={classes.flexGrow} />
         <Hidden smDown>
           <div
             className={classes.search}
             ref={searchRef}
           >
-            <SearchIcon className={classes.searchIcon}/>
+            <SearchIcon className={classes.searchIcon} />
             <Input
               className={classes.searchInput}
               disableUnderline
@@ -198,52 +215,77 @@ function TopBar({
                 elevation={3}
               >
                 <List>
-                  {popularSearches.map((search) => (
+                  {popularSearches.map(search => (
                     <ListItem
                       button
                       key={search}
                       onClick={handleSearchPopverClose}
                     >
                       <ListItemIcon>
-                        <SearchIcon/>
+                        <SearchIcon />
                       </ListItemIcon>
-                      <ListItemText primary={search}/>
+                      <ListItemText primary={search} />
                     </ListItem>
                   ))}
                 </List>
               </Paper>
             </ClickAwayListener>
           </Popper>
-        </Hidden>
-        <IconButton
-          className={classes.chatButton}
-          color="inherit"
-        >
-          <Badge
-            badgeContent={6}
-            color="secondary"
+          {/* <Button
+            className={classes.trialButton}
+            onClick={handlePricingOpen}
+            variant="contained"
           >
-            <PeopleIcon/>
-          </Badge>
-        </IconButton>
+            <LockIcon className={classes.trialIcon} />
+            Trial expired
+          </Button> */}
+        </Hidden>
         <Hidden mdDown>
+          <IconButton
+            className={classes.notificationsButton}
+            color="inherit"
+            onClick={handleNotificationsOpen}
+            ref={notificationsRef}
+          >
+            <Badge
+              badgeContent={notifications.length}
+              classes={{ badge: classes.notificationsBadge }}
+              variant="dot"
+            >
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
           <Button
             className={classes.logoutButton}
             color="inherit"
             onClick={handleLogout}
           >
-            <InputIcon className={classes.logoutIcon}/>
+            <InputIcon className={classes.logoutIcon} />
             Sign out
           </Button>
         </Hidden>
+        <Hidden lgUp>
+          <IconButton
+            color="inherit"
+            onClick={onOpenNavBarMobile}
+          >
+            <MenuIcon />
+          </IconButton>
+        </Hidden>
       </Toolbar>
       <PricingModal
-        onClose={handlePricingModalClose}
+        onClose={handlePricingClose}
         open={pricingModalOpen}
+      />
+      <NotificationsPopover
+        anchorEl={notificationsRef.current}
+        notifications={notifications}
+        onClose={handleNotificationsClose}
+        open={openNotifications}
       />
     </AppBar>
   );
-}
+};
 
 TopBar.propTypes = {
   className: PropTypes.string,
