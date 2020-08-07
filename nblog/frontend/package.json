@@ -55,6 +55,7 @@
     "jss-rtl": "^0.3.0",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.19",
+    "material-ui-icons": "^1.0.0-beta.36",
     "moment": "^2.27.0",
     "node-sass": "^4.14.1",
     "prismjs": "^1.20.0",

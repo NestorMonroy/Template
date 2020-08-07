@@ -12,7 +12,7 @@ import {
   // UserFlows
 } from './components';
 
-import PostsList from 'src/views/Post'
+import Post from 'src/views/Post'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,7 +32,7 @@ const Home = () => {
       className={classes.root}
       title="Presentación"
     >
-      <PostsList />
+      <Post />
       {/* <Header /> */}
       {/* <Grid
         className={classes.container}

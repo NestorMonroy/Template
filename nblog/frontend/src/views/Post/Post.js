@@ -1,29 +1,17 @@
 import React from 'react';
 import { useState, useRef, useEffect } from 'react';
-
-import { makeStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
-
-import {
-  Card,
-  CardContent,
-  Divider,
-  Input,
-  Paper,
-  Tooltip,
-  Typography,
-  Grid
-} from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import SendIcon from '@material-ui/icons/Send';
-import AddPhotoIcon from '@material-ui/icons/AddPhotoAlternate';
-import AttachFileIcon from '@material-ui/icons/AttachFile';
-
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
+import PostSend from './components/PostSend/PostSend'
 import PostList from './components/PostList/PostList'
+import PostDetails from './components/PostDetails/PostDetails'
+import {
+    Paper,
+    Typography,
+    Grid
+} from '@material-ui/core';
+
+import { Divider } from '@material-ui/core';
+
+import { makeStyles } from '@material-ui/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -54,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PostsList(props) {
+export default function Post(props) {
   const { className, ...rest } = props;
 
   const classes = useStyles();
@@ -62,6 +50,7 @@ export default function PostsList(props) {
   const [value, setValue] = useState('');
 
   const [posts, setPost] = useState([])
+  const [selectedPost, setselectedPost] = useState([null])
 
   useEffect(()=>{
     fetch("http://127.0.0.1:8000/api/post/posts/", {
@@ -76,85 +65,20 @@ export default function PostsList(props) {
     .catch(error => console.log(error))
   }, [])
 
-  const handleChange = event => {
-    event.persist();
 
-    setValue(event.target.value);
-  };
-  const handleAttach = () => {
-    fileInputRef.current.click();
-  };
+
+  const postClicked = post => {
+    setselectedPost(post)
+    console.log(post.id)
+
+  }
 
   return (
     <div className={classes.indexpost} >
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Card
-            {...rest}
-            className={clsx(classes.root, className)}
-          >
-            <CardContent className={classes.content}>
-              <Paper
-                className={classes.paper}
-                elevation={1}
-              >
-                <Input
-                  className={classes.input}
-                  disableUnderline
-                  onChange={handleChange}
-                  placeholder={`What's on your mind, N`}
-                />
-              </Paper>
-              <Tooltip title="Send">
-                <IconButton color={value.length > 0 ? 'primary' : 'default'}>
-                  <SendIcon />
-                </IconButton>
-              </Tooltip>
-              <Divider className={classes.divider} />
-              <Tooltip title="Attach image">
-                <IconButton
-                  edge="end"
-                  onClick={handleAttach}
-                >
-                  <AddPhotoIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Attach file">
-                <IconButton
-                  edge="end"
-                  onClick={handleAttach}
-                >
-                  <AttachFileIcon />
-                </IconButton>
-              </Tooltip>
-              <input
-                className={classes.fileInput}
-                ref={fileInputRef}
-                type="file"
-              />
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      {/* <PostSend value={value} /> */}
+      <PostDetails post={selectedPost} />
       <Divider className={classes.divider} />
-
-      <PostList posts={posts} />
-
-      {posts.map(post => {
-        return <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <Paper className={classes.paper}>
-              <Typography
-                component="h1"
-                variant="h3"
-              >
-                {post.content}
-          </Typography>
-            </Paper>
-          </Grid>
-        </Grid>
-      })}
-
+      <PostList posts={posts} postClicked={postClicked}  post={selectedPost} />
     </div>
   );
 }

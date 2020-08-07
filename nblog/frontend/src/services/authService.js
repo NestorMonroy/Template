@@ -8,14 +8,14 @@ export const authService = {
   logout,
   token,
   getClaim,
-  getFirstName,
-  getLastName,
-  getProfilePicture,
+  // getFirstName,
+  // getLastName,
+  // getProfilePicture,
   getClaims
 };
 
-function login(username, password, history) {
-  axios.post('/auth', {username, password})
+function login(email, password, history) {
+  axios.post('http://127.0.0.1:8000/api/accounts/login/', {email, password})
     .catch(handleError)
     .then(handleResponse)
     .then((data) => {
@@ -50,15 +50,15 @@ function getClaims() {
   return decoded;
 }
 
-function getFirstName() {
-  return getClaim('first_name');
-}
+// function getFirstName() {
+//   return getClaim('first_name');
+// }
 
-function getLastName() {
-  return getClaim('last_name');
-}
+// function getLastName() {
+//   return getClaim('last_name');
+// }
 
-function getProfilePicture() {
-  return getClaim('profile_picture');
+// function getProfilePicture() {
+//   return getClaim('profile_picture');
 
-}
+// }

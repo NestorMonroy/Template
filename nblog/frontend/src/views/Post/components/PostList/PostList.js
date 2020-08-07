@@ -1,9 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-    Card,
-    CardContent,
-
     Paper,
     Typography,
     Grid
@@ -36,25 +33,43 @@ const useStyles = makeStyles((theme) => ({
     divider: {
         margin: theme.spacing(2, 0),
     },
+    options: {
+        lineHeight: '26px'
+    },
 }));
 
 
 function PostList(props) {
-    const { className, ...rest } = props;
+    const { className, } = props;
     const classes = useStyles();
+    const postClicked = post => evt => {
+        props.postClicked(post)
+
+    }
+
     return (
         <Grid container spacing={3}>
             {props.posts && props.posts.map(post => {
-                return <Grid item xs={12}>
-                    <Paper className={classes.paper}>
-                        <Typography
-                            component="h1"
-                            variant="h3"
-                        >
-                            {post.content}
-                        </Typography>
-                    </Paper>
-                </Grid>
+                return (
+                    <Grid item xs={12} key={post.id} >
+                        <Paper className={classes.paper}>
+
+                            <Typography
+                                onClick={postClicked(post)}
+                                component="h1"
+                                variant="h3"
+                            >
+                                {post.content}
+                            </Typography>
+                            {/* <Typography
+                                className={classes.options}
+                                variant="subtitle2"
+                            >
+                            {props.post && props.post.content}
+                            </Typography> */}
+                        </Paper>
+                    </Grid>
+                )
             })}
         </Grid>
     )

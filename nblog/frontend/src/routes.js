@@ -4,11 +4,7 @@ import AuthLayout from './layouts/Auth';
 import ErrorLayout from './layouts/Error';
 import DashboardLayout from './layouts/Dashboard';
 import PrivateRoute from './privateRoute';
-import DefaultLayout from "./layouts/DefaultLayout";
 import Home from './views/Home';
-// import Home from "./views/Home";
-import Profile from "./views/UserProfile";
-import TypographyView from "./views/Typography";
 
 export default [
   {
@@ -62,7 +58,7 @@ export default [
   
   {
     route: '*',
-    component: DashboardLayout,
+    component:DashboardLayout,
     routes: [
       {
         path: '/post/:id',
@@ -80,11 +76,7 @@ export default [
         exact: true,
         component: Home
       },
-      // {
-      //   path: '/profile',
-      //   exact: true,
-      //   component: Profile
-      // },
+
       {
         component: () => <Redirect to="/errors/error-404" />
       }
