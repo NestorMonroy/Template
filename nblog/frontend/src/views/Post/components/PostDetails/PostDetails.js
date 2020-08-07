@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import StarRateIcon from '@material-ui/icons/StarRate';
 // import StarOutlineIcon from '@material-ui/icons/StarOutline';
@@ -17,7 +17,6 @@ import {
     Button
 
 } from '@material-ui/core';
-import StarIcon from '@material-ui/icons/StarBorder';
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -69,6 +68,15 @@ const useStyles = makeStyles((theme) => ({
         color: 'orange',
         marginLeft: theme.spacing(1)
     },
+    rateButton:{
+        // size='2rem',
+        marginLeft: theme.spacing(1)
+    },
+    rateButton1: {
+        // display: 'none',
+        color: 'red',
+        marginLeft: theme.spacing(1)
+    },
     divider: {
         margin: theme.spacing(2, 0),
     },
@@ -79,7 +87,29 @@ function PostDetails(props) {
     const { className, } = props;
     const classes = useStyles();
 
+    const [ highlighted, setHighlihted] = useState(-1);
+
     const pos = props.post;
+
+    const highlightRate = high => evt => {
+        setHighlihted(high)
+    }
+
+    const rateClicked = rate => evt => {
+        fetch(`http://127.0.0.1:8000/api/post/posts/${pos.id}/rate_post/`, {
+            method: 'POST',
+            headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': 'Token 6165f2762ac4358af1bdfceab20bb75b15d976d6'
+            },
+            body: JSON.stringify( {stars: rate +1} )
+          })
+          .then(resp => resp.json())
+          .then( resp => console.log(resp))
+          .catch(error => console.log(error))
+
+    }
+
 
     return (
         <Container maxWidth="md" component="main">
@@ -95,14 +125,45 @@ function PostDetails(props) {
                             />
                             <CardContent>
                                 <div className={classes.cardPricing}>
-                                    <Typography component="h2" variant="h3" color="textPrimary">
-                                        ${pos.no_of_ratings}
+                                    <Typography>
+                                        <IconButton className={pos.avg_rating > 0 ? classes.starButton2 : classes.starButton}>
+                                            <StarRateIcon />
+                                        </IconButton>
+                                        <IconButton className={pos.avg_rating > 1 ? classes.starButton2 : classes.starButton}>
+                                            <StarRateIcon />
+                                        </IconButton>
+                                        <IconButton className={pos.avg_rating > 2 ? classes.starButton2 : classes.starButton}>
+                                            <StarRateIcon />
+                                        </IconButton>
+                                        <IconButton className={pos.avg_rating > 3 ? classes.starButton2 : classes.starButton}>
+                                            <StarRateIcon />
+                                        </IconButton>
+                                        <IconButton className={pos.avg_rating > 4 ? classes.starButton2 : classes.starButton}>
+                                            <StarRateIcon />
+                                        </IconButton>
                                     </Typography>
-                                    <Typography variant="h6" color="textSecondary">
-                                        {pos.content}
+
+                                    <Typography component="h2" variant="h3" color="textPrimary">
+                                        ({pos.no_of_ratings})
                                     </Typography>
                                 </div>
+                                <Divider className={classes.divider} />
+
+                                <Typography component="h2" variant="subtitle1" align="center">
+                                    Rate it
+                                </Typography>
+                                {[...Array(5)].map((e, i) => {
+                                    return <IconButton  key={i} className={highlighted > i -1 ? classes.rateButton1 : classes.rateButton}
+                                            onMouseEnter={highlightRate(i)}
+                                            onMouseLeave={highlightRate(-1)}
+                                            onClick={rateClicked(i)}
+                                            >
+                                                <StarRateIcon />
+                                            </IconButton>
+                                })}
                                 <ul>
+
+
                                     {/* {tier.description.map((line) => (
                                         <Typography component="li" variant="subtitle1" align="center" key={line}>
                                             {line}
