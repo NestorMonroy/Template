@@ -53,7 +53,7 @@ class PostSerializer(serializers.ModelSerializer):
                 # 'parent',
                 'timestamp',
                 'no_of_ratings',
-                'avg_ratings'
+                'avg_rating'
                 ]
 
     def validate_content(self, value):

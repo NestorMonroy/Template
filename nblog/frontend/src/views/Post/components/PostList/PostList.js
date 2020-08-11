@@ -3,8 +3,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
     Paper,
     Typography,
-    Grid
+    Grid,
+    IconButton
 } from '@material-ui/core';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -30,11 +33,29 @@ const useStyles = makeStyles((theme) => ({
         whiteSpace: 'nowrap',
         marginBottom: theme.spacing(1),
     },
+    pape2: {
+        // padding: theme.spacing(1),
+        marginLeft: theme.spacing(1),
+        color: theme.palette.text.secondary,
+        // display: 'grid',
+        // gridTemplateColumns: '(1fr, auto, auto)',
+        // gridGap: theme.spacing(3),
+    },
     divider: {
         margin: theme.spacing(2, 0),
     },
     options: {
         lineHeight: '26px'
+    },
+    editButton: {
+        // display: 'none',
+        color: 'green',
+        marginLeft: theme.spacing(1)
+    },
+    deleteButton: {
+        // display: 'none',
+        color: 'red',
+        marginLeft: theme.spacing(1)
     },
 }));
 
@@ -46,13 +67,16 @@ function PostList(props) {
         props.postClicked(post)
 
     }
+    const editClicked = post => {
+        props.editClicked(post);
+    }
 
     return (
         <Grid container spacing={3}>
             {props.posts && props.posts.map(post => {
                 return (
                     <Grid item xs={12} key={post.id} >
-                        <Paper className={classes.paper}>
+                        <Paper>
 
                             <Typography
                                 onClick={postClicked(post)}
@@ -60,7 +84,21 @@ function PostList(props) {
                                 variant="h3"
                             >
                                 {post.content}
+
+                                
                             </Typography>
+                            <IconButton
+                                className={classes.editButton}
+                                onClick={() => editClicked(post)}
+
+                            >
+                                <EditIcon
+                                />
+                            </IconButton>
+                            <IconButton className={classes.deleteButton}>
+                                <DeleteForeverIcon />
+                            </IconButton>
+
                             {/* <Typography
                                 className={classes.options}
                                 variant="subtitle2"

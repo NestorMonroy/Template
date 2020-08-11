@@ -89,7 +89,7 @@ function PostDetails(props) {
 
     const [ highlighted, setHighlihted] = useState(-1);
 
-    const pos = props.post;
+    let pos = props.post;
 
     const highlightRate = high => evt => {
         setHighlihted(high)
@@ -104,8 +104,21 @@ function PostDetails(props) {
             },
             body: JSON.stringify( {stars: rate +1} )
           })
+          
+          .then(() => getDetails())
+          .catch(error => console.log(error))
+    }
+
+    const getDetails = () => {
+        fetch(`http://127.0.0.1:8000/api/post/posts/${pos.id}/`, {
+            method: 'GET',
+            headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': 'Token 6165f2762ac4358af1bdfceab20bb75b15d976d6'
+            },
+          })
           .then(resp => resp.json())
-          .then( resp => console.log(resp))
+          .then(resp => props.updatePost(resp) )
           .catch(error => console.log(error))
 
     }

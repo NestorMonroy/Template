@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import PostSend from './components/PostSend/PostSend'
 import PostList from './components/PostList/PostList'
 import PostDetails from './components/PostDetails/PostDetails'
+import PostForm from './components/PostForm/PostForm'
 import {
     Paper,
     Typography,
@@ -50,7 +51,8 @@ export default function Post(props) {
   const [value, setValue] = useState('');
 
   const [posts, setPost] = useState([])
-  const [selectedPost, setselectedPost] = useState([null])
+  const [selectedPost, setSelectedPost] = useState([null])
+  const [editedPost, setEditedPost] = useState([null])
 
   useEffect(()=>{
     fetch("http://127.0.0.1:8000/api/post/posts/", {
@@ -67,18 +69,31 @@ export default function Post(props) {
 
 
 
-  const postClicked = post => {
-    setselectedPost(post)
-    console.log(post.id)
+  // const postClicked = post => {
+  //   setSelectedPost(post)
+  //   // console.log(post.id)
+  // }
 
+
+  const loadPost = post => {
+    setSelectedPost(post);
+    setEditedPost(null);
+
+  }
+
+  const editClicked = post => {
+    setEditedPost(post);
+    setSelectedPost(null);
+    // console.log(post.id)
   }
 
   return (
     <div className={classes.indexpost} >
       {/* <PostSend value={value} /> */}
-      <PostDetails post={selectedPost} />
+      <PostForm post={editedPost} />
+      <PostDetails post={selectedPost}  updatePost={loadPost}/>
       <Divider className={classes.divider} />
-      <PostList posts={posts} postClicked={postClicked}  post={selectedPost} />
+      <PostList posts={posts} postClicked={loadPost}  post={selectedPost} editClicked={editClicked} />
     </div>
   );
 }

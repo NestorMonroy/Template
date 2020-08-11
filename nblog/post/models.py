@@ -70,7 +70,7 @@ class Post(models.Model):
         ratings = Rating.objects.filter(post=self)
         return len(ratings)
     
-    def avg_ratings(self):
+    def avg_rating(self):
         ratings = Rating.objects.filter(post=self)
         sum = 0
         for rating in ratings:

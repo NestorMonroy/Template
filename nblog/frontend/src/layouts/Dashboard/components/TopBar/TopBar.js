@@ -231,14 +231,7 @@ const TopBar = props => {
               </Paper>
             </ClickAwayListener>
           </Popper>
-          {/* <Button
-            className={classes.trialButton}
-            onClick={handlePricingOpen}
-            variant="contained"
-          >
-            <LockIcon className={classes.trialIcon} />
-            Trial expired
-          </Button> */}
+
         </Hidden>
         <Hidden mdDown>
           <IconButton
