@@ -54,57 +54,65 @@ function PostForm(props) {
     };
 
 
-  const handleAttach = () => {
-    fileInputRef.current.click();
-  };
+    const handleAttach = () => {
+        fileInputRef.current.click();
+    };
 
 
     return (
-        <Card
-            className={classes.root}
-            // className={clsx(classes.root, className)}
-        >
-            <CardContent className={classes.content}>
-                <Paper
-                    className={classes.paper}
-                    elevation={1}
-                >
-                    <Input
-                        className={classes.input}
-                        disableUnderline
-                        onChange={handleChange}
-                        placeholder={`What's on your mind, Nestor`}
-                    />
-                </Paper>
-                <Tooltip title="Send">
-                    <IconButton color={value.length > 0 ? 'primary' : 'default'}>
-                        <SendIcon />
-                    </IconButton>
-                </Tooltip>
-                <Divider className={classes.divider} />
-                <Tooltip title="Attach image">
-                    <IconButton
-                        edge="end"
-                        onClick={handleAttach}
+        <Container maxWidth="md" component="main">
+            <Grid container spacing={2} alignItems="flex-end">
+                <Grid item xs={12}>
+
+                    <Card
+                        className={classes.root}
+                    // className={clsx(classes.root, className)}
                     >
-                        <AddPhotoIcon />
-                    </IconButton>
-                </Tooltip>
-                <Tooltip title="Attach file">
-                    <IconButton
-                        edge="end"
-                        onClick={handleAttach}
-                    >
-                        <AttachFileIcon />
-                    </IconButton>
-                </Tooltip>
-                <input
-                    className={classes.fileInput}
-                    ref={fileInputRef}
-                    type="file"
-                />
-            </CardContent>
-        </Card>
+                        <CardContent className={classes.content}>
+                            <Paper
+                                className={classes.paper}
+                                elevation={1}
+                            >
+                                <Input
+                                    className={classes.input}
+                                    disableUnderline
+                                    onChange={handleChange}
+                                    placeholder={`What's on your mind, Nestor`}
+                                />
+                            </Paper>
+                            <Tooltip title="Send">
+                                <IconButton color={value.length > 0 ? 'primary' : 'default'}>
+                                    <SendIcon />
+                                </IconButton>
+                            </Tooltip>
+                            {/* <Divider className={classes.divider} />
+                            <Tooltip title="Attach image">
+                                <IconButton
+                                    edge="end"
+                                    onClick={handleAttach}
+                                >
+                                    <AddPhotoIcon />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Attach file">
+                                <IconButton
+                                    edge="end"
+                                    onClick={handleAttach}
+                                >
+                                    <AttachFileIcon />
+                                </IconButton>
+                            </Tooltip>
+                            <input
+                                className={classes.fileInput}
+                                ref={fileInputRef}
+                                type="file"
+                            /> */}
+                        </CardContent>
+                    </Card>
+                </Grid>
+            </Grid>
+        </Container>
+
     )
 }
 

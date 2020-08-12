@@ -1,10 +1,14 @@
 import React from 'react';
+import { LInk } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import {
+    Button,
     Paper,
     Typography,
     Grid,
-    IconButton
+    IconButton,
+    Container,
+    Card
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
@@ -57,6 +61,9 @@ const useStyles = makeStyles((theme) => ({
         color: 'red',
         marginLeft: theme.spacing(1)
     },
+    blue: {
+        color: 'blue'
+    }
 }));
 
 
@@ -72,45 +79,36 @@ function PostList(props) {
     }
 
     return (
-        <Grid container spacing={3}>
+        <Paper className={classes.paper}>
             {props.posts && props.posts.map(post => {
                 return (
-                    <Grid item xs={12} key={post.id} >
-                        <Paper>
-
-                            <Typography
-                                onClick={postClicked(post)}
-                                component="h1"
-                                variant="h3"
-                            >
+                    <Grid container justify="center" wrap="nowrap" spacing={2} key={post.id}>
+                        <Grid item>
+                            <Typography component="h1" variant="h3">
                                 {post.content}
-
-                                
                             </Typography>
+                        </Grid>
+                        <Grid item>
                             <IconButton
                                 className={classes.editButton}
-                                onClick={() => editClicked(post)}
 
                             >
                                 <EditIcon
                                 />
                             </IconButton>
-                            <IconButton className={classes.deleteButton}>
-                                <DeleteForeverIcon />
-                            </IconButton>
-
-                            {/* <Typography
-                                className={classes.options}
-                                variant="subtitle2"
+                        </Grid>
+                        <Grid item>
+                            <IconButton
+                                className={classes.deleteButton}
                             >
-                            {props.post && props.post.content}
-                            </Typography> */}
-                        </Paper>
+                                <DeleteForeverIcon
+                                />
+                            </IconButton>
+                        </Grid>
                     </Grid>
-                )
-            })}
-        </Grid>
+                                    )
+                                })}
+        </Paper>
     )
-
 }
 export default PostList;
