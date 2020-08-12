@@ -2,7 +2,7 @@ import React, { lazy } from 'react';
 import { Redirect } from 'react-router-dom';
 import AuthLayout from './layouts/Auth';
 import ErrorLayout from './layouts/Error';
-import DashboardLayout from './layouts/Dashboard';
+import Dashboard from './layouts/Dashboard';
 import PrivateRoute from './privateRoute';
 import Home from './views/Home';
 
@@ -58,7 +58,7 @@ export default [
   
   {
     route: '*',
-    component:DashboardLayout,
+    component:Dashboard,
     routes: [
       {
         path: '/post/:id',

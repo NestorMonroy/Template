@@ -76,6 +76,7 @@ function PostList(props) {
     }
     const editClicked = post => {
         props.editClicked(post);
+        console.log(post.content)
     }
 
     return (
@@ -84,14 +85,14 @@ function PostList(props) {
                 return (
                     <Grid container justify="center" wrap="nowrap" spacing={2} key={post.id}>
                         <Grid item>
-                            <Typography component="h1" variant="h3">
+                            <Typography onClick={postClicked(post)} component="h1" variant="h3">
                                 {post.content}
                             </Typography>
                         </Grid>
                         <Grid item>
                             <IconButton
                                 className={classes.editButton}
-
+                                onClick={() => editClicked(post)}
                             >
                                 <EditIcon
                                 />

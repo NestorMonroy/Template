@@ -21,8 +21,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import SendIcon from '@material-ui/icons/Send';
 import AddPhotoIcon from '@material-ui/icons/AddPhotoAlternate';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
-
-
+// import {postService} from '../../../'
+import {postService} from "src/services/postService";
 const useStyles = makeStyles((theme) => ({
     root: {},
     content: {
@@ -46,6 +46,9 @@ function PostForm(props) {
     const [value, setValue] = useState('');
     // const session = useSelector((state) => state.session);
 
+    const [content, setContent] = useState(props.post.content)
+
+
     const fileInputRef = useRef(null);
 
     const handleChange = (event) => {
@@ -56,6 +59,15 @@ function PostForm(props) {
 
     const handleAttach = () => {
         fileInputRef.current.click();
+    };
+
+    
+    const updateClicked = () => {
+        // console.log('here')
+        postService.updatePost(props.post.id, {content})
+        .then(resp => console.log(resp))
+        console.log(props.post.id)
+
     };
 
 
@@ -76,16 +88,29 @@ function PostForm(props) {
                                         className={classes.paper}
                                         elevation={1}
                                     >
-                                        <Input
+
+                                        <TextareaAutosize
+                                            rowsMax={4}
+                                            aria-label="maximum height"
+                                            className={classes.input}
+                                            id="content"
+                                            value={content}
+                                            onChange={evt=> setContent(evt.target.value)}
+                                            //defaultValue={props.post.content}
+                                        />
+
+                                        {/* <Input
+                                            id={props.content}
                                             className={classes.input}
                                             disableUnderline
-                                            onChange={handleChange}
-                                            placeholder=  {props.content &&  props.content.id}
-                                        />
-                                      
+         
+
+                                        /> */}
+
+
                                     </Paper>
                                     <Tooltip title="Send">
-                                        <IconButton color={value.length > 0 ? 'primary' : 'default'}>
+                                        <IconButton onClick={updateClicked} color={value.length > 0 ? 'primary' : 'default'}>
                                             <SendIcon />
                                         </IconButton>
                                     </Tooltip>

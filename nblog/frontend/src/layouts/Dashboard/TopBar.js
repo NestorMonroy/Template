@@ -1,12 +1,11 @@
 /* eslint-disable no-unused-vars */
-import React, {useState, useRef} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
-import {useHistory} from 'react-router';
+import React, { useState, useRef, useEffect } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {useDispatch, useSelector} from 'react-redux';
-import {makeStyles} from '@material-ui/styles';
-
+import { useDispatch } from 'react-redux';
+import { makeStyles } from '@material-ui/styles';
 import {
   AppBar,
   Badge,
@@ -22,16 +21,21 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  ClickAwayListener
+  ClickAwayListener,
+  SvgIcon
 } from '@material-ui/core';
+import LockIcon from '@material-ui/icons/LockOutlined';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
-import AccountBoxOutlinedIcon from '@material-ui/icons/AccountBoxOutlined';
+import PeopleIcon from '@material-ui/icons/PeopleOutline';
 import InputIcon from '@material-ui/icons/Input';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import {authService} from '../../services/authService';
-import AddProductDialog from "./AddProductDialog";
+import axios from 'src/utils/axios';
+import NotificationsPopover from 'src/components/NotificationsPopover';
+import PricingModal from 'src/components/PricingModal';
+import { logout } from 'src/actions';
+import ChatBar from './ChatBar';
+import { authService } from '../../services/authService';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,20 +71,30 @@ const useStyles = makeStyles((theme) => ({
   searchPopperContent: {
     marginTop: theme.spacing(1)
   },
-  menuButton: {
-    marginRight: theme.spacing(1),
+  trialButton: {
     marginLeft: theme.spacing(2),
+    color: theme.palette.common.white,
+    backgroundColor: colors.green[600],
+    '&:hover': {
+      backgroundColor: colors.green[900]
+    }
+  },
+  trialIcon: {
+    marginRight: theme.spacing(1)
+  },
+  menuButton: {
+    marginRight: theme.spacing(1)
   },
   chatButton: {
-    marginLeft: theme.spacing(1)
-  },
-  accountButton: {
     marginLeft: theme.spacing(1)
   },
   logoutButton: {
     marginLeft: theme.spacing(1)
   },
   logoutIcon: {
+    marginRight: theme.spacing(1)
+  },
+  logoIcon: {
     marginRight: theme.spacing(1)
   }
 }));
@@ -94,22 +108,29 @@ const popularSearches = [
 ];
 
 function TopBar({
-                  onOpenNavBarMobile,
-                  className,
-                  ...rest
-                }) {
+  onOpenNavBarMobile,
+  className,
+  ...rest
+}) {
   const classes = useStyles();
   const history = useHistory();
   const searchRef = useRef(null);
-  const shoppingCartReducers = useSelector(state => state.shoppingCartReducer);
+  const dispatch = useDispatch();
   const [openSearchPopover, setOpenSearchPopover] = useState(false);
   const [searchValue, setSearchValue] = useState('');
-  const [addProductDialogOpen, setAddProductDialogOpen] = useState(false);
-
-  const {products} = shoppingCartReducers;
+  const [openChatBar, setOpenChatBar] = useState(false);
+  const [pricingModalOpen, setPricingModalOpen] = useState(false);
 
   const handleLogout = () => {
     authService.logout(history);
+  };
+
+  const handlePricingModalOpen = () => {
+    setPricingModalOpen(true);
+  };
+
+  const handlePricingModalClose = () => {
+    setPricingModalOpen(false);
   };
 
   const handleSearchChange = (event) => {
@@ -128,36 +149,58 @@ function TopBar({
     setOpenSearchPopover(false);
   };
 
-
   return (
     <AppBar
       {...rest}
       className={clsx(classes.root, className)}
       color="primary"
     >
-      <Toolbar>
+      <Toolbar >
         <Hidden lgUp>
           <IconButton
             className={classes.menuButton}
             color="inherit"
             onClick={onOpenNavBarMobile}
           >
-            <MenuIcon/>
+            <MenuIcon />
           </IconButton>
         </Hidden>
+
         <RouterLink to="/">
           <img
             alt="Logo"
-            src="/images/logos/logo--white.svg"
+            src="/images/logos/gaggenau-vector-logo.svg"
+            width="200" height="50" 
           />
         </RouterLink>
-        <div className={classes.flexGrow}/>
+        {/* <SvgIcon
+          className={classes.logoIcon}>
+           https://jakearchibald.github.io/svgomg/
+
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="19 15 859 645">
+            <defs />
+            <path fill="#f70000" stroke="#000" stroke-width="18" d="M448 646L31 160 172 24h552l141 136-417 486z" />
+            <g fill="#fff800" stroke="#000" stroke-width="16">
+              <path stroke-miterlimit="4.7" d="M207 298l72 85c39-36 131-28 160 22 79 1 147 5 173-27 7-11 10-22 0-30-47-32-216-15-405-50zM93 164l99-97h49c-50 40-84 94-100 154l-48-57zm256 298l99 115 95-110c-48 11-102 16-194-5z" />
+              <path stroke-miterlimit="9.6" d="M594 67h42c1 16-7 25-11 30-10-13-26-26-31-30z" />
+              <path d="M709 276l94-112-68-67v75H595c-4-73-78-104-164-103-79 0-145 20-151 65-7 24 21 66 187 58 132-3 213 26 242 84z" />
+            </g>
+          </svg>
+
+        </SvgIcon> */}
+
+          <img
+            alt="Logo"
+            src="/images/logos/gaggenau-vector-logo.svg"
+            width="200" height="50" 
+          />
+        <div className={classes.flexGrow} />
         <Hidden smDown>
           <div
             className={classes.search}
             ref={searchRef}
           >
-            <SearchIcon className={classes.searchIcon}/>
+            <SearchIcon className={classes.searchIcon} />
             <Input
               className={classes.searchInput}
               disableUnderline
@@ -185,9 +228,9 @@ function TopBar({
                       onClick={handleSearchPopverClose}
                     >
                       <ListItemIcon>
-                        <SearchIcon/>
+                        <SearchIcon />
                       </ListItemIcon>
-                      <ListItemText primary={search}/>
+                      <ListItemText primary={search} />
                     </ListItem>
                   ))}
                 </List>
@@ -195,42 +238,15 @@ function TopBar({
             </ClickAwayListener>
           </Popper>
         </Hidden>
-        <Button
-          variant={"contained"}
-          className={classes.menuButton}
-          onClick={() => setAddProductDialogOpen(true)}>
-          Sell Something
-        </Button>
-        <IconButton
-          className={classes.accountButton}
-          color="inherit"
-        >
-          <Badge
-            color="secondary"
-          >
-            <AccountBoxOutlinedIcon onClick={() => history.push('/profile')}/>
-          </Badge>
-        </IconButton>
         <IconButton
           className={classes.chatButton}
           color="inherit"
         >
           <Badge
-            badgeContent={2}
+            badgeContent={6}
             color="secondary"
           >
-            <NotificationsIcon/>
-          </Badge>
-        </IconButton>
-        <IconButton
-          className={classes.chatButton}
-          color="inherit"
-        >
-          <Badge
-            badgeContent={products.length}
-            color="secondary"
-          >
-            <ShoppingCartIcon/>
+            <PeopleIcon />
           </Badge>
         </IconButton>
         <Hidden mdDown>
@@ -239,12 +255,15 @@ function TopBar({
             color="inherit"
             onClick={handleLogout}
           >
-            <InputIcon className={classes.logoutIcon}/>
+            <InputIcon className={classes.logoutIcon} />
             Sign out
           </Button>
         </Hidden>
       </Toolbar>
-      <AddProductDialog open={addProductDialogOpen} onClose={() => setAddProductDialogOpen(false)}/>
+      <PricingModal
+        onClose={handlePricingModalClose}
+        open={pricingModalOpen}
+      />
     </AppBar>
   );
 }

@@ -90,7 +90,7 @@ export default function Post(props) {
   return (
     <div className={classes.indexpost} >
       {/* <PostSend value={value} /> */}
-      <PostForm post={editedPost} />
+      {editedPost  ? <PostForm post={editedPost} /> :null}
       <PostDetails post={selectedPost}  updatePost={loadPost}/>
       <Divider className={classes.divider} />
       <PostList posts={posts} postClicked={loadPost}  post={selectedPost} editClicked={editClicked} />

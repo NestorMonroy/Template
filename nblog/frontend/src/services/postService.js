@@ -1,19 +1,23 @@
 import axios from 'src/utils/axios';
-import {handleResponse} from '../helpers/handleResponse';
-import {handleError} from '../helpers/handleError';
+import { handleResponse } from '../helpers/handleResponse';
+import { handleError } from '../helpers/handleError';
 
 export const postService = {
-  findAll,
-  saveProduct
+  updatePost,
 };
 
-function findAll() {
-  return axios.get('/post/posts/')
-    .then(handleResponse);
-}
 
-function saveProduct(name, price, description, subCategoryId) {
-    return axios.post('/post/posts/', {name, price, description, subCategoryId})
-      .catch(handleError)
-      .then(handleResponse);
-  }
+const TOKEN = "6165f2762ac4358af1bdfceab20bb75b15d976d6"
+
+function updatePost(pos_id, body) {
+
+  return fetch(`http://127.0.0.1:8000/api/post/posts/${pos_id}/`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${TOKEN}`,
+    },
+    body: JSON.stringify({ body })
+  })
+    .catch(error => console.log(error))
+}
