@@ -69,44 +69,31 @@ function PostForm(props) {
                     // className={clsx(classes.root, className)}
                     >
                         <CardContent className={classes.content}>
-                            <Paper
-                                className={classes.paper}
-                                elevation={1}
-                            >
-                                <Input
-                                    className={classes.input}
-                                    disableUnderline
-                                    onChange={handleChange}
-                                    placeholder={`What's on your mind, Nestor`}
-                                />
-                            </Paper>
-                            <Tooltip title="Send">
-                                <IconButton color={value.length > 0 ? 'primary' : 'default'}>
-                                    <SendIcon />
-                                </IconButton>
-                            </Tooltip>
-                            {/* <Divider className={classes.divider} />
-                            <Tooltip title="Attach image">
-                                <IconButton
-                                    edge="end"
-                                    onClick={handleAttach}
-                                >
-                                    <AddPhotoIcon />
-                                </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Attach file">
-                                <IconButton
-                                    edge="end"
-                                    onClick={handleAttach}
-                                >
-                                    <AttachFileIcon />
-                                </IconButton>
-                            </Tooltip>
-                            <input
-                                className={classes.fileInput}
-                                ref={fileInputRef}
-                                type="file"
-                            /> */}
+                            {props.post ? (
+                                <React.Fragment>
+
+                                    <Paper
+                                        className={classes.paper}
+                                        elevation={1}
+                                    >
+                                        <Input
+                                            className={classes.input}
+                                            disableUnderline
+                                            onChange={handleChange}
+                                            placeholder=  {props.content &&  props.content.id}
+                                        />
+                                      
+                                    </Paper>
+                                    <Tooltip title="Send">
+                                        <IconButton color={value.length > 0 ? 'primary' : 'default'}>
+                                            <SendIcon />
+                                        </IconButton>
+                                    </Tooltip>
+
+
+                                </React.Fragment>
+                            ) : null}
+
                         </CardContent>
                     </Card>
                 </Grid>

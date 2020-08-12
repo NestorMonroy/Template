@@ -106,8 +106,8 @@ function PostList(props) {
                             </IconButton>
                         </Grid>
                     </Grid>
-                                    )
-                                })}
+                )
+            })}
         </Paper>
     )
 }
