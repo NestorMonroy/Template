@@ -24,6 +24,8 @@ import NavItem from 'src/components/NavItem';
 import navConfig from './navConfig';
 import { authService } from '../../services/authService';
 
+const drawerWidth = 240;
+
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
@@ -38,6 +40,12 @@ const useStyles = makeStyles((theme) => ({
     top: 64,
     height: 'calc(100% - 64px)'
   },
+  // drawer: {
+  //   [theme.breakpoints.up("xs")]: {
+  //     width: drawerWidth,
+  //     flexShrink: 0
+  //   }
+  // },
   navigation: {
     overflow: 'auto',
     padding: theme.spacing(0, 2, 2, 2),
@@ -233,27 +241,17 @@ function NavBar({
 
   return (
     <>
-      <Hidden lgUp>
+      <Hidden xlUp>
         <Drawer
           anchor="left"
           classes={{
             paper: classes.mobileDrawer
           }}
+
           onClose={onMobileClose}
           open={openMobile}
           variant="temporary"
-        >
-          {content}
-        </Drawer>
-      </Hidden>
-      <Hidden mdDown>
-        <Drawer
-          anchor="left"
-          classes={{
-            paper: classes.desktopDrawer
-          }}
-          open
-          variant="persistent"
+          // className={classes.drawer}
         >
           {content}
         </Drawer>

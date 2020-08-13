@@ -19,12 +19,12 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     maxWidth: '100%',
     overflowX: 'hidden',
-    [theme.breakpoints.up('lg')]: {
-      paddingLeft: 256
-    },
-    [theme.breakpoints.down('xs')]: {
-      paddingTop: 56
-    }
+    // [theme.breakpoints.up('lg')]: {
+    //   paddingLeft: 256
+    // },
+    // [theme.breakpoints.down('xs')]: {
+    //   paddingTop: 56
+    // }
   }
 }));
 
