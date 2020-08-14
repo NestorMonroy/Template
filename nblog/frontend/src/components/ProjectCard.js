@@ -79,41 +79,13 @@ function ProjectCard({ project, className, ...rest }) {
         avatar={(
           <Avatar
             alt="Author"
-            src={project.author.avatar}
+            
           >
-            {getInitials(project.author.name)}
+            Nes
           </Avatar>
         )}
         className={classes.header}
-        disableTypography
-        subheader={(
-          <Typography variant="body2">
-            by
-            {' '}
-            <Link
-              color="textPrimary"
-              component={RouterLink}
-              to="/profile/1/timeline"
-              variant="h6"
-            >
-              {project.author.name}
-            </Link>
-            {' '}
-            | Updated:
-            {' '}
-            {moment(project.updated_at).fromNow()}
-          </Typography>
-        )}
-        title={(
-          <Link
-            color="textPrimary"
-            component={RouterLink}
-            to="/projects/1/overview"
-            variant="h5"
-          >
-            {project.title}
-          </Link>
-        )}
+
       />
       <CardContent className={classes.content}>
         <div className={classes.description}>
@@ -146,16 +118,16 @@ function ProjectCard({ project, className, ...rest }) {
             <Grid item>
               <Typography variant="h5">
                 $
-                {project.price}
+                1
               </Typography>
               <Typography variant="body2">Per Project</Typography>
             </Grid>
             <Grid item>
-              <Typography variant="h5">{project.location}</Typography>
+              <Typography variant="h5">mexi</Typography>
               <Typography variant="body2">Location</Typography>
             </Grid>
             <Grid item>
-              <Typography variant="h5">{project.type}</Typography>
+              <Typography variant="h5">TY</Typography>
               <Typography variant="body2">Type</Typography>
             </Grid>
             <Grid item>

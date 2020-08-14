@@ -1,14 +1,19 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
+
 import { useState, useRef, useEffect } from 'react';
 import PostSend from './components/PostSend/PostSend'
 import PostList from './components/PostList/PostList'
 import PostDetails from './components/PostDetails/PostDetails'
 import PostForm from './components/PostForm/PostForm'
 import {
-    Paper,
-    Typography,
-    Grid
+  Paper,
+  Typography,
+  Grid,
+  Container
+
 } from '@material-ui/core';
+import Header from "./components/Header";
 
 import { Divider } from '@material-ui/core';
 
@@ -54,26 +59,25 @@ export default function Post(props) {
   const [selectedPost, setSelectedPost] = useState([null])
   const [editedPost, setEditedPost] = useState([null])
 
-  useEffect(()=>{
+  const { match, history } = props;
+  const { tab } = match.params;
+
+  const handleTabsChange = (event, value) => {
+    history.push(value);
+  };
+
+  useEffect(() => {
     fetch("http://127.0.0.1:8000/api/post/posts/", {
       method: 'GET',
       headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Token 6165f2762ac4358af1bdfceab20bb75b15d976d6'
+        'Content-Type': 'application/json',
+        'Authorization': 'Token 6165f2762ac4358af1bdfceab20bb75b15d976d6'
       }
     })
-    .then(resp => resp.json())
-    .then( resp =>setPost(resp))
-    .catch(error => console.log(error))
+      .then(resp => resp.json())
+      .then(resp => setPost(resp))
+      .catch(error => console.log(error))
   }, [])
-
-
-
-  // const postClicked = post => {
-  //   setSelectedPost(post)
-  //   // console.log(post.id)
-  // }
-
 
   const loadPost = post => {
     setSelectedPost(post);
@@ -87,13 +91,30 @@ export default function Post(props) {
     // console.log(post.id)
   }
 
+
+  // const tabs = [
+  //   { value: 'general', label: 'General' },
+  //   { value: 'subscription', label: 'Subscription' },
+  //   { value: 'notifications', label: 'Notifications' },
+  //   { value: 'security', label: 'Security' }
+  // ];
+
+  // if (!tab) {
+  //   return <Redirect to="/settings/general" />;
+  // }
+
+  // if (!tabs.find(t => t.value === tab)) {
+  //   return <Redirect to="/errors/error-404" />;
+  // }
+
+
+
   return (
-    <div className={classes.indexpost} >
-      {/* <PostSend value={value} /> */}
-      {editedPost  ? <PostForm post={editedPost} /> :null}
-      <PostDetails post={selectedPost}  updatePost={loadPost}/>
-      <Divider className={classes.divider} />
-      <PostList posts={posts} postClicked={loadPost}  post={selectedPost} editClicked={editClicked} />
-    </div>
+    
+    <Container>
+      {/* <Header></Header> */}
+      <PostList posts={posts} postClicked={loadPost} post={selectedPost} editClicked={editClicked} />
+
+    </Container>
   );
 }

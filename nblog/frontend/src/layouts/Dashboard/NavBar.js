@@ -20,7 +20,7 @@ import {
   colors
 } from '@material-ui/core';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import NavItem from 'src/components/NavItem';
+import NavItem from '../../components/NavItem';
 import navConfig from './navConfig';
 import { authService } from '../../services/authService';
 

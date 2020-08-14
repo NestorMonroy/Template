@@ -61,15 +61,10 @@ export default [
     component:Dashboard,
     routes: [
       {
-        path: '/post/:id',
+        path: '/post',
         exact: true,
-        component: lazy(() => import('src/views/Post'))
+        component: lazy(() => import('src/views/ProjectList'))
         
-      },
-      {
-        path: '/settings',
-        exact: true,
-        component: lazy(() => import('src/views/Settings'))
       },
       {
         path: '/home',

@@ -15,7 +15,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import axios from 'src/utils/axios';
-import StatusBullet from 'src/components/StatusBullet';
+import StatusBullet from '../../components/StatusBullet';
 
 const useStyles = makeStyles((theme) => ({
   drawer: {

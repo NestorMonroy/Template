@@ -31,9 +31,7 @@ import InputIcon from '@material-ui/icons/Input';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import axios from 'src/utils/axios';
-import NotificationsPopover from 'src/components/NotificationsPopover';
-import PricingModal from 'src/components/PricingModal';
-import { logout } from 'src/actions';
+//import { logout } from 'src/actions';
 import ChatBar from './ChatBar';
 import { authService } from '../../services/authService';
 

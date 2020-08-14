@@ -3,6 +3,7 @@
 import React from 'react';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import DashboardIcon from '@material-ui/icons/DashboardOutlined';
+import SettingsIcon from '@material-ui/icons/SettingsOutlined';
 
 export default [
   {
@@ -18,10 +19,6 @@ export default [
         icon: BarChartIcon,
         items: [
           {
-            title: 'Customers',
-            href: '/management/customers'
-          },
-          {
             title: 'Projects',
             href: '/management/projects'
           },
@@ -30,7 +27,34 @@ export default [
             href: '/management/products'
           }
         ]
-      }
+      },
+      {
+        title: 'Post',
+        href: '/post',
+        icon: SettingsIcon,
+        items: [
+          {
+            title: 'General',
+            href: '/post/general'
+          },
+          {
+            title: 'Subscription',
+            href: '/post/subscription'
+          },
+          {
+            title: 'Notifications',
+            href: '/post/notifications'
+          },
+          {
+            title: 'Security',
+            href: '/post/security'
+          }
+        ]
+      },
+
+
+
+
     ]
   }
 ];
