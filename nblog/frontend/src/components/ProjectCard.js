@@ -60,15 +60,15 @@ const useStyles = makeStyles((theme) => ({
 
 function ProjectCard({ project, className, ...rest }) {
   const classes = useStyles();
-  const [liked, setLiked] = useState(project.liked);
+  // const [liked, setLiked] = useState(project.liked);
 
-  const handleLike = () => {
-    setLiked(true);
-  };
+  // const handleLike = () => {
+  //   setLiked(true);
+  // };
 
-  const handleUnlike = () => {
-    setLiked(false);
-  };
+  // const handleUnlike = () => {
+  //   setLiked(false);
+  // };
 
   return (
     <Card
@@ -81,7 +81,7 @@ function ProjectCard({ project, className, ...rest }) {
             alt="Author"
             
           >
-            Nes
+            {getInitials(project.user.email)}
           </Avatar>
         )}
         className={classes.header}
@@ -93,11 +93,10 @@ function ProjectCard({ project, className, ...rest }) {
             color="textSecondary"
             variant="subtitle2"
           >
-            We&apos;re looking for experienced Developers and Product Designers to
-            come aboard and help us build succesful businesses through software.
+            {project.content}
           </Typography>
         </div>
-        <div className={classes.tags}>
+        {/* <div className={classes.tags}>
           {project.tags.map((tag) => (
             <Label
               color={tag.color}
@@ -106,7 +105,7 @@ function ProjectCard({ project, className, ...rest }) {
               {tag.text}
             </Label>
           ))}
-        </div>
+        </div> */}
         <Divider />
         <div className={classes.details}>
           <Grid
@@ -131,7 +130,7 @@ function ProjectCard({ project, className, ...rest }) {
               <Typography variant="body2">Type</Typography>
             </Grid>
             <Grid item>
-              {liked ? (
+              {/* {liked ? (
                 <Tooltip title="Unlike">
                   <IconButton
                     className={classes.likedButton}
@@ -151,7 +150,7 @@ function ProjectCard({ project, className, ...rest }) {
                     <FavoriteBorderIcon />
                   </IconButton>
                 </Tooltip>
-              )}
+              )} */}
               <Tooltip title="Share">
                 <IconButton
                   className={classes.shareButton}

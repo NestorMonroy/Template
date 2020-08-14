@@ -14,9 +14,9 @@ import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
-import axios from 'src/utils/axios'; 
-import Paginate  from 'src/components/Paginate';
-import  ProjectCard  from 'src/components/ProjectCard';
+import axios from 'src/utils/axios';
+import Paginate from 'src/components/Paginate';
+import ProjectCard from 'src/components/ProjectCard';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -65,23 +65,47 @@ const Projects = props => {
   const [mode, setMode] = useState('grid');
   const [projects, setProjects] = useState([]);
 
+  // useEffect(() => {
+  //   fetch("http://127.0.0.1:8000/api/post/posts/", {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': 'Token 6165f2762ac4358af1bdfceab20bb75b15d976d6'
+  //     }
+  //   })
+  //     .then(resp => resp.json())
+  //     .then(resp => setProjects(resp))
+  //     .catch(error => console.log(error))
+
+
+  // }, [])
+
+  // const apiPost = axios.create({
+  //   baseURL: `http://127.0.0.1:8000/api/post/posts/`
+  // })
+
   useEffect(() => {
-    let mounted = true;
 
-    const fetchProjects = () => {
-      axios.get('/api/post/posts/').then(response => {
-        if (mounted) {
-          setProjects(response.data.projects);
-        }
-      });
-    };
+    axios.get('api/post/posts/')
+      .then(response => {
+        setProjects(response.data);
+        console.log(response)
+      })
+      .catch(error => console.log(error))
 
-    fetchProjects();
+    // const fetchProjects = () => {
+    //   axios.get('http://127.0.0.1:8000/api/post/posts/').then(response => {
+    //       setProjects(response.data.projects);
+    //   });
+    // };
 
-    return () => {
-      mounted = false;
-    };
+    // fetchProjects();
+
+    // return () => {
+    //   console.log('return algo 2')
+    // };
   }, []);
+
 
   const handleSortOpen = () => {
     setOpenSort(true);
@@ -137,7 +161,7 @@ const Projects = props => {
         container
         spacing={3}
       >
-        {projects && projects.map(project => (
+        {projects.map(project => (
           <Grid
             item
             key={project.id}
@@ -145,12 +169,12 @@ const Projects = props => {
             sm={mode === 'grid' ? 6 : 12}
             xs={12}
           >
-            <ProjectCard project={project} /> 
+            <ProjectCard project={project} />
           </Grid>
         ))}
       </Grid>
       <div className={classes.paginate}>
-        <Paginate pageCount={3} /> 
+        <Paginate pageCount={3} />
       </div>
       <Menu
         anchorEl={sortRef.current}
