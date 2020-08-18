@@ -92,10 +92,12 @@ function ProjectCard({ project, className, ...rest }) {
             <Link
               color="textPrimary"
               component={RouterLink}
+             
               to="/profile/1/timeline"
               variant="h6"
+
             >
-              {project.user.first_name}, {project.user.last_name}
+              {project.user.first_name}, {project.user.last_name}, {project.id}
             </Link>{' '}
             | Updated: {moment(project.updated_at).fromNow()}
           </Typography>
@@ -104,7 +106,7 @@ function ProjectCard({ project, className, ...rest }) {
           <Link
             color="textPrimary"
             component={RouterLink}
-            to="/projects/1/overview"
+            to={`post/${project.id}`} 
             variant="h5"
           >
             {project.title}

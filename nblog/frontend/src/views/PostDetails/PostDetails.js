@@ -19,11 +19,11 @@ import {
   Button
 
 } from '@material-ui/core';
-import axios from 'src/utils/axios';
+import axios from 'axios';
 import StarRateIcon from '@material-ui/icons/StarRate';
 
 import { Page } from 'src/components';
-// import { Header, Summary, } from './components';
+import { Header, Overview } from './components';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -53,116 +53,79 @@ function PostDetails(props) {
 
 
   const [openAlert, setOpenAlert] = useState(true);
-  const [project, setProject] = useState(null);
+  const [posts, setPosts] = useState(null);
 
-  let pos = props.post;
-  
-  const getDetails = () => {
-    fetch(`http://127.0.0.1:8000/api/post/posts/${pos.id}/`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Token 6165f2762ac4358af1bdfceab20bb75b15d976d6'
-      },
-    })
-      .then(resp => resp.json())
-      .then(resp => props.updatePost(resp))
+
+
+  useEffect(() => {
+
+    axios.get(`http://127.0.0.1:8000/api/post/posts/${id}/`)
+      .then(response => {
+        setPosts(response.data);
+        // console.log(response)
+      })
       .catch(error => console.log(error))
+  }, []);
 
-  }
-
+  const [mode, setMode] = useState('grid');
   const handleTabsChange = (event, value) => {
     history.push(value);
   };
 
+  //let post = props.post;
+
+  console.log(posts)
   const tabs = [
-    { value: 'summary', label: 'Summary' },
+    { value: 'overview', label: 'Overview' },
+    { value: 'files', label: 'Files' },
+    { value: 'activity', label: 'Activity' },
+    { value: 'subscribers', label: 'Subscribers' }
 
 
   ];
+
   if (!tab) {
-    //   return <Redirect to={`api/post/posts/${id}/`} />;
+    return <Redirect to={`/post/${id}/overview`} />;
   }
 
-  // if (!tabs.find(t => t.value === tab)) {
-  //   return <Redirect to="/errors/error-404" />;
-  // }
+  if (!tabs.find(t => t.value === tab)) {
+    return <Redirect to="/errors/error-404" />;
+  }
+  
+  if (!posts) {
+    return null;
+  }
+
 
   return (
     <Page
       className={classes.root}
       title="Customer Management Details"
     >
-      <Container maxWidth="md" component="main">
-        <Grid container spacing={2} alignItems="flex-end">
-          {pos ? (
-            <Grid item xs={12}>
-              <Card>
-                <CardHeader
-                  title={pos.content}
-                  titleTypographyProps={{ align: 'center' }}
-                  subheaderTypographyProps={{ align: 'center' }}
-                  className={classes.cardHeader}
-                />
-                <CardContent>
-                  <div className={classes.cardPricing}>
-                    <Typography>
-                      <IconButton className={pos.avg_rating > 0 ? classes.starButton2 : classes.starButton}>
-                        <StarRateIcon />
-                      </IconButton>
-                      <IconButton className={pos.avg_rating > 1 ? classes.starButton2 : classes.starButton}>
-                        <StarRateIcon />
-                      </IconButton>
-                      <IconButton className={pos.avg_rating > 2 ? classes.starButton2 : classes.starButton}>
-                        <StarRateIcon />
-                      </IconButton>
-                      <IconButton className={pos.avg_rating > 3 ? classes.starButton2 : classes.starButton}>
-                        <StarRateIcon />
-                      </IconButton>
-                      <IconButton className={pos.avg_rating > 4 ? classes.starButton2 : classes.starButton}>
-                        <StarRateIcon />
-                      </IconButton>
-                    </Typography>
-
-                    <Typography component="h2" variant="h3" color="textPrimary">
-                      ({pos.no_of_ratings})
-                                    </Typography>
-                  </div>
-                  <Divider className={classes.divider} />
-
-                  <Typography component="h2" variant="subtitle1" align="center">
-                    Rate it
-                                </Typography>
-                  {[...Array(5)].map((e, i) => {
-                    return <IconButton key={i} className={highlighted > i - 1 ? classes.rateButton1 : classes.rateButton}
-                      onMouseEnter={highlightRate(i)}
-                      onMouseLeave={highlightRate(-1)}
-                      onClick={console.log(i)}
-                    >
-                      <StarRateIcon />
-                    </IconButton>
-                  })}
-                  <ul>
-
-
-                    {/* {tier.description.map((line) => (
-                                        <Typography component="li" variant="subtitle1" align="center" key={line}>
-                                            {line}
-                                        </Typography>
-                                    ))} */}
-                  </ul>
-                </CardContent>
-                <CardActions>
-                  <Button fullWidth color="primary">
-
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ) : null}
-        </Grid>
-      </Container>
-
+      <Header posts={posts} />
+      <Tabs
+        className={classes.tabs}
+        onChange={handleTabsChange}
+        scrollButtons="auto"
+        value={tab}
+        variant="scrollable"
+      >
+        {tabs.map(tab => (
+          <Tab
+            key={tab.value}
+            label={tab.label}
+            value={tab.value}
+          />
+        ))}
+      </Tabs>
+      <Divider className={classes.divider} />
+      {/* {
+        posts.map(post => (
+          <div key={post.id} className={classes.content}>
+            {tab === 'overview' && <Overview post={post} />}
+          </div>
+        ))
+      } */}
     </Page>
   );
 };

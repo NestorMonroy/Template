@@ -67,12 +67,12 @@ export default [
         
       },
       {
-        path: '/post/detail/:id',
+        path: '/post/:id',
         exact: true,
         component: lazy(() => import('src/views/PostDetails'))
       },
       {
-        path: '/post/detail/:id/:tab',
+        path: '/post/:id/:tab',
         exact: true,
         component: lazy(() => import('src/views/PostDetails'))
       },
