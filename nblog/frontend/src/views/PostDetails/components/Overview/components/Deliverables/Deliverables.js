@@ -9,7 +9,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Deliverables = props => {
-  const {project, className, ...rest } = props;
+  const {posts, className, ...rest } = props;
 
   const classes = useStyles();
 
@@ -21,7 +21,7 @@ const Deliverables = props => {
       <CardContent>
         <Typography variant="h4">Deliverables:</Typography>
         <Typography variant="body1">
-          {project.author.name}
+          f
         </Typography>
       </CardContent>
     </Card>

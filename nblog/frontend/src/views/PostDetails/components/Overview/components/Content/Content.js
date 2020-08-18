@@ -10,8 +10,9 @@ const useStyles = makeStyles(() => ({
   root: {}
 }));
 
-const Brief = props => {
-  const { brief, className, ...rest } = props;
+const Content = props => {
+  const { content, className, ...rest } = props;
+
 
   const classes = useStyles();
 
@@ -21,15 +22,15 @@ const Brief = props => {
       className={clsx(classes.root, className)}
     >
       <CardContent>
-        <Markdown source={brief} />
+        <Markdown source={content} />
       </CardContent>
     </Card>
   );
 };
 
-Brief.propTypes = {
-  brief: PropTypes.string.isRequired,
+Content.propTypes = {
+  content: PropTypes.string.isRequired,
   className: PropTypes.string
 };
 
-export default Brief;
+export default Content;

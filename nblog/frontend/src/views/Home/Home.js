@@ -3,21 +3,10 @@ import clsx from "clsx";
 
 import { makeStyles } from '@material-ui/styles';
 import { Button, Grid, Hidden, Typography } from "@material-ui/core";
-import { Page } from "../../components";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import PropTypes from "prop-types";
 
-import {
-  Header,
-  TodaysMoney,
-  
-  // FAQ,
-  // PluginsSupport,
-  // SourceFiles,
-  // UserFlows
-} from './components';
 
-import Post from 'src/views/Post'
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
@@ -41,9 +30,10 @@ const useStyles = makeStyles(theme => ({
 
 
 const Home = (props) => {
-  const { className, ...rest } = props;
-  const history = useHistory();
+  const { className } = props;
   const classes = useStyles();
+  const history = useHistory();
+
   const [user, setUser] = useState({
     sub: "nestor.monroy.90@gmail.com",
     scopes: "ROLE_ADMIN,ROLE_USER",
@@ -56,8 +46,9 @@ const Home = (props) => {
     history.push("/post");
   };
 
+
   return (
-    <div {...rest} className={clsx(classes.root, className)}>
+    <div className={classes.root}>
       <Grid alignItems="center" container justify="space-between" spacing={3}>
         <Grid item md={6} xs={12}>
           <Typography component="h2" gutterBottom variant="overline">

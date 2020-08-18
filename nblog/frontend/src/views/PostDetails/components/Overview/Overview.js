@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 
-import { Brief, Deliverables, Holder, Members } from './components';
+import { Content, Deliverables, Holder } from './components';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -17,10 +17,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Overview = props => {
-  const { post, className, ...rest } = props;
+  const { posts, className, ...rest } = props;
 
   const classes = useStyles();
-
+  let pos = props.post;
   return (
     <Grid
       {...rest}
@@ -34,8 +34,8 @@ const Overview = props => {
         xl={9}
         xs={12}
       >
-        <Brief />
-        <Deliverables className={classes.deliverables}  />
+        <Content content={posts.content} />
+        <Deliverables className={classes.deliverables} />
       </Grid>
       <Grid
         item
@@ -43,10 +43,9 @@ const Overview = props => {
         xl={3}
         xs={12}
       >
-        <Members
-          className={classes.members}
+        <Holder posts={posts} />
 
-        />
+
       </Grid>
     </Grid>
   );
@@ -54,7 +53,7 @@ const Overview = props => {
 
 Overview.propTypes = {
   className: PropTypes.string,
-  project: PropTypes.object.isRequired
+  posts: PropTypes.object.isRequired
 };
 
 export default Overview;

@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Application = props => {
-  const { author, open, onClose, onApply, className, ...rest } = props;
+  const { user, open, onClose, onApply, className, ...rest } = props;
 
   const [value, setValue] = useState('');
 
@@ -114,13 +114,13 @@ const Application = props => {
             <Avatar
               alt="Author"
               className={classes.avatar}
-              src={author.avatar}
+              
             >
-              {getInitials(author.name)}
+              {getInitials('n')}
             </Avatar>
             <div>
-              <Typography variant="h3">{author.name}</Typography>
-              <Typography variant="subtitle2">{author.bio}</Typography>
+              <Typography variant="h3">FN</Typography>
+              <Typography variant="subtitle2">bio</Typography>
             </div>
           </div>
         </div>

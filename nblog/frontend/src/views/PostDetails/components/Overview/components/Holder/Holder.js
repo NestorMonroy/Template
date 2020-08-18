@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Holder = props => {
-  const { project, className, ...rest } = props;
+  const { posts, className, ...rest } = props;
 
   const classes = useStyles();
 
@@ -50,7 +50,7 @@ const Holder = props => {
            
             to="/profile/1/timeline"
           >
-            {getInitials(project.author.name)}
+            {getInitials(posts.user.first_name)}
           </Avatar>
         }
         className={classes.header}
@@ -61,7 +61,7 @@ const Holder = props => {
             to="/profile/1/timeline"
             variant="h5"
           >
-            {project.author.name}
+            {posts.user.last_name}
           </Typography>
         }
         title={
@@ -82,7 +82,7 @@ const Holder = props => {
           >
             <Typography variant="subtitle2">Deadline</Typography>
             <Typography variant="h6">
-              {moment(project.timestamp).format('DD MMM YYYY')}
+              {moment(posts.timestamp).format('DD MMM YYYY')}
             </Typography>
           </ListItem>
           <ListItem
@@ -110,7 +110,7 @@ const Holder = props => {
           >
             <Typography variant="subtitle2">Last Update</Typography>
             <Typography variant="h6">
-              {moment(project.timestamp).format('DD MMM YYYY')}
+              {moment(posts.timestamp).format('DD MMM YYYY')}
             </Typography>
           </ListItem>
         </List>
@@ -121,7 +121,7 @@ const Holder = props => {
 
 Holder.propTypes = {
   className: PropTypes.string,
-  project: PropTypes.object.isRequired
+  posts: PropTypes.object.isRequired
 };
 
 export default Holder;

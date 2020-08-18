@@ -91,16 +91,15 @@ function PostDetails(props) {
   if (!tabs.find(t => t.value === tab)) {
     return <Redirect to="/errors/error-404" />;
   }
-  
+
   if (!posts) {
     return null;
   }
 
-
   return (
     <Page
       className={classes.root}
-      title="Customer Management Details"
+      title="Detalle de Post"
     >
       <Header posts={posts} />
       <Tabs
@@ -119,13 +118,9 @@ function PostDetails(props) {
         ))}
       </Tabs>
       <Divider className={classes.divider} />
-      {/* {
-        posts.map(post => (
-          <div key={post.id} className={classes.content}>
-            {tab === 'overview' && <Overview post={post} />}
-          </div>
-        ))
-      } */}
+      <div className={classes.content}>
+        {tab === 'overview' && <Overview posts={posts} />}
+      </div>
     </Page>
   );
 };

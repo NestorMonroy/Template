@@ -3,7 +3,6 @@ import { Redirect } from 'react-router-dom';
 import AuthLayout from './layouts/Auth';
 import ErrorLayout from './layouts/Error';
 import Dashboard from './layouts/Dashboard';
-import PrivateRoute from './privateRoute';
 import Home from './views/Home';
 
 export default [
