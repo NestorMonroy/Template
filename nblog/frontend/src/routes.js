@@ -63,8 +63,18 @@ export default [
       {
         path: '/post',
         exact: true,
-        component: lazy(() => import('src/views/ProjectList'))
+        component: lazy(() => import('src/views/PostList'))
         
+      },
+      {
+        path: '/post/detail/:id',
+        exact: true,
+        component: lazy(() => import('src/views/PostDetails'))
+      },
+      {
+        path: '/post/detail/:id/:tab',
+        exact: true,
+        component: lazy(() => import('src/views/PostDetails'))
       },
       {
         path: '/home',

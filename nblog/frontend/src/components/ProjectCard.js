@@ -85,7 +85,31 @@ function ProjectCard({ project, className, ...rest }) {
           </Avatar>
         )}
         className={classes.header}
-
+        disableTypography
+        subheader={
+          <Typography variant="body2">
+            by{' '}
+            <Link
+              color="textPrimary"
+              component={RouterLink}
+              to="/profile/1/timeline"
+              variant="h6"
+            >
+              {project.user.first_name}, {project.user.last_name}
+            </Link>{' '}
+            | Updated: {moment(project.updated_at).fromNow()}
+          </Typography>
+        }
+        title={
+          <Link
+            color="textPrimary"
+            component={RouterLink}
+            to="/projects/1/overview"
+            variant="h5"
+          >
+            {project.title}
+          </Link>
+        }
       />
       <CardContent className={classes.content}>
         <div className={classes.description}>
@@ -96,16 +120,6 @@ function ProjectCard({ project, className, ...rest }) {
             {project.content}
           </Typography>
         </div>
-        {/* <div className={classes.tags}>
-          {project.tags.map((tag) => (
-            <Label
-              color={tag.color}
-              key={tag.text}
-            >
-              {tag.text}
-            </Label>
-          ))}
-        </div> */}
         <Divider />
         <div className={classes.details}>
           <Grid
@@ -114,21 +128,6 @@ function ProjectCard({ project, className, ...rest }) {
             justify="space-between"
             spacing={3}
           >
-            <Grid item>
-              <Typography variant="h5">
-                $
-                1
-              </Typography>
-              <Typography variant="body2">Per Project</Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="h5">mexi</Typography>
-              <Typography variant="body2">Location</Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="h5">TY</Typography>
-              <Typography variant="body2">Type</Typography>
-            </Grid>
             <Grid item>
               {/* {liked ? (
                 <Tooltip title="Unlike">

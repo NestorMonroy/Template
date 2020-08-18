@@ -1,10 +1,11 @@
 from rest_framework import serializers
-
+from accounts.serializers import UserDetailsSerializer
 from .models import Profile
 
 class PublicProfileSerializer(serializers.ModelSerializer):
-    # first_name = serializers.SerializerMethodField(read_only=True)
-    # last_name = serializers.SerializerMethodField(read_only=True)
+
+    first_name = serializers.SerializerMethodField(read_only=True)
+    last_name = serializers.SerializerMethodField(read_only=True)
     # is_following = serializers.SerializerMethodField(read_only=True)
     email = serializers.SerializerMethodField(read_only=True)
     # follower_count = serializers.SerializerMethodField(read_only=True)
@@ -12,8 +13,8 @@ class PublicProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = [
-            # "first_name",
-            # "last_name",
+            "first_name",
+            "last_name",
             # "id",
             # "bio",
             # "location",

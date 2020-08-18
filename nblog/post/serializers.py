@@ -24,7 +24,7 @@ class PostCreateSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Post
-        fields = ['user', 'id', 'content', 'likes', 'timestamp']
+        fields = ['id','user','title', 'content', 'likes', 'timestamp']
     
     # def get_likes(self, obj):
     #     return obj.likes.count()
@@ -49,6 +49,7 @@ class PostSerializer(serializers.ModelSerializer):
                 'id', 
                 'content',
                 'likes',
+                'title',
                 # 'is_retweet',
                 # 'parent',
                 'timestamp',
