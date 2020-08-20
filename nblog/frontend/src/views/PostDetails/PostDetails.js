@@ -21,6 +21,7 @@ import {
 } from '@material-ui/core';
 import axios from 'axios';
 import StarRateIcon from '@material-ui/icons/StarRate';
+import { postService } from "src/services/postService";
 
 import { Page } from 'src/components';
 import { Header, Overview } from './components';
@@ -53,28 +54,34 @@ function PostDetails(props) {
 
 
   const [openAlert, setOpenAlert] = useState(true);
-  const [posts, setPosts] = useState(null);
+  const [posts, setPosts] = useState([]);
 
-
-
-  useEffect(() => {
-
-    axios.get(`http://127.0.0.1:8000/api/post/posts/${id}/`)
-      .then(response => {
-        setPosts(response.data);
-        // console.log(response)
-      })
-      .catch(error => console.log(error))
-  }, []);
-
-  const [mode, setMode] = useState('grid');
   const handleTabsChange = (event, value) => {
     history.push(value);
   };
 
-  //let post = props.post;
 
-  console.log(posts)
+  useEffect(() => {
+
+    const fetchProject = () => {
+      postService
+        .getDetails(id, posts)
+        .then(posts => setPosts())
+    };
+    fetchProject();
+    console.log('n')
+
+  }, []);
+
+/*  if (!posts) {
+      return null;
+    } 
+*/
+
+
+let post = props.post;
+
+
   const tabs = [
     { value: 'overview', label: 'Overview' },
     { value: 'files', label: 'Files' },
@@ -92,16 +99,15 @@ function PostDetails(props) {
     return <Redirect to="/errors/error-404" />;
   }
 
-  if (!posts) {
-    return null;
-  }
+
+
 
   return (
     <Page
       className={classes.root}
       title="Detalle de Post"
     >
-      <Header posts={posts} />
+      <Header/>
       <Tabs
         className={classes.tabs}
         onChange={handleTabsChange}
@@ -119,7 +125,7 @@ function PostDetails(props) {
       </Tabs>
       <Divider className={classes.divider} />
       <div className={classes.content}>
-        {tab === 'overview' && <Overview posts={posts} />}
+        {tab === 'overview' && <Overview />}
       </div>
     </Page>
   );

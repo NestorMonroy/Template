@@ -169,7 +169,7 @@ const Projects = props => {
             sm={mode === 'grid' ? 6 : 12}
             xs={12}
           >
-            <ProjectCard project={project} />
+           <ProjectCard project={project} />
           </Grid>
         ))}
       </Grid>

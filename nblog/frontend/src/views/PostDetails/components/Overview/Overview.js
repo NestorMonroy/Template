@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 
 import { Content, Deliverables, Holder } from './components';
+import { postService } from "src/services/postService";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -17,14 +18,23 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Overview = props => {
-  const { posts, className, ...rest } = props;
+  const { updateClicked, className, ...rest } = props;
+  
+
+
+
+  // useEffect(() => {
+  //   postService
+  //     .findAll()
+  //     .then(posts => setPosts())
+  //   console.log('n')
+  // }, []);
 
   const classes = useStyles();
-  let pos = props.post;
   return (
     <Grid
-      {...rest}
-      className={clsx(classes.root, className)}
+
+
       container
       spacing={3}
     >
@@ -34,8 +44,7 @@ const Overview = props => {
         xl={9}
         xs={12}
       >
-        <Content content={posts.content} />
-        <Deliverables className={classes.deliverables} />
+
       </Grid>
       <Grid
         item
@@ -43,7 +52,7 @@ const Overview = props => {
         xl={3}
         xs={12}
       >
-        <Holder posts={posts} />
+
 
 
       </Grid>
@@ -53,7 +62,7 @@ const Overview = props => {
 
 Overview.propTypes = {
   className: PropTypes.string,
-  posts: PropTypes.object.isRequired
+  //posts: PropTypes.object.isRequired
 };
 
 export default Overview;

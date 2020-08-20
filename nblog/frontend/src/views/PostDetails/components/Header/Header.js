@@ -43,7 +43,7 @@ const Header = props => {
     setOpenApplication(false);
   };
 
-  let pos = props.posts;
+ 
 
   return (
     <div
@@ -69,7 +69,7 @@ const Header = props => {
               gutterBottom
               variant="h3"
             >
-              {posts.title}
+              T
             </Typography>
             <Label
               className={classes.label}
@@ -97,19 +97,14 @@ const Header = props => {
           </Grid>
         </Grid>
 
-      <Application
-        author={posts.user}
-        onApply={handleApplicationClose}
-        onClose={handleApplicationClose}
-        open={openApplication}
-      />
+
     </div>
   );
 };
 
 Header.propTypes = {
   className: PropTypes.string,
-  posts: PropTypes.object.isRequired
+  //posts: PropTypes.object.isRequired
 };
 
 Header.defaultProps = {};

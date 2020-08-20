@@ -21,10 +21,11 @@ import {
 import ShareIcon from '@material-ui/icons/Share';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import getInitials from 'src/utils/getInitials';
-import Label from 'src/components/Label';
 
-const useStyles = makeStyles((theme) => ({
+import getInitials from 'src/utils/getInitials';
+import { Label } from 'src/components';
+
+const useStyles = makeStyles(theme => ({
   root: {},
   header: {
     paddingBottom: 0
@@ -39,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 3, 1, 3)
   },
   tags: {
-    padding: theme.spacing(0, 3, 2, 3),
+    padding: theme.spacing(0, 3, 1, 3),
     '& > * + *': {
       marginLeft: theme.spacing(1)
     }
@@ -54,21 +55,24 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1)
   },
   details: {
-    padding: theme.spacing(2, 3)
+    padding: theme.spacing(1, 3)
   }
 }));
 
-function ProjectCard({ project, className, ...rest }) {
+const ProjectCard = props => {
+  const { project, className, ...rest } = props;
+
   const classes = useStyles();
-  // const [liked, setLiked] = useState(project.liked);
 
-  // const handleLike = () => {
-  //   setLiked(true);
-  // };
+  const [liked, setLiked] = useState(project.liked);
 
-  // const handleUnlike = () => {
-  //   setLiked(false);
-  // };
+  const handleLike = () => {
+    setLiked(true);
+  };
+
+  const handleUnlike = () => {
+    setLiked(false);
+  };
 
   return (
     <Card
@@ -76,14 +80,14 @@ function ProjectCard({ project, className, ...rest }) {
       className={clsx(classes.root, className)}
     >
       <CardHeader
-        avatar={(
+        avatar={
           <Avatar
             alt="Author"
             
           >
-            {getInitials(project.user.email)}
+          
           </Avatar>
-        )}
+        }
         className={classes.header}
         disableTypography
         subheader={
@@ -92,89 +96,42 @@ function ProjectCard({ project, className, ...rest }) {
             <Link
               color="textPrimary"
               component={RouterLink}
-             
               to="/profile/1/timeline"
               variant="h6"
-
             >
-              {project.user.first_name}, {project.user.last_name}, {project.id}
+                          {project.user.first_name}, {project.user.last_name}, {project.id}
+
             </Link>{' '}
-            | Updated: {moment(project.updated_at).fromNow()}
+         
           </Typography>
         }
         title={
           <Link
             color="textPrimary"
             component={RouterLink}
-            to={`post/${project.id}`} 
+            to="/projects/1/overview"
             variant="h5"
           >
-            {project.title}
+            tit
           </Link>
         }
       />
       <CardContent className={classes.content}>
         <div className={classes.description}>
           <Typography
-            color="textSecondary"
+            colo="textSecondary"
             variant="subtitle2"
           >
-            {project.content}
+            We're looking for experienced Developers and Product Designers to
+            come aboard and help us build succesful businesses through softare.
+            
           </Typography>
         </div>
-        <Divider />
-        <div className={classes.details}>
-          <Grid
-            alignItems="center"
-            container
-            justify="space-between"
-            spacing={3}
-          >
-            <Grid item>
-              {/* {liked ? (
-                <Tooltip title="Unlike">
-                  <IconButton
-                    className={classes.likedButton}
-                    onClick={handleUnlike}
-                    size="small"
-                  >
-                    <FavoriteIcon />
-                  </IconButton>
-                </Tooltip>
-              ) : (
-                <Tooltip title="Like">
-                  <IconButton
-                    className={classes.likeButton}
-                    onClick={handleLike}
-                    size="small"
-                  >
-                    <FavoriteBorderIcon />
-                  </IconButton>
-                </Tooltip>
-              )} */}
-              <Tooltip title="Share">
-                <IconButton
-                  className={classes.shareButton}
-                  size="small"
-                >
-                  <ShareIcon />
-                </IconButton>
-              </Tooltip>
-              <Button
-                className={classes.learnMoreButton}
-                component={RouterLink}
-                size="small"
-                to="/projects/1/overview"
-              >
-                Learn more
-              </Button>
-            </Grid>
-          </Grid>
-        </div>
+
       </CardContent>
     </Card>
   );
-}
+};
 
 ProjectCard.propTypes = {
   className: PropTypes.string,
